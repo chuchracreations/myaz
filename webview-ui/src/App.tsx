@@ -4,7 +4,7 @@ import { vscode } from './vscodeApi';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
 import { OctopusIcon } from './components/OctopusIcon';
-import { Plus, RefreshCw, CheckCircle2, FolderOpen, Download, Upload } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
   { id: 'snippets', title: 'Snippets', enabled: true },
@@ -138,48 +138,6 @@ export const App: React.FC = () => {
               <OctopusIcon className="brand-icon" size={19} />
             )}
             <h1 className="brand-title">Coders Canvas</h1>
-          </div>
-          <div className="header-actions">
-            <button
-              className="btn-icon"
-              onClick={handleExport}
-              title="Export workspace data (JSON)"
-              aria-label="Export Workspace Data"
-            >
-              <Download size={13} />
-            </button>
-            <button
-              className="btn-icon"
-              onClick={handleImport}
-              title="Import workspace data (JSON)"
-              aria-label="Import Workspace Data"
-            >
-              <Upload size={13} />
-            </button>
-            <button
-              className="btn-icon"
-              onClick={handleOpenStorageFile}
-              title={storagePath ? `Open workspace data on device:\n${storagePath}` : 'Open workspace data file'}
-              aria-label="Open Workspace Data"
-            >
-              <FolderOpen size={13} />
-            </button>
-            <button
-              className="btn-icon"
-              onClick={handleRefresh}
-              title="Refresh workspace"
-              aria-label="Refresh"
-            >
-              <RefreshCw size={13} />
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => handleOpenCreateModal()}
-              title="Create a new snippet"
-            >
-              <Plus size={12} strokeWidth={2.5} />
-              <span>New</span>
-            </button>
           </div>
         </div>
 

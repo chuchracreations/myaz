@@ -29,6 +29,18 @@ export class SnippetCommands {
       })
     );
 
+    // Command: Open modal to create new snippet
+    const createSnippetHandler = async () => {
+      await vscode.commands.executeCommand('coders-canvas.sidebarView.focus');
+      this.sidebarProvider.postMessage({
+        type: 'OPEN_CREATE_SNIPPET_MODAL',
+      });
+    };
+    disposables.push(
+      vscode.commands.registerCommand('coders-canvas.snippets.create', createSnippetHandler),
+      vscode.commands.registerCommand('myaz.snippets.create', createSnippetHandler)
+    );
+
     // Command: Open workspace storage file on device
     const openStorageHandler = async () => {
       await this.snippetService.openStorageFile();

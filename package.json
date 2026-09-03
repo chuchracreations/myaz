@@ -70,9 +70,41 @@
         "command": "coders-canvas.refresh",
         "title": "Coders Canvas: Refresh View",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "coders-canvas.snippets.create",
+        "title": "New Snippet",
+        "icon": "$(add)"
       }
     ],
     "menus": {
+      "view/title": [
+        {
+          "command": "coders-canvas.exportData",
+          "when": "view == coders-canvas.sidebarView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "coders-canvas.importData",
+          "when": "view == coders-canvas.sidebarView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "coders-canvas.openStorageFile",
+          "when": "view == coders-canvas.sidebarView",
+          "group": "navigation@3"
+        },
+        {
+          "command": "coders-canvas.refresh",
+          "when": "view == coders-canvas.sidebarView",
+          "group": "navigation@4"
+        },
+        {
+          "command": "coders-canvas.snippets.create",
+          "when": "view == coders-canvas.sidebarView",
+          "group": "navigation@5"
+        }
+      ],
       "editor/context": [
         {
           "command": "coders-canvas.snippets.createFromSelection",
