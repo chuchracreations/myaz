@@ -1,9 +1,8 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { vscode } from '../../vscodeApi';
 import { convertImage, ConvertedImageResult } from './imageConverter';
 import {
   FileUp,
-  ArrowRight,
   Download,
   Copy,
   Check,
@@ -12,7 +11,6 @@ import {
   FileText,
   Image as ImageIcon,
   Table as TableIcon,
-  Code2,
   FileCode,
 } from 'lucide-react';
 
@@ -157,8 +155,6 @@ const PRESETS: Record<string, ConversionPreset> = {
 };
 
 export const ConvertersView: React.FC = () => {
-  const [mode, setMode] = useState<'file' | 'scratchpad'>('file');
-
   // File Mode States
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [sourceExt, setSourceExt] = useState<string>('');
@@ -174,12 +170,6 @@ export const ConvertersView: React.FC = () => {
   const [outputFileName, setOutputFileName] = useState<string>('');
   const [hasCopied, setHasCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  // Scratchpad States
-  const [scratchSource, setScratchSource] = useState<'json' | 'yaml' | 'xml' | 'env'>('json');
-  const [scratchTarget, setScratchTarget] = useState<'yaml' | 'json' | 'xml' | 'env'>('yaml');
-  const [scratchInput, setScratchInput] = useState<string>('');
-  const [scratchOutput, setScratchOutput] = useState<string>('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -346,73 +336,11 @@ export const ConvertersView: React.FC = () => {
     }
   };
 
-  // Quick Scratchpad Convert
-  const handleScratchpadConvert = useCallback(() => {
-    if (!scratchInput.trim()) {
-      setScratchOutput('');
-      return;
-    }
-
-    try {
-      if (scratchSource === 'json') {
-        const obj = JSON.parse(scratchInput);
-        if (scratchTarget === 'json') setScratchOutput(JSON.stringify(obj, null, 2));
-        else {
-          // Send to host for yaml/xml/env conversion
-          vscode.postMessage({
-            type: 'CONVERT_TEXT',
-            payload: { text: scratchInput, sourceFormat: scratchSource, targetFormat: scratchTarget },
-          });
-        }
-      } else {
-        vscode.postMessage({
-          type: 'CONVERT_TEXT',
-          payload: { text: scratchInput, sourceFormat: scratchSource, targetFormat: scratchTarget },
-        });
-      }
-    } catch (err: unknown) {
-      setScratchOutput(`Error parsing ${scratchSource.toUpperCase()}: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  }, [scratchInput, scratchSource, scratchTarget]);
-
-  // Listen for scratchpad responses
-  React.useEffect(() => {
-    const unsub = vscode.onMessage(msg => {
-      if (msg.type === 'CONVERT_TEXT_RESULT') {
-        if (msg.payload.success) {
-          setScratchOutput(msg.payload.outputText || '');
-        } else {
-          setScratchOutput(`Conversion Error: ${msg.payload.error}`);
-        }
-      }
-    });
-    return () => unsub();
-  }, []);
-
   const preset = sourceExt ? PRESETS[sourceExt] : null;
 
   return (
     <div className="converters-container">
-      {/* Mode Switcher */}
-      <div className="converters-mode-pills">
-        <button
-          className={`mode-pill ${mode === 'file' ? 'active' : ''}`}
-          onClick={() => setMode('file')}
-        >
-          <FileUp size={12} />
-          <span>File Converter</span>
-        </button>
-        <button
-          className={`mode-pill ${mode === 'scratchpad' ? 'active' : ''}`}
-          onClick={() => setMode('scratchpad')}
-        >
-          <Code2 size={12} />
-          <span>Quick Scratchpad</span>
-        </button>
-      </div>
-
-      {mode === 'file' ? (
-        <div className="file-converter-view">
+      <div className="file-converter-view">
           {/* Dropzone */}
           <div
             className={`dropzone-card ${isDragOver ? 'drag-over' : ''} ${selectedFile ? 'has-file' : ''}`}
@@ -587,83 +515,6 @@ export const ConvertersView: React.FC = () => {
             </div>
           )}
         </div>
-      ) : (
-        /* Scratchpad Mode */
-        <div className="scratchpad-view">
-          <div className="scratchpad-selectors">
-            <div className="scratchpad-select-group">
-              <label>From:</label>
-              <select
-                value={scratchSource}
-                onChange={e => setScratchSource(e.target.value as 'json' | 'yaml' | 'xml' | 'env')}
-                className="select-input"
-              >
-                <option value="json">JSON</option>
-                <option value="yaml">YAML</option>
-                <option value="xml">XML</option>
-                <option value="env">.ENV</option>
-              </select>
-            </div>
-            <ArrowRight size={14} className="scratchpad-arrow" />
-            <div className="scratchpad-select-group">
-              <label>To:</label>
-              <select
-                value={scratchTarget}
-                onChange={e => setScratchTarget(e.target.value as 'yaml' | 'json' | 'xml' | 'env')}
-                className="select-input"
-              >
-                <option value="yaml">YAML</option>
-                <option value="json">JSON</option>
-                <option value="xml">XML</option>
-                <option value="env">.ENV</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="scratchpad-panes">
-            <div className="scratchpad-pane">
-              <div className="pane-header">Input ({scratchSource.toUpperCase()})</div>
-              <textarea
-                className="pane-textarea"
-                placeholder={`Paste your ${scratchSource.toUpperCase()} here...`}
-                value={scratchInput}
-                onChange={e => {
-                  setScratchInput(e.target.value);
-                }}
-              />
-            </div>
-
-            <div className="scratchpad-pane">
-              <div className="pane-header">
-                <span>Output ({scratchTarget.toUpperCase()})</span>
-                {scratchOutput && (
-                  <button
-                    className="btn-icon"
-                    onClick={() => {
-                      navigator.clipboard.writeText(scratchOutput);
-                      setHasCopied(true);
-                      setTimeout(() => setHasCopied(false), 2000);
-                    }}
-                    title="Copy Output"
-                  >
-                    {hasCopied ? <Check size={11} color="#10b981" /> : <Copy size={11} />}
-                  </button>
-                )}
-              </div>
-              <textarea
-                className="pane-textarea output"
-                readOnly
-                placeholder="Converted output will appear here..."
-                value={scratchOutput}
-              />
-            </div>
-          </div>
-
-          <button className="btn btn-primary" onClick={handleScratchpadConvert}>
-            <Sparkles size={12} /> Convert Scratchpad
-          </button>
-        </div>
-      )}
     </div>
   );
 };
