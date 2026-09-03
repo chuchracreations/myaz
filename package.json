@@ -4,7 +4,7 @@
   "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
   "version": "0.1.0",
   "publisher": "himanshuchuchra",
-  "icon": "media/logo.png",
+  "icon": "media/icon.png",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
         {
           "id": "coders-canvas-container",
           "title": "Coders Canvas",
-          "icon": "media/logo.png"
+          "icon": "media/icon.png"
         }
       ]
     },
