@@ -2,7 +2,7 @@
   "name": "myaz-extension",
   "displayName": "Coders Canvas",
   "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "himanshuchuchra",
   "icon": "media/icon.png",
   "license": "MIT",

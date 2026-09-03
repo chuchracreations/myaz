@@ -6,7 +6,7 @@
 
   ### *The Modular Developer Workspace & Snippet Command Center for VS Code*
 
-  [![Visual Studio Marketplace Version](https://img.shields.io/badge/Marketplace-v0.1.0-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
+  [![Visual Studio Marketplace Version](https://img.shields.io/badge/Marketplace-v0.1.1-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
   [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
   [![Offline First](https://img.shields.io/badge/Storage-100%25%20Offline%20%26%20Private-orange?style=for-the-badge)](#-where-your-data-is-stored-on-device)
   [![Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript-61dafb?style=for-the-badge&logo=react)](#-technology-stack)
