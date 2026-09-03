@@ -3,7 +3,6 @@ import { ModuleDefinition, ModuleId, Snippet } from '../../src/common/types';
 import { vscode } from './vscodeApi';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
-import { OctopusIcon } from './components/OctopusIcon';
 import { CheckCircle2 } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
@@ -119,28 +118,10 @@ export const App: React.FC = () => {
     vscode.postMessage({ type: 'IMPORT_SNIPPETS' });
   };
 
-  const logoUri = typeof window !== 'undefined' ? (window as unknown as { __LOGO_URI__?: string }).__LOGO_URI__ : undefined;
-
   return (
     <div className="app-container">
       {/* Header Bar */}
       <header className="app-header">
-        <div className="brand-row">
-          <div className="brand-identity">
-            {logoUri ? (
-              <img
-                src={logoUri}
-                alt="Coders Canvas Logo"
-                className="brand-icon"
-                style={{ height: 22, width: 'auto', maxWidth: 36, objectFit: 'contain', flexShrink: 0 }}
-              />
-            ) : (
-              <OctopusIcon className="brand-icon" size={19} />
-            )}
-            <h1 className="brand-title">Coders Canvas</h1>
-          </div>
-        </div>
-
         {/* Modular Navigation Bar */}
         <nav className="module-tabs" aria-label="Extension Modules">
           {MODULES.map(module => {
