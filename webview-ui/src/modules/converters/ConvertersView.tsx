@@ -381,16 +381,13 @@ export const ConvertersView: React.FC = () => {
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <div className="dropzone-ambient-glow" />
-            
-            <div className="dropzone-icon-ring">
-              <div className="icon-pulse-glow" />
-              <FileUp size={24} className="dropzone-icon" />
-            </div>
-
             <div className="dropzone-text-block">
               <h3 className="dropzone-main-title">Drop your file here</h3>
               <p className="dropzone-sub-title">or click anywhere to browse from device</p>
+            </div>
+
+            <div className="dropzone-icon-ring">
+              <FileUp size={24} className="dropzone-icon" />
             </div>
 
             <button
