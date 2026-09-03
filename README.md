@@ -4,9 +4,9 @@
 
   # Coders Canvas
 
-  ### *The All-in-One Snippet Command Center & Universal Offline File Converter for VS Code*
+  ### *The All-in-One Snippet Command Center, Universal Offline File Converter & Port Killer for VS Code*
 
-  [![Visual Studio Marketplace Version](https://img.shields.io/badge/Marketplace-v0.2.0-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
+  [![Visual Studio Marketplace Version](https://img.shields.io/badge/Marketplace-v0.3.0-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
   [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
   [![Offline First](https://img.shields.io/badge/Storage-100%25%20Offline%20%26%20Private-orange?style=for-the-badge)](#-100-offline-private--local)
   [![Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript-61dafb?style=for-the-badge&logo=react)](#-technology-stack)
@@ -85,10 +85,12 @@ Never upload confidential company code, spreadsheets, or documents to third-part
 
 Never fight `Error: listen EADDRINUSE: address already in use :::3000` again. Clean up ghost dev servers and terminate blocked ports in 1 click without memorizing terminal commands.
 
-* **📍 Project-Aware Smart Detection**: Automatically detects your workspace's configured dev ports from `package.json` scripts and `.env*` variables (`PORT`, `VITE_PORT`, `APP_PORT`).
-* **👻 Ghost Process Highlighting**: Detects if a listening process was started inside your active project directory (`cwd`) and badges it with **`📍 THIS WORKSPACE`**.
+* **📍 Monorepos & Microservices Aware**:
+  * Recursively scans nested `.env*` files, `package.json` scripts, and `docker-compose*.yml` across microservice folders (`apps/web`, `services/auth`, `packages/api`) in under 2ms.
+  * Attributes active processes to their specific microservice subfolder (`📁 apps/web`, `📁 services/auth`).
+* **👻 Ghost Process Highlighting**: Detects if a listening process was started inside your active workspace directory (`cwd`) and badges it with **`📍 THIS WORKSPACE`**.
 * **⚡ 1-Click Safe Process Termination**: Terminate runaway Node, Vite, Python, or Next.js processes with graceful `SIGTERM` followed by `SIGKILL` on Unix, or `taskkill` on Windows.
-* **🔍 Custom Port Quick-Scan**: Search bar to inspect any custom port number (e.g. `8888`) or view standard dev services (`5432` PostgreSQL, `6379` Redis, `8080` Docker).
+* **🔍 On-Demand Port Inspector**: Search bar to inspect and kill any specific port number (e.g. `3000`, `8080`) while filtering out unrelated system background processes.
 
 ---
 

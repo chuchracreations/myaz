@@ -2,7 +2,7 @@
   "name": "myaz-extension",
   "displayName": "Coders Canvas",
   "description": "Smart Snippet Manager, Universal Offline File Converter & Port Killer: Word to PDF, Markdown Slides, SVG to PNG, WebP optimizer, Excel to JSON, and EADDRINUSE port janitor.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "himanshuchuchra",
   "icon": "media/icon.png",
   "license": "MIT",
