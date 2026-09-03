@@ -5,6 +5,11 @@
   "version": "0.1.0",
   "publisher": "himanshuchuchra",
   "icon": "media/logo.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/himanshuchuchra/coders-canvas"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -81,7 +86,7 @@
     "vscode:prepublish": "npm run build",
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
-    "package": "npx @vscode/vsce package --allow-missing-repository --skip-license",
+    "package": "npx @vscode/vsce package --no-rewrite-relative-links",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.webview.json --noEmit"
   },
   "dependencies": {

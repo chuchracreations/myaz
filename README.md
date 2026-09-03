@@ -1,95 +1,135 @@
-# Coders Canvas
+<div align="center">
 
-A modern, modular productivity extension for Visual Studio Code, starting with a rich **Snippets** manager and engineered to easily scale into additional modules (e.g. AI Prompts, Templates, Project Notes).
+  <img src="media/logo.png" alt="Coders Canvas Logo" width="130" height="130" style="border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.25);" />
 
-## 🚀 Features (Snippets MVP)
+  # Coders Canvas
 
-- **Sidebar Integration**: Appears in the VS Code Activity Bar with a custom **octopus icon**. Clicking it opens **Coders Canvas** in the Primary Sidebar.
-- **Premium Branding**: Clean, modern aesthetic with *Coders Canvas* branding and matching octopus logo.
-- **Bricolage Grotesque Typography**: Styled with Google Font *Bricolage Grotesque* and VS Code native theme CSS tokens.
-- **Language-Based Color Syntax Highlighting**: Snippets display rich, vibrant syntax coloring based on their selected language (TypeScript, TSX, JavaScript, Python, CSS, HTML, JSON, SQL, Bash, Markdown, etc.) powered by Prism.js, plus custom highlighting for tab-stops (`$1`, `$0`).
-- **Modular Shell**: Designed from Day 1 to host multiple modules with a unified navigation bar.
-- **Rich Snippets Management**:
-  - **Search & Live Filter**: Search by title, code content, tags, or prefix.
-  - **Automatic Language Detection**: Highlights snippets matching your active editor's file language.
-  - **Insert at Cursor**: Direct insertion into active editor with tab-stop navigation (`$1`, `${1:label}`, `$0`).
-  - **One-Click Copy**: Instant clipboard copy with visual confirmation.
-  - **Save from Editor Selection**: Select code in any editor, right-click, and choose **Coders Canvas: Save Selection as Snippet**.
-  - **Export Workspace Data**: One-click export of your entire extension data to a single `coders-canvas-workspace.json` file.
-  - **Import Workspace Data**: Easily import data from any JSON file with *Merge with Existing* or *Replace All* options.
-  - **Open Workspace on Device**: Dedicated button to open and edit the raw `workspace.json` data file directly in VS Code.
-  - **Favorites & Tags**: Pin frequent snippets and organize with tags.
+  ### *The Modular Developer Workspace & Snippet Command Center for VS Code*
 
-## 💾 Where Data is Stored on Your Device
+  [![Visual Studio Marketplace Version](https://img.shields.io/badge/Marketplace-v0.1.0-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.coders-canvas)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
+  [![Offline First](https://img.shields.io/badge/Storage-100%25%20Offline%20%26%20Private-orange?style=for-the-badge)](#-where-your-data-is-stored-on-device)
+  [![Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript-61dafb?style=for-the-badge&logo=react)](#-technology-stack)
 
-All your data is saved locally on your device in a human-readable JSON file:
+  <p align="center">
+    <b>Stop re-writing boilerplate. Organize, search, and instantly insert your favorite code snippets directly from your VS Code sidebar.</b>
+  </p>
 
-- **macOS**: `~/Library/Application Support/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json`
-- **Windows**: `%APPDATA%\Code\User\globalStorage\himanshuchuchra.coders-canvas\workspace.json`
-- **Linux**: `~/.config/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json`
+</div>
 
-> **Tip**: You can open this file anytime by clicking the **Folder icon** in the **Coders Canvas** header or running the command **Coders Canvas: Open Workspace Data File**. Any manual edits saved to `workspace.json` are automatically loaded by the extension!
+---
 
-## 🛠️ Tech Stack
+## ✨ Overview
 
-- **Extension Host**: TypeScript + Node.js (`vscode` API)
-- **Webview UI**: React 18 + TypeScript + Lucide Icons
-- **Bundler**: `esbuild` (dual-target: Node CJS for host, Browser ESM for webview)
-- **Design & Typography**: CSS with *Bricolage Grotesque* & *JetBrains Mono* + native VS Code theme tokens
+**Coders Canvas** is a high-performance, modular productivity extension designed to streamline your daily programming workflow. Engineered from the ground up with **React 18**, **TypeScript**, and **Google Font Bricolage Grotesque**, Coders Canvas gives you an interactive, visually stunning command center right inside your VS Code Activity Bar.
 
-## 📂 Architecture
+Whether you're juggling TypeScript boilerplates, React hooks, SQL queries, regex patterns, or Python scripts, **Coders Canvas** keeps your highest-value code right at your fingertips with zero context switching.
 
-```
-coders-canvas/
-├── .vscode/
-│   ├── launch.json              # F5 debug configuration
-│   └── tasks.json               # esbuild build and watch tasks
-├── media/
-│   └── icon.svg                 # Activity Bar icon
-├── src/
-│   ├── extension.ts             # Extension activation & registration
-│   ├── common/
-│   │   └── types.ts             # Shared message contracts & models
-│   ├── modules/
-│   │   └── snippets/
-│   │       ├── snippetService.ts # globalState CRUD & seed data
-│   │       └── snippetCommands.ts # Editor insertion & selection capture
-│   └── providers/
-│       └── SidebarWebviewProvider.ts # WebviewViewProvider + message bridge
-├── webview-ui/
-│   └── src/
-│       ├── index.tsx            # React 18 entrypoint
-│       ├── index.css            # Styling + Bricolage Grotesque
-│       ├── vscodeApi.ts         # Type-safe acquireVsCodeApi() wrapper
-│       ├── App.tsx              # Modular UI shell
-│       └── modules/
-│           └── snippets/
-│               ├── SnippetList.tsx  # Search & filters
-│               ├── SnippetCard.tsx  # Interactive snippet card
-│               └── SnippetModal.tsx # Add/Edit modal dialog
-├── build.mjs                    # Dual-target esbuild pipeline
-└── package.json
-```
+---
 
-## 💻 Development & Testing
+## 🚀 Key Features
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+### ⚡ Smart Snippet Command Center
+* **Live Search**: Instant real-time filtering across titles, descriptions, code bodies, and tags.
+* **Auto Language Detection**: Intelligently detects the language of your active editor and highlights matching snippets first.
+* **Favorites & Pinning**: Star your go-to snippets to keep them pinned at the top of your library.
+* **Tag System**: Group snippets by stack, framework, or utility (`#react`, `#frontend`, `#api`, `#sql`, `#docker`).
 
-### 2. Build Bundles
-```bash
-npm run build
-```
+### 🎨 Language-Based Color Syntax Highlighting
+* **Rich Syntax Highlighting**: Preview code with VS Code Dark+ color syntax tailored to each snippet’s language:
+  * TypeScript & TSX
+  * JavaScript & JSX
+  * Python
+  * HTML / XML
+  * CSS / SCSS
+  * JSON
+  * SQL
+  * Bash / Shell
+  * Markdown
+* **Interactive Tab-Stops**: Full support for native VS Code snippet placeholders (`$1`, `${1:variableName}`, `$0`) styled with subtle cursor indicators.
 
-Or run incremental watch mode:
-```bash
-npm run watch
-```
+### 🪄 Save Selection from Editor in 1 Click
+* Highlight any block of code in your active editor.
+* Right-click and choose **`Coders Canvas: Save Selection as Snippet`**.
+* The sidebar opens with your code, language, and suggested title automatically pre-filled!
 
-### 3. Run & Debug in VS Code
-1. Open this repository in VS Code.
-2. Press `F5` (or go to **Run and Debug** -> **Run Extension**).
-3. A new **Extension Development Host** window will open.
-4. Click the **Coders Canvas** icon in the Activity Bar (left sidebar) to test the extension!
+### 🎯 Instant Insertion & Copy
+* **Insert at Cursor**: Click **Insert** to inject snippet code right at your active editor cursor position, with instant tab-stop navigation between placeholders.
+* **Copy to Clipboard**: Quick copy button with visual confirmation when you just need the code on your clipboard.
+
+### 📦 Complete Workspace Portability (Backup & Restore)
+* **Single-File Export**: Export your entire workspace collection into a clean `coders-canvas-workspace.json` file in one click.
+* **Flexible Import**: Share snippet packs with teammates or restore backups with two convenient modes:
+  * **Merge with Existing**: Appends new snippets while preserving your current collection.
+  * **Replace All**: Replaces your workspace with the imported pack.
+
+### 🔒 100% Offline, Private & Local
+* Your code is yours. **Coders Canvas has zero external telemetry, zero tracking, and makes no network requests.**
+* All data is stored locally on your device in human-readable JSON (`workspace.json`).
+* You can open and edit this raw data file anytime by clicking the **Folder** icon in the header or via the command palette.
+
+### 🧩 Modular Architecture (Future-Ready)
+* Starting with **Snippets**, Coders Canvas is architected as a modular hub with dedicated tabs designed to seamlessly host upcoming modules:
+  * 💬 **AI Prompts Hub** *(Coming Soon)*
+  * 📑 **Project Templates** *(Coming Soon)*
+  * 📝 **Scratchpad & Notes** *(Coming Soon)*
+
+---
+
+## ⌨️ Command Palette Shortcuts
+
+Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access all commands:
+
+| Command | Description |
+| :--- | :--- |
+| **`Coders Canvas: Save Selection as Snippet`** | Creates a new snippet from your current editor selection |
+| **`Coders Canvas: Insert Snippet`** | Inserts a selected snippet directly into your active document |
+| **`Coders Canvas: Open Workspace Data File`** | Opens your local `workspace.json` data file on disk in VS Code |
+| **`Coders Canvas: Export Workspace Data`** | Exports all workspace data to a standalone JSON file |
+| **`Coders Canvas: Import Workspace Data`** | Imports workspace snippets from a JSON file (Merge or Replace) |
+| **`Coders Canvas: Refresh View`** | Syncs the sidebar with disk storage |
+
+---
+
+## 💾 Where Your Data is Stored on Device
+
+All snippets and workspace configurations are stored locally on your machine in a human-readable JSON file:
+
+| Operating System | Default Storage Path |
+| :--- | :--- |
+| **macOS** | `~/Library/Application Support/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
+| **Windows** | `%APPDATA%\Code\User\globalStorage\himanshuchuchra.coders-canvas\workspace.json` |
+| **Linux** | `~/.config/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
+
+> 💡 **Pro Tip**: Any manual edits you save to `workspace.json` in VS Code are instantly reloaded by the extension!
+
+---
+
+## 🛠️ Technology Stack
+
+Coders Canvas is engineered with performance and aesthetics in mind:
+
+- **Extension Host**: TypeScript + Node.js (VS Code Extension API)
+- **Webview Architecture**: React 18 + TypeScript + Lucide Icons
+- **Syntax Highlighting**: Prism.js syntax engine with language grammars
+- **Typography**: Google Font *Bricolage Grotesque* & *JetBrains Mono*
+- **Bundler**: `esbuild` dual-pipeline (Node CJS for host, Browser ESM for webview)
+
+---
+
+## 🤝 Contributing & Feedback
+
+Have ideas, suggestions, or found a bug? We’d love to hear from you!
+
+- **Report Issues & Feature Requests**: Reach out or file an issue on GitHub.
+- **Enjoying Coders Canvas?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.coders-canvas)!
+
+---
+
+<div align="center">
+
+  Crafted with care for developers who value speed, craft, and great tooling.
+
+  **Coders Canvas** © 2026
+
+</div>
