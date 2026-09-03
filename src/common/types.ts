@@ -35,7 +35,9 @@ export type WebviewToHostMessage =
   | { type: 'IMPORT_SNIPPETS' }
   | { type: 'CONVERT_FILE'; payload: any }
   | { type: 'CONVERT_TEXT'; payload: any }
-  | { type: 'SAVE_CONVERTED_FILE'; payload: any };
+  | { type: 'SAVE_CONVERTED_FILE'; payload: any }
+  | { type: 'SAVE_BATCH_FILES'; payload: any }
+  | { type: 'SAVE_BATCH_ZIP'; payload: any };
 
 export type HostToWebviewMessage =
   | { type: 'SYNC_SNIPPETS'; payload: { snippets: Snippet[]; storagePath?: string } }

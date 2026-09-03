@@ -59,19 +59,28 @@ Whether you're juggling TypeScript boilerplates, React hooks, SQL queries, regex
 
 ### 🔄 Universal Local Converters Hub (100% Offline & Private)
 Stop uploading sensitive company files to sketchy converter sites! Convert files locally on your machine with zero lag and zero tracking:
-* **Documents & Office**:
+* **⚡ Batch & Multi-File Queue**:
+  * Drop multiple files at once, convert in parallel, and export all to a destination folder or download as a `.zip` bundle.
+  * Optional **In-Place File Replace**: Overwrite or swap original files on disk in one click.
+* **🎨 SVG & Vector Suite**:
+  * Convert `.svg` icons into a **Multi-Resolution PNG Bundle** (`16px`, `32px`, `48px`, `64px`, `128px`, `256px`, `512px`) ready for app stores and web.
+* **📑 Markdown ➔ Interactive Slide Deck**:
+  * Turn any Markdown file with `---` dividers into a standalone, interactive HTML presentation with dark mode and keyboard arrow navigation.
+* **📄 PDF ➔ Markdown / Text Extractor**:
+  * Extract text, headings, and structure from `.pdf` documents directly into clean Markdown (`.md`) or plain text (`.txt`).
+* **📄 Documents & Office**:
   * Word (`.docx`) ➔ **PDF**, **Markdown**, **HTML**, **Plain Text**
-  * Markdown (`.md`) ➔ **PDF**, **HTML**, **Plain Text**
-  * Plain Text (`.txt`) ➔ **PDF**
+  * Markdown (`.md`) ➔ **PDF**, **Slide Deck**, **HTML**, **Plain Text**
+  * Plain Text (`.txt`) ➔ **PDF** (with auto line-wrapping and pagination)
   * HTML (`.html`) ➔ **Markdown**, **PDF**
-* **Images & Graphics**:
+* **🖼️ Images & Graphics**:
   * Cross-convert **PNG ↔ JPG ↔ WebP** with custom quality compression sliders
   * Generate **Favicon (`.ico`)** files from any image
   * Instant **Base64 Data URI** generation for CSS/HTML/React
-* **Spreadsheets & Tables**:
+* **📊 Spreadsheets & Tables**:
   * Excel (`.xlsx`, `.xls`), `.csv`, `.tsv` ➔ **JSON Array**, **Markdown Table**, **HTML Table**, **CSV**
-* **Data & Config (File & Live Scratchpad)**:
-  * Two-way conversion between **JSON ↔ YAML ↔ XML ↔ .ENV**
+* **⚙️ Data & Config**:
+  * Two-way conversions between **JSON ↔ YAML ↔ XML ↔ .ENV**
 * **VS Code Explorer Context Menu**:
   * Right-click any file in your project explorer ➔ **`Coders Canvas: Convert File...`** to convert and save beside the original in one click!
 

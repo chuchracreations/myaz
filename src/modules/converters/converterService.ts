@@ -6,6 +6,7 @@ import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 import * as yaml from 'js-yaml';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import JSZip from 'jszip';
 import { FileConversionRequest, FileConversionResult } from '../../common/converterTypes';
 
 export class ConverterService {
@@ -19,8 +20,8 @@ export class ConverterService {
     const target = req.targetFormat.toLowerCase().replace('.', '');
 
     try {
-      // 1. Documents conversions
-      if (['docx', 'md', 'txt', 'html'].includes(ext) || ['pdf', 'md', 'html', 'txt'].includes(target)) {
+      // 1. Documents & PDF conversions
+      if (['docx', 'md', 'txt', 'html', 'pdf'].includes(ext) || ['pdf', 'md', 'html', 'txt', 'slide-deck', 'slides'].includes(target)) {
         return await this.convertDocument(req, ext, target);
       }
 
@@ -51,11 +52,12 @@ export class ConverterService {
   }
 
   /**
-   * Convert Documents (DOCX, Markdown, Text, HTML to PDF, MD, HTML, TXT)
+   * Convert Documents (DOCX, Markdown, Text, HTML, PDF to PDF, MD, HTML, TXT, Slide-Deck)
    */
   private async convertDocument(req: FileConversionRequest, ext: string, target: string): Promise<FileConversionResult> {
     const baseName = path.basename(req.fileName, path.extname(req.fileName));
-    const targetFileName = `${baseName}.${target === 'markdown' ? 'md' : target}`;
+    const targetExt = target === 'markdown' ? 'md' : target === 'slide-deck' || target === 'slides' ? 'html' : target;
+    const targetFileName = `${baseName}.${targetExt}`;
 
     // Get input buffer & text
     let buffer: Buffer | null = null;
@@ -63,12 +65,57 @@ export class ConverterService {
 
     if (req.dataBase64) {
       buffer = Buffer.from(req.dataBase64, 'base64');
-      if (!textContent && ext !== 'docx') {
+      if (!textContent && ext !== 'docx' && ext !== 'pdf') {
         textContent = buffer.toString('utf-8');
       }
     }
 
-    // DOCX conversions via Mammoth
+    // 1. PDF Extractor (PDF ➔ Markdown, Plain Text)
+    if (ext === 'pdf') {
+      if (!buffer) throw new Error('PDF extraction requires binary file data.');
+
+      const { PDFParse } = await import('pdf-parse');
+      const parser = new (PDFParse as any)({ data: buffer });
+      const textResult = await parser.getText();
+      const rawText = typeof textResult === 'string' ? textResult : (textResult as any)?.text || '';
+      let pageCount = 1;
+      try {
+        const info = await parser.getInfo();
+        pageCount = (info as any)?.pages || 1;
+      } catch {}
+      await parser.destroy();
+
+      if (target === 'md' || target === 'markdown') {
+        const md = `# Extracted Content: ${baseName}\n\n*Source: ${req.fileName} • Pages: ${pageCount}*\n\n---\n\n${rawText.trim()}`;
+        return {
+          id: req.id,
+          success: true,
+          fileName: targetFileName,
+          targetFormat: target,
+          outputText: md,
+          isBinary: false,
+          mimeType: 'text/markdown',
+          sizeBytes: Buffer.byteLength(md, 'utf-8'),
+        };
+      }
+
+      if (target === 'txt') {
+        return {
+          id: req.id,
+          success: true,
+          fileName: targetFileName,
+          targetFormat: target,
+          outputText: rawText.trim(),
+          isBinary: false,
+          mimeType: 'text/plain',
+          sizeBytes: Buffer.byteLength(rawText, 'utf-8'),
+        };
+      }
+
+      throw new Error(`Cannot convert PDF to .${target}. Supported targets: Markdown (.md) or Plain Text (.txt)`);
+    }
+
+    // 2. DOCX conversions via Mammoth
     if (ext === 'docx') {
       if (!buffer) throw new Error('DOCX conversion requires binary file data.');
 
@@ -147,8 +194,23 @@ ${result.value}
       }
     }
 
-    // Markdown conversions
+    // 3. Markdown conversions
     if (ext === 'md' || ext === 'markdown') {
+      // 3.1 Markdown to Slide Deck (HTML Presentation)
+      if (target === 'slide-deck' || target === 'slides') {
+        const slideDeckHtml = await this.generateSlideDeck(baseName, textContent);
+        return {
+          id: req.id,
+          success: true,
+          fileName: `${baseName}.slides.html`,
+          targetFormat: 'html',
+          outputText: slideDeckHtml,
+          isBinary: false,
+          mimeType: 'text/html',
+          sizeBytes: Buffer.byteLength(slideDeckHtml, 'utf-8'),
+        };
+      }
+
       if (target === 'html') {
         const { marked } = await import('marked');
         const parsedBody = await marked.parse(textContent);
@@ -213,7 +275,7 @@ ${parsedBody}
       }
     }
 
-    // Plain Text (.txt) to PDF
+    // 4. Plain Text (.txt) to PDF
     if (ext === 'txt' && target === 'pdf') {
       const pdfBase64 = this.createPdfFromText(baseName, textContent);
       return {
@@ -228,7 +290,7 @@ ${parsedBody}
       };
     }
 
-    // HTML to Markdown
+    // 5. HTML to Markdown
     if (ext === 'html' && (target === 'md' || target === 'markdown')) {
       const md = this.htmlToMarkdown(textContent);
       return {
@@ -276,7 +338,6 @@ ${parsedBody}
       throw new Error('Spreadsheet is empty.');
     }
 
-    // 1. Target: JSON
     if (target === 'json') {
       const objectRows = XLSX.utils.sheet_to_json(worksheet);
       const jsonStr = JSON.stringify(objectRows, null, 2);
@@ -292,7 +353,6 @@ ${parsedBody}
       };
     }
 
-    // 2. Target: Markdown Table
     if (target === 'md' || target === 'markdown' || target === 'markdown-table') {
       const mdTable = this.rowsToMarkdownTable(rows);
       return {
@@ -307,7 +367,6 @@ ${parsedBody}
       };
     }
 
-    // 3. Target: HTML Table
     if (target === 'html' || target === 'html-table') {
       const htmlTable = XLSX.utils.sheet_to_html(worksheet);
       const fullHtml = `<!DOCTYPE html>
@@ -340,7 +399,6 @@ ${parsedBody}
       };
     }
 
-    // 4. Target: CSV
     if (target === 'csv') {
       const csvStr = XLSX.utils.sheet_to_csv(worksheet);
       return {
@@ -370,7 +428,6 @@ ${parsedBody}
       text = Buffer.from(req.dataBase64, 'base64').toString('utf-8');
     }
 
-    // Step 1: Parse input to JS Object
     let dataObj: Record<string, unknown> | unknown[];
 
     if (ext === 'json') {
@@ -386,7 +443,6 @@ ${parsedBody}
       throw new Error(`Unsupported data source format .${ext}`);
     }
 
-    // Step 2: Format to target
     let outputText = '';
     let mimeType = 'text/plain';
 
@@ -421,19 +477,23 @@ ${parsedBody}
   }
 
   /**
-   * Save converted file to disk via VS Code Save Dialog or Workspace
+   * Save converted file to disk via VS Code Save Dialog with optional in-place replacement
    */
   public async saveConvertedFile(
     defaultFileName: string,
     outputDataBase64?: string,
     outputText?: string,
-    defaultDirectory?: string
+    defaultDirectory?: string,
+    originalPath?: string,
+    replaceOriginal?: boolean
   ): Promise<string | null> {
     const ext = path.extname(defaultFileName);
     const filterName = ext ? `${ext.toUpperCase().replace('.', '')} File` : 'All Files';
 
     const defaultUri = defaultDirectory
       ? vscode.Uri.file(path.join(defaultDirectory, defaultFileName))
+      : originalPath
+      ? vscode.Uri.file(path.join(path.dirname(originalPath), defaultFileName))
       : vscode.workspace.workspaceFolders?.[0]
       ? vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, defaultFileName)
       : vscode.Uri.file(defaultFileName);
@@ -458,12 +518,114 @@ ${parsedBody}
     }
 
     fs.writeFileSync(targetUri.fsPath, buffer);
-    vscode.window.showInformationMessage(`Saved: ${path.basename(targetUri.fsPath)}`, 'Open File').then(action => {
-      if (action === 'Open File') {
-        vscode.commands.executeCommand('vscode.open', targetUri);
+
+    // In-place replacement: remove original file if requested
+    if (replaceOriginal && originalPath && fs.existsSync(originalPath)) {
+      try {
+        if (path.resolve(targetUri.fsPath) !== path.resolve(originalPath)) {
+          fs.unlinkSync(originalPath);
+          vscode.window.showInformationMessage(`Replaced original: ${path.basename(originalPath)} with ${path.basename(targetUri.fsPath)}`);
+        }
+      } catch (err: unknown) {
+        console.error('Failed to remove original file:', err);
       }
+    } else {
+      vscode.window.showInformationMessage(`Saved: ${path.basename(targetUri.fsPath)}`, 'Open File').then(action => {
+        if (action === 'Open File') {
+          vscode.commands.executeCommand('vscode.open', targetUri);
+        }
+      });
+    }
+
+    return targetUri.fsPath;
+  }
+
+  /**
+   * Save multiple batch converted files to a selected folder
+   */
+  public async saveBatchFiles(
+    items: { fileName: string; outputDataBase64?: string; outputText?: string; originalPath?: string }[],
+    replaceOriginal?: boolean
+  ): Promise<{ savedCount: number; destinationDir: string } | null> {
+    const defaultUri = vscode.workspace.workspaceFolders?.[0]?.uri;
+    const folderUri = await vscode.window.showOpenDialog({
+      canSelectFiles: false,
+      canSelectFolders: true,
+      canSelectMany: false,
+      defaultUri,
+      openLabel: 'Select Output Destination Folder',
     });
 
+    if (!folderUri || folderUri.length === 0) {
+      return null;
+    }
+
+    const targetDir = folderUri[0].fsPath;
+    let count = 0;
+
+    for (const item of items) {
+      try {
+        const filePath = path.join(targetDir, item.fileName);
+        let buf: Buffer;
+        if (item.outputDataBase64) {
+          buf = Buffer.from(item.outputDataBase64, 'base64');
+        } else if (item.outputText !== undefined) {
+          buf = Buffer.from(item.outputText, 'utf-8');
+        } else {
+          continue;
+        }
+
+        fs.writeFileSync(filePath, buf);
+        count++;
+
+        // Delete original if requested
+        if (replaceOriginal && item.originalPath && fs.existsSync(item.originalPath)) {
+          if (path.resolve(filePath) !== path.resolve(item.originalPath)) {
+            fs.unlinkSync(item.originalPath);
+          }
+        }
+      } catch (err: unknown) {
+        console.error(`Failed to save batch item ${item.fileName}:`, err);
+      }
+    }
+
+    vscode.window.showInformationMessage(`Batch complete: Saved ${count} files to ${path.basename(targetDir)}`);
+    return { savedCount: count, destinationDir: targetDir };
+  }
+
+  /**
+   * Package multiple batch files into a single .ZIP archive
+   */
+  public async saveBatchAsZip(
+    zipFileName: string,
+    items: { fileName: string; outputDataBase64?: string; outputText?: string }[]
+  ): Promise<string | null> {
+    const zip = new JSZip();
+
+    for (const item of items) {
+      if (item.outputDataBase64) {
+        zip.file(item.fileName, Buffer.from(item.outputDataBase64, 'base64'));
+      } else if (item.outputText !== undefined) {
+        zip.file(item.fileName, item.outputText);
+      }
+    }
+
+    const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
+
+    const defaultUri = vscode.workspace.workspaceFolders?.[0]
+      ? vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, zipFileName)
+      : vscode.Uri.file(zipFileName);
+
+    const targetUri = await vscode.window.showSaveDialog({
+      defaultUri,
+      saveLabel: 'Save ZIP Archive',
+      filters: { 'ZIP Archive': ['zip'] },
+    });
+
+    if (!targetUri) return null;
+
+    fs.writeFileSync(targetUri.fsPath, zipBuffer);
+    vscode.window.showInformationMessage(`Exported ZIP: ${path.basename(targetUri.fsPath)}`);
     return targetUri.fsPath;
   }
 
@@ -486,12 +648,10 @@ ${parsedBody}
     const pageHeight = doc.internal.pageSize.getHeight();
     const maxWidth = pageWidth - margin * 2;
 
-    // Header Title
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(18);
     doc.text(title, margin, margin + 10);
 
-    // Body Text with auto-wrapping
     doc.setFont('Helvetica', 'normal');
     doc.setFontSize(10.5);
     const lineHeight = 16;
@@ -508,10 +668,195 @@ ${parsedBody}
       cursorY += lineHeight;
     }
 
-    // Output Base64 string
     const output = doc.output('datauristring');
-    // Strip data URI prefix: data:application/pdf;filename=...;base64,
     return output.split(',')[1] || '';
+  }
+
+  /**
+   * Generate an interactive, standalone HTML slide deck presentation from Markdown
+   */
+  private async generateSlideDeck(title: string, markdown: string): Promise<string> {
+    const { marked } = await import('marked');
+
+    // Split markdown by slide separators: '---' or '___'
+    const rawSlides = markdown
+      .split(/\n---\n|\n___\n/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const slideContents: string[] = [];
+    for (const raw of rawSlides) {
+      slideContents.push(await marked.parse(raw));
+    }
+
+    const total = slideContents.length;
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title} - Slide Deck</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --accent: #0078d4;
+      --accent-glow: rgba(0, 120, 212, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+    .deck-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 40px;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+      min-height: 480px;
+      max-height: 80vh;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      overflow-y: auto;
+      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide.active { display: block; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    h1 { font-size: 2.4em; font-weight: 800; margin-bottom: 0.5em; color: #ffffff; }
+    h2 { font-size: 1.8em; font-weight: 700; margin-bottom: 0.4em; color: var(--accent); }
+    h3 { font-size: 1.3em; margin-bottom: 0.4em; }
+    p, li { font-size: 1.1em; line-height: 1.65; color: var(--text); margin-bottom: 0.8em; }
+    ul, ol { padding-left: 1.5em; margin-bottom: 1em; }
+    code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.2em 0.4em;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #030712;
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 1em;
+    }
+    pre code { background: transparent; padding: 0; }
+    /* Bottom Controls */
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: rgba(0, 0, 0, 0.4);
+      border-top: 1px solid var(--border);
+    }
+    .controls-nav { display: flex; gap: 8px; }
+    .control-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .control-btn:hover { background: var(--accent); color: #fff; }
+    .slide-counter { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+    .progress-bar-track { width: 100%; height: 3px; background: var(--border); }
+    .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.25s ease; }
+  </style>
+</head>
+<body>
+  <div class="progress-bar-track">
+    <div id="progress" class="progress-bar-fill" style="width: ${(1 / total) * 100}%"></div>
+  </div>
+
+  <main class="deck-container">
+    ${slideContents
+      .map(
+        (html, idx) => `
+    <section class="slide ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+      ${html}
+    </section>`
+      )
+      .join('\n')}
+  </main>
+
+  <footer class="deck-controls">
+    <div class="controls-nav">
+      <button class="control-btn" onclick="prevSlide()">❮ Prev</button>
+      <button class="control-btn" onclick="nextSlide()">Next ❯</button>
+      <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    </div>
+    <div id="counter" class="slide-counter">Slide 1 / ${total}</div>
+  </footer>
+
+  <script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+
+    function update() {
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === current));
+      counter.textContent = 'Slide ' + (current + 1) + ' / ' + total;
+      progress.style.width = ((current + 1) / total * 100) + '%';
+    }
+
+    function nextSlide() {
+      if (current < total - 1) { current++; update(); }
+    }
+
+    function prevSlide() {
+      if (current > 0) { current--; update(); }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+      else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+      else if (e.key === 'Home') { current = 0; update(); }
+      else if (e.key === 'End') { current = total - 1; update(); }
+    });
+  </script>
+</body>
+</html>`;
   }
 
   private rowsToMarkdownTable(rows: unknown[][]): string {
@@ -527,7 +872,6 @@ ${parsedBody}
 
     for (let i = 1; i < rows.length; i++) {
       const rowCells = (rows[i] || []).map(cell => String(cell ?? '').replace(/\|/g, '\\|').trim());
-      // Pad cells if row length is less than header
       while (rowCells.length < headers.length) {
         rowCells.push('');
       }

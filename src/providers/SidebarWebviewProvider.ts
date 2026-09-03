@@ -188,8 +188,24 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
       case 'SAVE_CONVERTED_FILE': {
         if (this.converterService) {
-          const { fileName, outputDataBase64, outputText } = (message as any).payload;
-          await this.converterService.saveConvertedFile(fileName, outputDataBase64, outputText);
+          const { fileName, outputDataBase64, outputText, originalPath, replaceOriginal } = (message as any).payload;
+          await this.converterService.saveConvertedFile(fileName, outputDataBase64, outputText, undefined, originalPath, replaceOriginal);
+        }
+        break;
+      }
+
+      case 'SAVE_BATCH_FILES': {
+        if (this.converterService) {
+          const { items, replaceOriginal } = (message as any).payload;
+          await this.converterService.saveBatchFiles(items, replaceOriginal);
+        }
+        break;
+      }
+
+      case 'SAVE_BATCH_ZIP': {
+        if (this.converterService) {
+          const { zipFileName, items } = (message as any).payload;
+          await this.converterService.saveBatchAsZip(zipFileName, items);
         }
         break;
       }

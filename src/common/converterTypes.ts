@@ -1,7 +1,7 @@
 export type ConverterCategory = 'documents' | 'images' | 'spreadsheets' | 'data';
 
-export type DocumentFormat = 'docx' | 'md' | 'txt' | 'html' | 'pdf';
-export type ImageFormat = 'png' | 'jpg' | 'jpeg' | 'webp' | 'svg' | 'ico' | 'bmp' | 'base64';
+export type DocumentFormat = 'docx' | 'md' | 'txt' | 'html' | 'pdf' | 'slide-deck';
+export type ImageFormat = 'png' | 'jpg' | 'jpeg' | 'webp' | 'svg' | 'ico' | 'bmp' | 'base64' | 'multi-res-png';
 export type SpreadsheetFormat = 'xlsx' | 'xls' | 'csv' | 'tsv' | 'json' | 'markdown-table' | 'html-table';
 export type DataFormat = 'json' | 'yaml' | 'yml' | 'xml' | 'toml' | 'env';
 
@@ -12,6 +12,9 @@ export interface ConversionOptionConfig {
   indent?: number; // 2 or 4 for JSON/YAML
   sheetIndex?: number;
   includeHeaders?: boolean;
+  replaceOriginal?: boolean;
+  originalPath?: string;
+  multiResolutions?: number[]; // [16, 32, 64, 128, 256, 512]
 }
 
 export interface FileConversionRequest {
@@ -34,6 +37,19 @@ export interface FileConversionResult {
   isBinary: boolean;
   mimeType: string;
   sizeBytes: number;
+  error?: string;
+  multiFiles?: { fileName: string; dataBase64: string; sizeBytes: number }[];
+}
+
+export interface BatchFileItem {
+  id: string;
+  file: File;
+  name: string;
+  size: number;
+  ext: string;
+  targetFormat: string;
+  status: 'pending' | 'converting' | 'success' | 'error';
+  result?: FileConversionResult;
   error?: string;
 }
 

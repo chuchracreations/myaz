@@ -1,5 +1,5 @@
 export interface ImageConversionOptions {
-  format: 'png' | 'jpg' | 'jpeg' | 'webp' | 'ico' | 'base64';
+  format: 'png' | 'jpg' | 'jpeg' | 'webp' | 'ico' | 'base64' | 'multi-res-png';
   quality?: number; // 0.1 to 1.0
   maxWidth?: number;
   maxHeight?: number;
@@ -13,6 +13,15 @@ export interface ConvertedImageResult {
   height: number;
   format: string;
   mimeType: string;
+  multiFiles?: MultiResPngItem[];
+}
+
+export interface MultiResPngItem {
+  size: number;
+  fileName: string;
+  dataUrl: string;
+  base64: string;
+  sizeBytes: number;
 }
 
 /**
@@ -20,9 +29,26 @@ export interface ConvertedImageResult {
  */
 export async function convertImage(
   fileOrUrl: File | string,
-  options: ImageConversionOptions
+  options: ImageConversionOptions,
+  baseName = 'image'
 ): Promise<ConvertedImageResult> {
   const img = await loadImage(fileOrUrl);
+
+  // Multi-Resolution SVG/PNG Mode
+  if (options.format === 'multi-res-png') {
+    const multiFiles = await convertSvgToMultiRes(fileOrUrl, baseName);
+    const primary = multiFiles[multiFiles.length - 1]; // largest e.g. 512px
+    return {
+      dataUrl: primary.dataUrl,
+      base64: primary.base64,
+      sizeBytes: primary.sizeBytes,
+      width: primary.size,
+      height: primary.size,
+      format: 'multi-res-png',
+      mimeType: 'image/png',
+      multiFiles,
+    };
+  }
 
   let targetWidth = img.naturalWidth || img.width;
   let targetHeight = img.naturalHeight || img.height;
@@ -79,6 +105,43 @@ export async function convertImage(
   };
 }
 
+/**
+ * Convert SVG or Image into a full set of PNG icon resolutions
+ */
+export async function convertSvgToMultiRes(
+  fileOrUrl: File | string,
+  baseName: string,
+  sizes = [16, 32, 64, 128, 256, 512]
+): Promise<MultiResPngItem[]> {
+  const img = await loadImage(fileOrUrl);
+  const results: MultiResPngItem[] = [];
+
+  for (const size of sizes) {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) continue;
+
+    ctx.clearRect(0, 0, size, size);
+    ctx.drawImage(img, 0, 0, size, size);
+
+    const dataUrl = canvas.toDataURL('image/png');
+    const base64 = dataUrl.split(',')[1] || '';
+    const sizeBytes = Math.round((base64.length * 3) / 4);
+
+    results.push({
+      size,
+      fileName: `${baseName}-${size}x${size}.png`,
+      dataUrl,
+      base64,
+      sizeBytes,
+    });
+  }
+
+  return results;
+}
+
 function loadImage(fileOrUrl: File | string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -115,29 +178,24 @@ async function generateIco(img: HTMLImageElement, size = 32): Promise<ConvertedI
   const pngBase64 = pngDataUrl.split(',')[1];
   const pngBinary = Uint8Array.from(atob(pngBase64), c => c.charCodeAt(0));
 
-  // Build ICO header + directory entry wrapping PNG data
   const icoBuffer = new Uint8Array(6 + 16 + pngBinary.length);
   const view = new DataView(icoBuffer.buffer);
 
-  // ICONDIR: reserved (0), type (1 for icon), count (1)
   view.setUint16(0, 0, true);
   view.setUint16(2, 1, true);
   view.setUint16(4, 1, true);
 
-  // ICONDIRENTRY: width, height, colors, reserved, planes, bpp, bytesInRes, offset
   icoBuffer[6] = size >= 256 ? 0 : size;
   icoBuffer[7] = size >= 256 ? 0 : size;
-  icoBuffer[8] = 0; // color palette
-  icoBuffer[9] = 0; // reserved
-  view.setUint16(10, 1, true); // color planes
-  view.setUint16(12, 32, true); // bit count
-  view.setUint32(14, pngBinary.length, true); // size of image data
-  view.setUint32(18, 22, true); // offset of image data (6 + 16)
+  icoBuffer[8] = 0;
+  icoBuffer[9] = 0;
+  view.setUint16(10, 1, true);
+  view.setUint16(12, 32, true);
+  view.setUint32(14, pngBinary.length, true);
+  view.setUint32(18, 22, true);
 
-  // Append PNG payload
   icoBuffer.set(pngBinary, 22);
 
-  // Base64 encode
   let binaryStr = '';
   for (let i = 0; i < icoBuffer.length; i++) {
     binaryStr += String.fromCharCode(icoBuffer[i]);
