@@ -1,12 +1,14 @@
 import * as vscode from 'vscode';
 import { Snippet } from '../../common/types';
 import { SidebarWebviewProvider } from '../../providers/SidebarWebviewProvider';
+import { SnippetService } from './snippetService';
 
 export class SnippetCommands {
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly sidebarProvider: SidebarWebviewProvider
-  ) {}
+    private readonly sidebarProvider: SidebarWebviewProvider,
+    private readonly snippetService: SnippetService
+  ) { }
 
   public registerCommands(): vscode.Disposable[] {
     const disposables: vscode.Disposable[] = [];
@@ -15,11 +17,39 @@ export class SnippetCommands {
     disposables.push(
       vscode.commands.registerCommand('myaz.snippets.insert', async (snippet?: Snippet) => {
         if (!snippet) {
-          vscode.window.showInformationMessage('Select a snippet from the MyAz sidebar to insert.');
+          vscode.window.showInformationMessage('Select a snippet from the myaz sidebar to insert.');
           return;
         }
         await this.insertSnippetIntoEditor(snippet);
       })
+    );
+
+    // Command: Open workspace storage file on device
+    disposables.push(
+      vscode.commands.registerCommand('myaz.openStorageFile', async () => {
+        await this.snippetService.openStorageFile();
+      })
+    );
+
+    // Command: Export workspace data to single JSON file
+    const exportHandler = async () => {
+      await this.snippetService.exportToFile();
+    };
+    disposables.push(
+      vscode.commands.registerCommand('myaz.exportData', exportHandler),
+      vscode.commands.registerCommand('myaz.exportSnippets', exportHandler)
+    );
+
+    // Command: Import workspace data from JSON file
+    const importHandler = async () => {
+      const count = await this.snippetService.importFromFile();
+      if (count > 0) {
+        this.sidebarProvider.syncSnippets();
+      }
+    };
+    disposables.push(
+      vscode.commands.registerCommand('myaz.importData', importHandler),
+      vscode.commands.registerCommand('myaz.importSnippets', importHandler)
     );
 
     // Command: Create snippet from current editor selection
@@ -27,7 +57,7 @@ export class SnippetCommands {
       vscode.commands.registerCommand('myaz.snippets.createFromSelection', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-          vscode.window.showWarningMessage('MyAz: Open a file and select text to save as a snippet.');
+          vscode.window.showWarningMessage('myaz: Open a file and select text to save as a snippet.');
           return;
         }
 
@@ -35,7 +65,7 @@ export class SnippetCommands {
         const selectedText = editor.document.getText(selection);
 
         if (!selectedText.trim()) {
-          vscode.window.showWarningMessage('MyAz: Please select some text in the editor first.');
+          vscode.window.showWarningMessage('myaz: Please select some text in the editor first.');
           return;
         }
 
@@ -65,14 +95,14 @@ export class SnippetCommands {
   public async insertSnippetIntoEditor(snippet: Snippet): Promise<boolean> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-      vscode.window.showWarningMessage('MyAz: Open a file editor where you want to insert this snippet.');
+      vscode.window.showWarningMessage('myaz: Open a file editor where you want to insert this snippet.');
       return false;
     }
 
     const snippetString = new vscode.SnippetString(snippet.body);
     const success = await editor.insertSnippet(snippetString);
     if (success) {
-      vscode.window.setStatusBarMessage(`MyAz: Inserted "${snippet.title}"`, 2500);
+      vscode.window.setStatusBarMessage(`myaz: Inserted "${snippet.title}"`, 2500);
     }
     return success;
   }

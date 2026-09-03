@@ -75,6 +75,13 @@ h1, h2, h3, h4, h5, h6 {
 
 code, pre, .font-mono {
   font-family: var(--font-mono);
+  background: transparent;
+}
+
+code {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
 }
 
 /* Container */
@@ -82,16 +89,16 @@ code, pre, .font-mono {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 10px;
-  gap: 12px;
+  padding: 4px 8px 10px 8px;
+  gap: 8px;
 }
 
 /* Header */
 .app-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-bottom: 8px;
+  gap: 6px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -117,6 +124,7 @@ code, pre, .font-mono {
   font-size: 14px;
   font-weight: 800;
   letter-spacing: -0.03em;
+  text-transform: lowercase;
   background: linear-gradient(135deg, #ffffff 40%, #0078d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -403,12 +411,98 @@ code, pre, .font-mono {
 .code-preview {
   font-family: var(--font-mono);
   font-size: 11px;
-  line-height: 1.5;
-  padding: 8px;
+  line-height: 1.55;
+  padding: 8px 10px;
   color: #e2e8f0;
   overflow-x: auto;
   max-height: 140px;
   white-space: pre;
+  background: transparent !important;
+  margin: 0;
+}
+
+.code-preview code {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: block;
+}
+
+/* Syntax Highlighting (VS Code Dark+ Style) */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #cccccc;
+  opacity: 0.85;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #b5cea8;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #ce9178;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d4d4d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #569cd6;
+  font-weight: 600;
+}
+
+.token.function,
+.token.class-name {
+  color: #dcdcaa;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #9cdcfe;
+}
+
+.token.type-annotation,
+.token.interface,
+.token.class {
+  color: #4ec9b0;
+}
+
+/* Tabstops ($1, ${1:label}, $0) - clean variable indicator */
+.snippet-tabstop {
+  color: #f59e0b;
+  background: transparent !important;
+  border: none !important;
+  font-weight: 600;
+  text-decoration: underline dotted #f59e0b;
 }
 
 /* Card Actions */

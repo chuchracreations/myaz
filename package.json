@@ -1,6 +1,6 @@
 {
   "name": "myaz-extension",
-  "displayName": "MyAz Assistant",
+  "displayName": "myaz",
   "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
   "version": "0.1.0",
   "publisher": "myaz",
@@ -20,7 +20,7 @@
       "activitybar": [
         {
           "id": "myaz-sidebar-container",
-          "title": "MyAz",
+          "title": "myaz",
           "icon": "media/icon.svg"
         }
       ]
@@ -30,24 +30,39 @@
         {
           "type": "webview",
           "id": "myaz.sidebarView",
-          "name": "MyAz Hub"
+          "name": ""
         }
       ]
     },
     "commands": [
       {
         "command": "myaz.snippets.createFromSelection",
-        "title": "MyAz: Save Selection as Snippet",
+        "title": "myaz: Save Selection as Snippet",
         "icon": "$(add)"
       },
       {
         "command": "myaz.snippets.insert",
-        "title": "MyAz: Insert Snippet",
+        "title": "myaz: Insert Snippet",
         "icon": "$(insert)"
       },
       {
+        "command": "myaz.openStorageFile",
+        "title": "myaz: Open Workspace Data File",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "myaz.exportData",
+        "title": "myaz: Export Workspace Data",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "myaz.importData",
+        "title": "myaz: Import Workspace Data",
+        "icon": "$(cloud-upload)"
+      },
+      {
         "command": "myaz.refresh",
-        "title": "MyAz: Refresh View",
+        "title": "myaz: Refresh View",
         "icon": "$(refresh)"
       }
     ],
@@ -57,13 +72,6 @@
           "command": "myaz.snippets.createFromSelection",
           "when": "editorHasSelection",
           "group": "myaz@1"
-        }
-      ],
-      "view/title": [
-        {
-          "command": "myaz.refresh",
-          "when": "view == myaz.sidebarView",
-          "group": "navigation"
         }
       ]
     }
@@ -76,11 +84,13 @@
   },
   "dependencies": {
     "lucide-react": "^1.16.0",
+    "prismjs": "^1.30.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
+    "@types/prismjs": "^1.26.6",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/vscode": "^1.85.0",

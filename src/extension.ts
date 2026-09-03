@@ -4,7 +4,7 @@ import { SnippetCommands } from './modules/snippets/snippetCommands';
 import { SidebarWebviewProvider } from './providers/SidebarWebviewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('MyAz Extension is now active!');
+  console.log('myaz extension is now active!');
 
   // Initialize services
   const snippetService = new SnippetService(context);
@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   const sidebarProvider = new SidebarWebviewProvider(context.extensionUri, snippetService);
 
   // Initialize and register commands
-  const snippetCommands = new SnippetCommands(context, sidebarProvider);
+  const snippetCommands = new SnippetCommands(context, sidebarProvider, snippetService);
   sidebarProvider.setSnippetCommands(snippetCommands);
 
   // Register Webview View Provider
@@ -36,11 +36,11 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('myaz.refresh', () => {
       sidebarProvider.syncSnippets();
-      vscode.window.setStatusBarMessage('MyAz: Synced with storage', 2000);
+      vscode.window.setStatusBarMessage('myaz: Synced with storage', 2000);
     })
   );
 }
 
 export function deactivate() {
-  console.log('MyAz Extension deactivated.');
+  console.log('myaz Extension deactivated.');
 }

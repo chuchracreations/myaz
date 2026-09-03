@@ -3,7 +3,8 @@ import { ModuleDefinition, ModuleId, Snippet } from '../../src/common/types';
 import { vscode } from './vscodeApi';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
-import { Code2, Plus, Sparkles, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { OctopusIcon } from './components/OctopusIcon';
+import { Plus, RefreshCw, CheckCircle2, FolderOpen, Download, Upload } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
   { id: 'snippets', title: 'Snippets', enabled: true },
@@ -14,6 +15,7 @@ const MODULES: ModuleDefinition[] = [
 export const App: React.FC = () => {
   const [activeModule, setActiveModule] = useState<ModuleId>('snippets');
   const [snippets, setSnippets] = useState<Snippet[]>([]);
+  const [storagePath, setStoragePath] = useState<string>('');
   const [activeEditorLanguage, setActiveEditorLanguage] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<Partial<Snippet> | null>(null);
@@ -30,6 +32,9 @@ export const App: React.FC = () => {
       switch (msg.type) {
         case 'SYNC_SNIPPETS':
           setSnippets(msg.payload.snippets);
+          if (msg.payload.storagePath) {
+            setStoragePath(msg.payload.storagePath);
+          }
           break;
 
         case 'ACTIVE_EDITOR_LANGUAGE':
@@ -98,7 +103,20 @@ export const App: React.FC = () => {
 
   const handleRefresh = () => {
     vscode.postMessage({ type: 'GET_SNIPPETS' });
-    showToast('Refreshed snippets');
+    showToast('Refreshed workspace');
+  };
+
+  const handleOpenStorageFile = () => {
+    vscode.postMessage({ type: 'OPEN_STORAGE_FILE' });
+    showToast('Opened workspace data');
+  };
+
+  const handleExport = () => {
+    vscode.postMessage({ type: 'EXPORT_SNIPPETS' });
+  };
+
+  const handleImport = () => {
+    vscode.postMessage({ type: 'IMPORT_SNIPPETS' });
   };
 
   return (
@@ -107,14 +125,38 @@ export const App: React.FC = () => {
       <header className="app-header">
         <div className="brand-row">
           <div className="brand-identity">
-            <Code2 className="brand-icon" size={18} />
-            <h1 className="brand-title">MyAz</h1>
+            <OctopusIcon className="brand-icon" size={19} />
+            <h1 className="brand-title">myaz</h1>
           </div>
           <div className="header-actions">
             <button
               className="btn-icon"
+              onClick={handleExport}
+              title="Export workspace data (JSON)"
+              aria-label="Export Workspace Data"
+            >
+              <Download size={13} />
+            </button>
+            <button
+              className="btn-icon"
+              onClick={handleImport}
+              title="Import workspace data (JSON)"
+              aria-label="Import Workspace Data"
+            >
+              <Upload size={13} />
+            </button>
+            <button
+              className="btn-icon"
+              onClick={handleOpenStorageFile}
+              title={storagePath ? `Open workspace data on device:\n${storagePath}` : 'Open workspace data file'}
+              aria-label="Open Workspace Data"
+            >
+              <FolderOpen size={13} />
+            </button>
+            <button
+              className="btn-icon"
               onClick={handleRefresh}
-              title="Refresh snippets"
+              title="Refresh workspace"
               aria-label="Refresh"
             >
               <RefreshCw size={13} />

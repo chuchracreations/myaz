@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Snippet } from '../../../../src/common/types';
+import { highlightSnippetCode } from '../../utils/syntaxHighlight';
 import { Play, Copy, Check, Star, Edit3, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface SnippetCardProps {
@@ -30,6 +31,10 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
 
   const lineCount = snippet.body.split('\n').length;
   const isMultiLine = lineCount > 4;
+
+  const highlightedCode = useMemo(() => {
+    return highlightSnippetCode(snippet.body, snippet.language);
+  }, [snippet.body, snippet.language]);
 
   return (
     <div className="snippet-card">
@@ -67,7 +72,7 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
         </div>
       )}
 
-      {/* Code preview block */}
+      {/* Code preview block with syntax highlighting */}
       <div className="code-preview-container">
         <pre
           className="code-preview"
@@ -75,7 +80,7 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
             maxHeight: isExpanded ? '400px' : '100px',
           }}
         >
-          <code>{snippet.body}</code>
+          <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
         </pre>
         {isMultiLine && (
           <button

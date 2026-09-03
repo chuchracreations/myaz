@@ -68,7 +68,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
   }, [snippets, searchQuery, selectedFilter]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {/* Search Input */}
       <div className="search-container">
         <Search size={13} className="search-icon" />

@@ -29,12 +29,13 @@ export type WebviewToHostMessage =
   | { type: 'TOGGLE_FAVORITE'; payload: { id: string } }
   | { type: 'INSERT_SNIPPET'; payload: { snippet: Snippet } }
   | { type: 'COPY_SNIPPET'; payload: { snippet: Snippet } }
+  | { type: 'OPEN_STORAGE_FILE' }
   | { type: 'SHOW_MESSAGE'; payload: { text: string; level?: 'info' | 'warn' | 'error' } }
   | { type: 'EXPORT_SNIPPETS' }
   | { type: 'IMPORT_SNIPPETS' };
 
 export type HostToWebviewMessage =
-  | { type: 'SYNC_SNIPPETS'; payload: { snippets: Snippet[] } }
+  | { type: 'SYNC_SNIPPETS'; payload: { snippets: Snippet[]; storagePath?: string } }
   | { type: 'OPEN_CREATE_SNIPPET_MODAL'; payload?: Partial<Snippet> }
   | { type: 'ACTIVE_EDITOR_LANGUAGE'; payload: { languageId: string } }
   | { type: 'ACTIVE_MODULE_CHANGED'; payload: { moduleId: ModuleId } };
