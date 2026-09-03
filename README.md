@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="media/logo.png" alt="Coders Canvas Logo" width="300" style="max-width: 100%; height: auto;" />
+  <img src="https://raw.githubusercontent.com/himanshuchuchra/coders-canvas/main/media/logo.png" alt="Coders Canvas Logo" width="300" style="max-width: 100%; height: auto;" />
 
   # Coders Canvas
 
