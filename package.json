@@ -3,7 +3,7 @@
   "displayName": "myaz",
   "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
   "version": "0.1.0",
-  "publisher": "myaz",
+  "publisher": "himanshuchuchra",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -80,7 +80,7 @@
     "vscode:prepublish": "npm run build",
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
-    "package": "vsce package --allow-missing-repository --skip-license",
+    "package": "npx @vscode/vsce package --allow-missing-repository --skip-license",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.webview.json --noEmit"
   },
   "dependencies": {
