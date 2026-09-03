@@ -1,0 +1,6 @@
+"ID",Feature,Category,Status,MemoryMB
+101,Batch Conversions,Core,Shipped,12.4
+102,SVG Multi-Resolution,Graphics,Shipped,8.1
+103,Slide Deck Generator,Docs,Shipped,15.2
+104,PDF Extractor,Docs,Shipped,22
+105,In-Place Replacement,Workflow,Shipped,4.5

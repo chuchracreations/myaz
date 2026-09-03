@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078d4" />
+      <stop offset="100%" stop-color="#00d2ff" />
+    </linearGradient>
+    <linearGradient id="sparkleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded card -->
+  <rect width="512" height="512" rx="100" fill="url(#bgGrad)" stroke="#334155" stroke-width="8" />
+
+  <!-- Code bracket left -->
+  <path d="M 170 170 L 90 256 L 170 342" fill="none" stroke="url(#accentGrad)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Code bracket right -->
+  <path d="M 342 170 L 422 256 L 342 342" fill="none" stroke="url(#accentGrad)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Center Slash / Canvas Sparkle -->
+  <line x1="280" y1="150" x2="232" y2="362" stroke="#e2e8f0" stroke-width="28" stroke-linecap="round" />
+
+  <!-- Orbiting dots -->
+  <circle cx="256" cy="110" r="14" fill="url(#sparkleGrad)" />
+  <circle cx="256" cy="402" r="14" fill="url(#sparkleGrad)" />
+</svg>

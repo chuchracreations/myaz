@@ -1,0 +1,17 @@
+{
+  "appName": "Coders Canvas",
+  "version": "0.1.1",
+  "port": 8080,
+  "features": {
+    "offlineMode": true,
+    "batchConversion": true,
+    "svgMultiRes": true,
+    "slideDeck": true,
+    "pdfExtraction": true
+  },
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "canvas_db"
+  }
+}
