@@ -367,13 +367,8 @@ export const ConvertersView: React.FC = () => {
               textData: e.target?.result as string,
             };
           } else {
-            const arrayBuf = e.target?.result as ArrayBuffer;
-            let binary = '';
-            const bytes = new Uint8Array(arrayBuf);
-            for (let i = 0; i < bytes.byteLength; i++) {
-              binary += String.fromCharCode(bytes[i]);
-            }
-            const b64 = btoa(binary);
+            const dataUrl = (e.target?.result as string) || '';
+            const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
             reqPayload = {
               id: String(Date.now()),
               fileName: selectedFile.name,
@@ -413,7 +408,7 @@ export const ConvertersView: React.FC = () => {
       if (isTextSource) {
         reader.readAsText(selectedFile);
       } else {
-        reader.readAsArrayBuffer(selectedFile);
+        reader.readAsDataURL(selectedFile);
       }
     } catch (err: unknown) {
       setIsConverting(false);
@@ -510,21 +505,17 @@ export const ConvertersView: React.FC = () => {
 
       reader.onload = e => {
         if (isText) {
-          resolve({ isText: true, content: e.target?.result as string });
+          resolve({ isText: true, content: (e.target?.result as string) || '' });
         } else {
-          const arrayBuf = e.target?.result as ArrayBuffer;
-          let binary = '';
-          const bytes = new Uint8Array(arrayBuf);
-          for (let i = 0; i < bytes.byteLength; i++) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-          resolve({ isText: false, content: btoa(binary) });
+          const dataUrl = (e.target?.result as string) || '';
+          const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+          resolve({ isText: false, content: b64 });
         }
       };
 
       reader.onerror = reject;
       if (isText) reader.readAsText(file);
-      else reader.readAsArrayBuffer(file);
+      else reader.readAsDataURL(file);
     });
   };
 

@@ -3,16 +3,6 @@ import * as path from 'path';
 import JSZip from 'jszip';
 import { ConverterService } from '../src/modules/converters/converterService';
 
-if (typeof (globalThis as any).DOMMatrix === 'undefined') {
-  (globalThis as any).DOMMatrix = class DOMMatrix {};
-}
-if (typeof (globalThis as any).ImageData === 'undefined') {
-  (globalThis as any).ImageData = class ImageData {};
-}
-if (typeof (globalThis as any).Path2D === 'undefined') {
-  (globalThis as any).Path2D = class Path2D {};
-}
-
 // Mock minimal vscode context
 const mockContext = {} as any;
 const service = new ConverterService(mockContext);

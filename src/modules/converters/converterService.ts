@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import * as yaml from 'js-yaml';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import JSZip from 'jszip';
+import * as zlib from 'zlib';
 import { FileConversionRequest, FileConversionResult } from '../../common/converterTypes';
 
 export class ConverterService {
@@ -74,15 +75,10 @@ export class ConverterService {
     if (ext === 'pdf') {
       if (!buffer) throw new Error('PDF extraction requires binary file data.');
 
-      const { PDFParse } = await import('pdf-parse');
-      const parser = new (PDFParse as any)({ data: buffer });
-      const textResult = await parser.getText();
-      const rawText = typeof textResult === 'string' ? textResult : (textResult as any)?.text || '';
-      const pageCount = (textResult as any)?.total || (textResult as any)?.pages?.length || 1;
-      await parser.destroy();
+      const { totalPages, markdown, text } = this.parsePdfBuffer(buffer);
 
       if (target === 'md' || target === 'markdown') {
-        const md = `# Extracted Content: ${baseName}\n\n*Source: ${req.fileName} • Pages: ${pageCount}*\n\n---\n\n${rawText.trim()}`;
+        const md = `# Extracted Content: ${baseName}\n\n*Source: ${req.fileName} • Pages: ${totalPages}*\n\n---\n\n${markdown.trim()}`;
         return {
           id: req.id,
           success: true,
@@ -101,10 +97,10 @@ export class ConverterService {
           success: true,
           fileName: targetFileName,
           targetFormat: target,
-          outputText: rawText.trim(),
+          outputText: text.trim(),
           isBinary: false,
           mimeType: 'text/plain',
-          sizeBytes: Buffer.byteLength(rawText, 'utf-8'),
+          sizeBytes: Buffer.byteLength(text, 'utf-8'),
         };
       }
 
@@ -934,5 +930,75 @@ ${parsedBody}
     }
 
     return lines.join('\n');
+  }
+
+  private cleanPdfString(raw: string): string {
+    return raw
+      .replace(/\\([0-7]{1,3})/g, (_, oct) => String.fromCharCode(parseInt(oct, 8)))
+      .replace(/\\([()\\])/g, '$1')
+      .replace(/\\n/g, '\n')
+      .replace(/\\r/g, '\r')
+      .replace(/\\t/g, '\t');
+  }
+
+  private parsePdfBuffer(buffer: Buffer): { totalPages: number; markdown: string; text: string } {
+    const binaryStr = buffer.toString('binary');
+    const streamRegex = /stream\r?\n([\s\S]*?)\r?\nendstream/g;
+    let match: RegExpExecArray | null;
+    const extractedLines: string[] = [];
+
+    while ((match = streamRegex.exec(binaryStr)) !== null) {
+      const streamContent = match[1];
+      let decompressed = '';
+      try {
+        decompressed = zlib.inflateSync(Buffer.from(streamContent, 'binary')).toString('latin1');
+      } catch {
+        try {
+          decompressed = zlib.inflateRawSync(Buffer.from(streamContent, 'binary')).toString('latin1');
+        } catch {
+          decompressed = streamContent;
+        }
+      }
+
+      // 1. Literal strings: (text) Tj
+      const tjRegex = /\(([\s\S]*?)\)\s*Tj/g;
+      let tjMatch: RegExpExecArray | null;
+      while ((tjMatch = tjRegex.exec(decompressed)) !== null) {
+        const t = this.cleanPdfString(tjMatch[1]);
+        if (t.trim()) extractedLines.push(t.trim());
+      }
+
+      // 2. String array: [(t1) 120 (t2)] TJ
+      const tjArrayRegex = /\[([\s\S]*?)\]\s*TJ/g;
+      let tjaMatch: RegExpExecArray | null;
+      while ((tjaMatch = tjArrayRegex.exec(decompressed)) !== null) {
+        const inner = tjaMatch[1];
+        const strParts = [...inner.matchAll(/\(([\s\S]*?)\)/g)].map(m => this.cleanPdfString(m[1]));
+        const combined = strParts.join('').trim();
+        if (combined) extractedLines.push(combined);
+      }
+
+      // 3. Hex strings: <48656c6c6f> Tj
+      const hexRegex = /<([0-9a-fA-F\s]+)>\s*Tj/g;
+      let hexMatch: RegExpExecArray | null;
+      while ((hexMatch = hexRegex.exec(decompressed)) !== null) {
+        const hex = hexMatch[1].replace(/\s+/g, '');
+        let decoded = '';
+        for (let i = 0; i < hex.length; i += 2) {
+          decoded += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        }
+        if (decoded.trim()) extractedLines.push(decoded.trim());
+      }
+    }
+
+    const pageMatches = binaryStr.match(/\/Type\s*\/Page\b/g);
+    const totalPages = pageMatches ? pageMatches.length : 1;
+    const cleanedLines = extractedLines.filter(l => l.trim().length > 0);
+
+    return {
+      totalPages,
+      text: cleanedLines.join('\n'),
+      markdown: cleanedLines.join('\n\n'),
+    };
   }
 }

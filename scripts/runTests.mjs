@@ -41,7 +41,6 @@ async function main() {
     bundle: true,
     outfile,
     plugins: [mockVscodePlugin],
-    external: ['pdf-parse'],
     format: 'cjs',
     platform: 'node',
     target: 'node18',
