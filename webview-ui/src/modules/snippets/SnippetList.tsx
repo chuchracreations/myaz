@@ -137,39 +137,6 @@ export const SnippetList: React.FC<SnippetListProps> = ({
         })}
       </div>
 
-      {/* Snippets Count Indicator */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '11px',
-          color: 'var(--text-muted)',
-          padding: '0 2px',
-        }}
-      >
-        <span>
-          Showing {filteredSnippets.length} {filteredSnippets.length === 1 ? 'snippet' : 'snippets'}
-        </span>
-        {searchQuery && (
-          <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedFilter('all');
-            }}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--accent-color)',
-              fontSize: '11px',
-              cursor: 'pointer',
-            }}
-          >
-            Reset filters
-          </button>
-        )}
-      </div>
-
       {/* Snippet Cards List */}
       {filteredSnippets.length > 0 ? (
         <div className="snippets-grid">
