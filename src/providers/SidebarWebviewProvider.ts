@@ -163,6 +163,9 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     const styleUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this.extensionUri, 'dist', 'webview.css')
     );
+    const logoUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this.extensionUri, 'media', 'logo.png')
+    );
 
     const nonce = getNonce();
 
@@ -177,6 +180,9 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${styleUri}">
+  <script nonce="${nonce}">
+    window.__LOGO_URI__ = "${logoUri}";
+  </script>
 </head>
 <body>
   <div id="root"></div>

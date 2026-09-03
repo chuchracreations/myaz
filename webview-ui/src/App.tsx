@@ -119,13 +119,24 @@ export const App: React.FC = () => {
     vscode.postMessage({ type: 'IMPORT_SNIPPETS' });
   };
 
+  const logoUri = typeof window !== 'undefined' ? (window as unknown as { __LOGO_URI__?: string }).__LOGO_URI__ : undefined;
+
   return (
     <div className="app-container">
       {/* Header Bar */}
       <header className="app-header">
         <div className="brand-row">
           <div className="brand-identity">
-            <OctopusIcon className="brand-icon" size={19} />
+            {logoUri ? (
+              <img
+                src={logoUri}
+                alt="Coders Canvas Logo"
+                className="brand-icon"
+                style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'contain' }}
+              />
+            ) : (
+              <OctopusIcon className="brand-icon" size={19} />
+            )}
             <h1 className="brand-title">Coders Canvas</h1>
           </div>
           <div className="header-actions">

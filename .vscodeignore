@@ -7,3 +7,4 @@ tsconfig.webview.json
 node_modules/**
 .gitignore
 *.vsix
+coderscanvaslogo.png

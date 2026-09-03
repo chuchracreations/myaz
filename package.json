@@ -4,7 +4,7 @@
   "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
   "version": "0.1.0",
   "publisher": "himanshuchuchra",
-  "icon": "coderscanvaslogo.png",
+  "icon": "media/logo.png",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -22,7 +22,7 @@
         {
           "id": "coders-canvas-container",
           "title": "Coders Canvas",
-          "icon": "media/icon.svg"
+          "icon": "media/logo.png"
         }
       ]
     },
