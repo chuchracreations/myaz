@@ -5,7 +5,28 @@ import { Snippet } from '../../common/types';
 
 const STORAGE_KEY = 'coders-canvas.snippets';
 
-const DEFAULT_SNIPPETS: Snippet[] = [];
+const DEFAULT_SNIPPETS: Snippet[] = [
+  {
+    id: 'welcome-snippet',
+    title: 'Welcome to Coders Canvas ✨',
+    prefix: 'welcome',
+    description: 'Quick starter snippet — press Tab to jump through placeholders',
+    language: 'javascript',
+    tags: ['welcome', 'starter'],
+    isFavorite: true,
+    body: `// 🎨 Welcome to Coders Canvas! Press TAB to navigate:
+const coder = {
+  name: "\${1:Developer}",
+  workspace: "Coders Canvas",
+  status: "Ready to build \${2:something awesome} 🚀",
+};
+
+console.log(coder);
+\${0}`,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+];
 
 export class SnippetService {
   private readonly storageFilePath: string;
@@ -214,9 +235,10 @@ export class SnippetService {
         const list = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
         if (Array.isArray(list)) {
           const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-          this.context.globalState.update(STORAGE_KEY, userOnly);
-          if (userOnly.length !== list.length) {
-            this.persistToFile(userOnly);
+          const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
+          this.context.globalState.update(STORAGE_KEY, finalList);
+          if (finalList.length !== list.length) {
+            this.persistToFile(finalList);
           }
           return;
         }
@@ -226,11 +248,12 @@ export class SnippetService {
       const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>('myaz.snippets');
       if (existing && existing.length > 0) {
         const userOnly = existing.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-        this.context.globalState.update(STORAGE_KEY, userOnly);
-        this.persistToFile(userOnly);
+        const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
+        this.context.globalState.update(STORAGE_KEY, finalList);
+        this.persistToFile(finalList);
       } else {
-        this.context.globalState.update(STORAGE_KEY, []);
-        this.persistToFile([]);
+        this.context.globalState.update(STORAGE_KEY, DEFAULT_SNIPPETS);
+        this.persistToFile(DEFAULT_SNIPPETS);
       }
     } catch (err) {
       console.error('Failed to initialize workspace file storage:', err);
@@ -263,9 +286,10 @@ export class SnippetService {
         const content = fs.readFileSync(this.storageFilePath, 'utf-8');
         const parsed = JSON.parse(content);
         const list = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
-        if (Array.isArray(list)) {
+        if (Array.isArray(list) && list.length > 0) {
           const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-          return userOnly.sort((a, b) => {
+          const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
+          return finalList.sort((a, b) => {
             if (a.isFavorite !== b.isFavorite) {
               return a.isFavorite ? -1 : 1;
             }
@@ -277,8 +301,14 @@ export class SnippetService {
       // fallback to globalState
     }
 
-    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || [];
-    return list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
+    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY);
+    if (list && list.length > 0) {
+      const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
+      if (userOnly.length > 0) {
+        return userOnly;
+      }
+    }
+    return DEFAULT_SNIPPETS;
   }
 
   public save(data: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }): Snippet {
