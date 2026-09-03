@@ -3,10 +3,12 @@ import { ModuleDefinition, ModuleId, Snippet } from '../../src/common/types';
 import { vscode } from './vscodeApi';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
+import { ConvertersView } from './modules/converters/ConvertersView';
 import { CheckCircle2 } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
   { id: 'snippets', title: 'Snippets', enabled: true },
+  { id: 'converters', title: 'Converters', enabled: true },
   { id: 'prompts', title: 'AI Prompts', badge: 'Soon', enabled: false },
   { id: 'templates', title: 'Templates', badge: 'Soon', enabled: false },
 ];
@@ -160,6 +162,7 @@ export const App: React.FC = () => {
             onOpenCreateModal={() => handleOpenCreateModal()}
           />
         )}
+        {activeModule === 'converters' && <ConvertersView />}
       </main>
 
       {/* Snippet Create / Edit Modal */}

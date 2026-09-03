@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { SnippetService } from './modules/snippets/snippetService';
 import { SnippetCommands } from './modules/snippets/snippetCommands';
+import { ConverterService } from './modules/converters/converterService';
+import { ConverterCommands } from './modules/converters/converterCommands';
 import { SidebarWebviewProvider } from './providers/SidebarWebviewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -8,13 +10,17 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Initialize services
   const snippetService = new SnippetService(context);
+  const converterService = new ConverterService(context);
 
   // Initialize Sidebar Webview Provider
   const sidebarProvider = new SidebarWebviewProvider(context.extensionUri, snippetService);
+  sidebarProvider.setConverterService(converterService);
 
   // Initialize and register commands
   const snippetCommands = new SnippetCommands(context, sidebarProvider, snippetService);
   sidebarProvider.setSnippetCommands(snippetCommands);
+
+  const converterCommands = new ConverterCommands(converterService);
 
   // Register Webview View Provider
   context.subscriptions.push(
@@ -30,7 +36,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   // Register all extension commands
-  context.subscriptions.push(...snippetCommands.registerCommands());
+  context.subscriptions.push(
+    ...snippetCommands.registerCommands(),
+    ...converterCommands.register(context)
+  );
 
   // Command: Refresh Sidebar View
   const refreshHandler = () => {

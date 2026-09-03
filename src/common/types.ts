@@ -1,4 +1,4 @@
-export type ModuleId = 'snippets' | 'prompts' | 'templates' | 'notes';
+export type ModuleId = 'snippets' | 'converters' | 'prompts' | 'templates' | 'notes';
 
 export interface ModuleDefinition {
   id: ModuleId;
@@ -32,10 +32,15 @@ export type WebviewToHostMessage =
   | { type: 'OPEN_STORAGE_FILE' }
   | { type: 'SHOW_MESSAGE'; payload: { text: string; level?: 'info' | 'warn' | 'error' } }
   | { type: 'EXPORT_SNIPPETS' }
-  | { type: 'IMPORT_SNIPPETS' };
+  | { type: 'IMPORT_SNIPPETS' }
+  | { type: 'CONVERT_FILE'; payload: any }
+  | { type: 'CONVERT_TEXT'; payload: any }
+  | { type: 'SAVE_CONVERTED_FILE'; payload: any };
 
 export type HostToWebviewMessage =
   | { type: 'SYNC_SNIPPETS'; payload: { snippets: Snippet[]; storagePath?: string } }
   | { type: 'OPEN_CREATE_SNIPPET_MODAL'; payload?: Partial<Snippet> }
   | { type: 'ACTIVE_EDITOR_LANGUAGE'; payload: { languageId: string } }
-  | { type: 'ACTIVE_MODULE_CHANGED'; payload: { moduleId: ModuleId } };
+  | { type: 'ACTIVE_MODULE_CHANGED'; payload: { moduleId: ModuleId } }
+  | { type: 'CONVERT_FILE_RESULT'; payload: any }
+  | { type: 'CONVERT_TEXT_RESULT'; payload: any };

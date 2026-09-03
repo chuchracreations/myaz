@@ -57,6 +57,24 @@ Whether you're juggling TypeScript boilerplates, React hooks, SQL queries, regex
 * **Insert at Cursor**: Click **Insert** to inject snippet code right at your active editor cursor position, with instant tab-stop navigation between placeholders.
 * **Copy to Clipboard**: Quick copy button with visual confirmation when you just need the code on your clipboard.
 
+### 🔄 Universal Local Converters Hub (100% Offline & Private)
+Stop uploading sensitive company files to sketchy converter sites! Convert files locally on your machine with zero lag and zero tracking:
+* **Documents & Office**:
+  * Word (`.docx`) ➔ **PDF**, **Markdown**, **HTML**, **Plain Text**
+  * Markdown (`.md`) ➔ **PDF**, **HTML**, **Plain Text**
+  * Plain Text (`.txt`) ➔ **PDF**
+  * HTML (`.html`) ➔ **Markdown**, **PDF**
+* **Images & Graphics**:
+  * Cross-convert **PNG ↔ JPG ↔ WebP** with custom quality compression sliders
+  * Generate **Favicon (`.ico`)** files from any image
+  * Instant **Base64 Data URI** generation for CSS/HTML/React
+* **Spreadsheets & Tables**:
+  * Excel (`.xlsx`, `.xls`), `.csv`, `.tsv` ➔ **JSON Array**, **Markdown Table**, **HTML Table**, **CSV**
+* **Data & Config (File & Live Scratchpad)**:
+  * Two-way conversion between **JSON ↔ YAML ↔ XML ↔ .ENV**
+* **VS Code Explorer Context Menu**:
+  * Right-click any file in your project explorer ➔ **`Coders Canvas: Convert File...`** to convert and save beside the original in one click!
+
 ### 📦 Complete Workspace Portability (Backup & Restore)
 * **Single-File Export**: Export your entire workspace collection into a clean `coders-canvas-workspace.json` file in one click.
 * **Flexible Import**: Share snippet packs with teammates or restore backups with two convenient modes:
@@ -64,12 +82,14 @@ Whether you're juggling TypeScript boilerplates, React hooks, SQL queries, regex
   * **Replace All**: Replaces your workspace with the imported pack.
 
 ### 🔒 100% Offline, Private & Local
-* Your code is yours. **Coders Canvas has zero external telemetry, zero tracking, and makes no network requests.**
-* All data is stored locally on your device in human-readable JSON (`workspace.json`).
+* Your code and documents are yours. **Coders Canvas has zero external telemetry, zero tracking, and makes no network requests.**
+* All data and conversions run locally on your device in human-readable JSON (`workspace.json`).
 * You can open and edit this raw data file anytime by clicking the **Folder** icon in the header or via the command palette.
 
 ### 🧩 Modular Architecture (Future-Ready)
-* Starting with **Snippets**, Coders Canvas is architected as a modular hub with dedicated tabs designed to seamlessly host upcoming modules:
+* Coders Canvas is architected as an expandable modular developer hub:
+  * ⚡ **Snippets Command Center** *(Active)*
+  * 🔄 **Universal File Converters** *(Active)*
   * 💬 **AI Prompts Hub** *(Coming Soon)*
   * 📑 **Project Templates** *(Coming Soon)*
   * 📝 **Scratchpad & Notes** *(Coming Soon)*
@@ -82,6 +102,7 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access al
 
 | Command | Description |
 | :--- | :--- |
+| **`Coders Canvas: Convert File...`** | Converts any right-clicked file in the explorer to PDF, Markdown, WebP, etc. |
 | **`Coders Canvas: Save Selection as Snippet`** | Creates a new snippet from your current editor selection |
 | **`Coders Canvas: Insert Snippet`** | Inserts a selected snippet directly into your active document |
 | **`Coders Canvas: Open Workspace Data File`** | Opens your local `workspace.json` data file on disk in VS Code |

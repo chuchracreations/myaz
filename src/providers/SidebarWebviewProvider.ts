@@ -2,11 +2,13 @@ import * as vscode from 'vscode';
 import { HostToWebviewMessage, WebviewToHostMessage } from '../common/types';
 import { SnippetService } from '../modules/snippets/snippetService';
 import { SnippetCommands } from '../modules/snippets/snippetCommands';
+import { ConverterService } from '../modules/converters/converterService';
 
 export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'coders-canvas.sidebarView';
   private _view?: vscode.WebviewView;
   private snippetCommands?: SnippetCommands;
+  private converterService?: ConverterService;
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -15,6 +17,10 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
   public setSnippetCommands(commands: SnippetCommands): void {
     this.snippetCommands = commands;
+  }
+
+  public setConverterService(service: ConverterService): void {
+    this.converterService = service;
   }
 
   public resolveWebviewView(
@@ -147,6 +153,43 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
           vscode.window.showWarningMessage(text);
         } else {
           vscode.window.showInformationMessage(text);
+        }
+        break;
+      }
+
+      case 'CONVERT_FILE': {
+        if (this.converterService) {
+          const result = await this.converterService.convert((message as any).payload);
+          this.postMessage({
+            type: 'CONVERT_FILE_RESULT',
+            payload: result,
+          } as any);
+        }
+        break;
+      }
+
+      case 'CONVERT_TEXT': {
+        if (this.converterService) {
+          const { text, sourceFormat, targetFormat } = (message as any).payload;
+          const result = await this.converterService.convert({
+            id: String(Date.now()),
+            fileName: `scratchpad.${sourceFormat}`,
+            sourceFormat,
+            targetFormat,
+            textData: text,
+          });
+          this.postMessage({
+            type: 'CONVERT_TEXT_RESULT',
+            payload: result,
+          } as any);
+        }
+        break;
+      }
+
+      case 'SAVE_CONVERTED_FILE': {
+        if (this.converterService) {
+          const { fileName, outputDataBase64, outputText } = (message as any).payload;
+          await this.converterService.saveConvertedFile(fileName, outputDataBase64, outputText);
         }
         break;
       }
