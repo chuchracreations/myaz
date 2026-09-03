@@ -4,13 +4,11 @@ import { vscode } from './vscodeApi';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
 import { ConvertersView } from './modules/converters/ConvertersView';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Code2, RefreshCw } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
   { id: 'snippets', title: 'Snippets', enabled: true },
   { id: 'converters', title: 'Converters', enabled: true },
-  { id: 'prompts', title: 'AI Prompts', badge: 'Soon', enabled: false },
-  { id: 'templates', title: 'Templates', badge: 'Soon', enabled: false },
 ];
 
 export const App: React.FC = () => {
@@ -132,16 +130,10 @@ export const App: React.FC = () => {
               <button
                 key={module.id}
                 className={`module-tab ${isActive ? 'active' : ''}`}
-                onClick={() => {
-                  if (module.enabled) {
-                    setActiveModule(module.id);
-                  } else {
-                    showToast(`${module.title} is coming in the next update!`);
-                  }
-                }}
+                onClick={() => setActiveModule(module.id)}
               >
+                {module.id === 'snippets' ? <Code2 size={13} /> : <RefreshCw size={13} />}
                 <span>{module.title}</span>
-                {module.badge && <span className="module-tab-badge">{module.badge}</span>}
               </button>
             );
           })}

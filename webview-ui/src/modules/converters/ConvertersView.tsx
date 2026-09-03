@@ -12,6 +12,11 @@ import {
   Image as ImageIcon,
   Table as TableIcon,
   FileCode,
+  FolderOpen,
+  ArrowRight,
+  X,
+  RotateCcw,
+  Zap,
 } from 'lucide-react';
 
 interface ConversionPreset {
@@ -192,6 +197,20 @@ export const ConvertersView: React.FC = () => {
     }
   };
 
+  const handleReset = () => {
+    setSelectedFile(null);
+    setSourceExt('');
+    setTargetFormat('');
+    setConvertedText(null);
+    setConvertedImage(null);
+    setConvertedDataBase64(null);
+    setOutputFileName('');
+    setErrorMsg(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(true);
@@ -340,84 +359,174 @@ export const ConvertersView: React.FC = () => {
 
   return (
     <div className="converters-container">
-      <div className="file-converter-view">
-          {/* Dropzone */}
+      {/* Hidden file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={e => {
+          if (e.target.files && e.target.files.length > 0) {
+            handleFileSelected(e.target.files[0]);
+          }
+        }}
+      />
+
+      {/* State 1: Dropzone (When NO file is selected) */}
+      {!selectedFile ? (
+        <div className="empty-dropzone-wrapper">
           <div
-            className={`dropzone-card ${isDragOver ? 'drag-over' : ''} ${selectedFile ? 'has-file' : ''}`}
+            className={`dropzone-card ${isDragOver ? 'drag-over' : ''}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-              onChange={e => {
-                if (e.target.files && e.target.files.length > 0) {
-                  handleFileSelected(e.target.files[0]);
-                }
-              }}
-            />
-            <div className="dropzone-content">
-              <div className="dropzone-icon-ring">
-                {selectedFile ? (
-                  ['png', 'jpg', 'jpeg', 'webp'].includes(sourceExt) ? (
-                    <ImageIcon size={22} className="dropzone-icon accent" />
-                  ) : ['xlsx', 'csv'].includes(sourceExt) ? (
-                    <TableIcon size={22} className="dropzone-icon accent" />
-                  ) : (
-                    <FileText size={22} className="dropzone-icon accent" />
-                  )
-                ) : (
-                  <FileUp size={22} className="dropzone-icon" />
-                )}
-              </div>
+            <div className="dropzone-ambient-glow" />
+            
+            <div className="dropzone-icon-ring">
+              <div className="icon-pulse-glow" />
+              <FileUp size={24} className="dropzone-icon" />
+            </div>
 
-              {selectedFile ? (
-                <div className="file-meta">
-                  <span className="file-name" title={selectedFile.name}>
-                    {selectedFile.name}
-                  </span>
-                  <span className="file-size">
-                    {(selectedFile.size / 1024).toFixed(1)} KB • Detected: .{sourceExt.toUpperCase()}
-                  </span>
-                </div>
-              ) : (
-                <div className="dropzone-prompt">
-                  <span className="prompt-title">Drag & drop any file here</span>
-                  <span className="prompt-subtitle">
-                    Supports Word (.docx), PDF, Markdown, Images, Excel & JSON
-                  </span>
-                </div>
-              )}
+            <div className="dropzone-text-block">
+              <h3 className="dropzone-main-title">Drop your file here</h3>
+              <p className="dropzone-sub-title">or click anywhere to browse from device</p>
+            </div>
+
+            <button
+              type="button"
+              className="dropzone-cta-btn"
+              onClick={e => {
+                e.stopPropagation();
+                fileInputRef.current?.click();
+              }}
+            >
+              <FolderOpen size={14} />
+              <span>Browse File</span>
+            </button>
+
+            <div className="dropzone-supported-tags">
+              <span className="tag-pill">DOCX</span>
+              <span className="tag-pill">PDF</span>
+              <span className="tag-pill">PNG</span>
+              <span className="tag-pill">WEBP</span>
+              <span className="tag-pill">XLSX</span>
+              <span className="tag-pill">CSV</span>
+              <span className="tag-pill">MD</span>
+              <span className="tag-pill">JSON</span>
             </div>
           </div>
 
-          {/* Target Format Selector */}
-          {selectedFile && preset ? (
-            <div className="target-selector-box">
-              <div className="selector-header">
-                <span className="selector-title">Convert .{sourceExt.toUpperCase()} to:</span>
+          {/* Quick Shortcuts Section */}
+          <div className="quick-presets-container">
+            <div className="quick-presets-header">
+              <Zap size={11} className="quick-icon" />
+              <span>Popular Conversions</span>
+            </div>
+            <div className="quick-presets-grid">
+              <button
+                type="button"
+                className="preset-card"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <span className="preset-name">Word</span>
+                <ArrowRight size={10} className="preset-arrow" />
+                <span className="preset-target pdf">PDF</span>
+              </button>
+
+              <button
+                type="button"
+                className="preset-card"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <span className="preset-name">Image</span>
+                <ArrowRight size={10} className="preset-arrow" />
+                <span className="preset-target webp">WebP</span>
+              </button>
+
+              <button
+                type="button"
+                className="preset-card"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <span className="preset-name">Excel</span>
+                <ArrowRight size={10} className="preset-arrow" />
+                <span className="preset-target json">JSON</span>
+              </button>
+
+              <button
+                type="button"
+                className="preset-card"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <span className="preset-name">Markdown</span>
+                <ArrowRight size={10} className="preset-arrow" />
+                <span className="preset-target pdf">PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* State 2: File Selected & Conversion Workflow */
+        <div className="loaded-converter-flow">
+          {/* Active File Card */}
+          <div className="active-file-card">
+            <div className="file-card-leading">
+              <div className="file-avatar-ring">
+                {['png', 'jpg', 'jpeg', 'webp'].includes(sourceExt) ? (
+                  <ImageIcon size={18} className="file-type-icon img" />
+                ) : ['xlsx', 'csv'].includes(sourceExt) ? (
+                  <TableIcon size={18} className="file-type-icon xlsx" />
+                ) : (
+                  <FileText size={18} className="file-type-icon doc" />
+                )}
               </div>
-              <div className="target-chips-row">
+              <div className="file-details">
+                <span className="active-filename" title={selectedFile.name}>
+                  {selectedFile.name}
+                </span>
+                <span className="active-filemeta">
+                  {(selectedFile.size / 1024).toFixed(1)} KB • .{sourceExt.toUpperCase()}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="btn-icon change-file-btn"
+              onClick={handleReset}
+              title="Remove or Change File"
+            >
+              <X size={14} />
+            </button>
+          </div>
+
+          {/* Target Format Selector */}
+          {preset ? (
+            <div className="target-selection-card">
+              <div className="selection-label">
+                <span>Convert to format:</span>
+              </div>
+
+              <div className="targets-grid">
                 {preset.targets.map(t => (
                   <button
                     key={t.format}
-                    className={`target-chip ${targetFormat === t.format ? 'active' : ''}`}
+                    type="button"
+                    className={`target-pill-btn ${targetFormat === t.format ? 'active' : ''}`}
                     onClick={() => setTargetFormat(t.format)}
                   >
-                    {t.label}
+                    <span className="target-pill-label">{t.label}</span>
                   </button>
                 ))}
               </div>
 
-              {/* Quality slider for lossy images */}
+              {/* Quality Slider for Images */}
               {['jpg', 'webp'].includes(targetFormat) && (
-                <div className="quality-slider-row">
-                  <div className="quality-label">
-                    <span>Quality</span>
-                    <span className="quality-val">{Math.round(imageQuality * 100)}%</span>
+                <div className="quality-control-block">
+                  <div className="quality-header-row">
+                    <span className="quality-title">Compression Quality</span>
+                    <span className="quality-badge">{Math.round(imageQuality * 100)}%</span>
                   </div>
                   <input
                     type="range"
@@ -426,61 +535,71 @@ export const ConvertersView: React.FC = () => {
                     step="0.05"
                     value={imageQuality}
                     onChange={e => setImageQuality(parseFloat(e.target.value))}
-                    className="slider-input"
+                    className="quality-range-slider"
                   />
                 </div>
               )}
 
-              {/* Convert Action Button */}
+              {/* Convert CTA */}
               <button
-                className="btn btn-primary convert-cta-btn"
+                type="button"
+                className="btn btn-primary convert-action-cta"
                 disabled={isConverting || !targetFormat}
                 onClick={handleConvert}
               >
                 {isConverting ? (
                   <>
-                    <RefreshCw size={13} className="spin" />
+                    <RefreshCw size={14} className="spin" />
                     <span>Converting...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles size={13} />
+                    <Sparkles size={14} />
                     <span>Convert Now</span>
                   </>
                 )}
               </button>
             </div>
-          ) : selectedFile && !preset ? (
-            <div className="unsupported-box">
-              <span>Format .{sourceExt.toUpperCase()} is not yet recognized. Supported: DOCX, MD, TXT, HTML, PNG, JPG, WEBP, XLSX, CSV, JSON, YAML, XML, .ENV</span>
+          ) : (
+            <div className="unsupported-format-box">
+              <span>Format .{sourceExt.toUpperCase()} is not yet supported.</span>
             </div>
-          ) : null}
+          )}
 
-          {/* Error Message */}
+          {/* Error Banner */}
           {errorMsg && (
             <div className="converter-error-banner">
               <span>{errorMsg}</span>
             </div>
           )}
 
-          {/* Result Card */}
+          {/* Conversion Success & Output Card */}
           {(convertedText !== null || convertedImage !== null || convertedDataBase64 !== null) && (
-            <div className="result-card">
-              <div className="result-header">
-                <div className="result-identity">
-                  <Check size={14} className="success-icon" />
-                  <span className="result-filename">{outputFileName}</span>
+            <div className="conversion-result-card">
+              <div className="result-card-header">
+                <div className="result-name-group">
+                  <Check size={14} className="result-check-icon" />
+                  <span className="result-output-filename" title={outputFileName}>
+                    {outputFileName}
+                  </span>
                 </div>
-                <div className="result-actions">
+
+                <div className="result-header-actions">
                   {convertedText && (
-                    <button className="btn-icon" onClick={handleCopy} title="Copy to Clipboard">
+                    <button
+                      type="button"
+                      className="btn-icon"
+                      onClick={handleCopy}
+                      title="Copy to Clipboard"
+                    >
                       {hasCopied ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
                     </button>
                   )}
                   <button
-                    className="btn btn-secondary btn-sm"
+                    type="button"
+                    className="btn btn-primary btn-sm save-result-btn"
                     onClick={handleSaveToWorkspace}
-                    title="Save converted file into workspace"
+                    title="Save File to Workspace"
                   >
                     <Download size={12} />
                     <span>Save</span>
@@ -488,33 +607,47 @@ export const ConvertersView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Live Preview */}
-              <div className="result-preview-box">
+              {/* Live Preview Container */}
+              <div className="result-content-preview">
                 {convertedImage ? (
-                  <div className="image-preview-wrapper">
+                  <div className="image-preview-box">
                     <img
                       src={convertedImage.dataUrl}
-                      alt="Converted Preview"
-                      className="image-preview-render"
+                      alt="Converted Render"
+                      className="preview-image-element"
                     />
-                    <div className="image-preview-stats">
+                    <div className="preview-meta-tag">
                       {convertedImage.width}×{convertedImage.height}px • {(convertedImage.sizeBytes / 1024).toFixed(1)} KB
                     </div>
                   </div>
                 ) : convertedText ? (
-                  <pre className="code-preview-render">
-                    <code>{convertedText.slice(0, 1500)}{convertedText.length > 1500 ? '\n\n... (truncated for preview)' : ''}</code>
+                  <pre className="text-preview-code">
+                    <code>
+                      {convertedText.slice(0, 1800)}
+                      {convertedText.length > 1800 ? '\n\n... (preview truncated)' : ''}
+                    </code>
                   </pre>
                 ) : (
-                  <div className="binary-preview-placeholder">
-                    <FileCode size={24} />
-                    <span>Binary output ready: {outputFileName}</span>
+                  <div className="binary-preview-box">
+                    <FileCode size={22} className="binary-preview-icon" />
+                    <span>File ready: {outputFileName}</span>
                   </div>
                 )}
               </div>
+
+              {/* Convert Another File Button */}
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm convert-another-btn"
+                onClick={handleReset}
+              >
+                <RotateCcw size={12} />
+                <span>Convert Another File</span>
+              </button>
             </div>
           )}
         </div>
+      )}
     </div>
   );
 };
