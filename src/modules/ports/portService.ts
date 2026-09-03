@@ -16,7 +16,7 @@ export class PortService {
   public async detectProjectPorts(workspaceRoot?: string): Promise<number[]> {
     const root = workspaceRoot || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root || !fs.existsSync(root)) {
-      return [3000, 5173, 8080];
+      return [];
     }
 
     const detected = new Set<number>();
@@ -67,13 +67,6 @@ export class PortService {
           console.error(`Failed to parse ${envFile} for ports:`, err);
         }
       }
-    }
-
-    // Standard dev defaults if none found
-    if (detected.size === 0) {
-      detected.add(3000);
-      detected.add(5173);
-      detected.add(8080);
     }
 
     return Array.from(detected);
@@ -224,14 +217,6 @@ export class PortService {
           const resolvedRoot = path.resolve(workspaceRoot);
           const resolvedCwd = path.resolve(item.cwd);
           if (resolvedCwd.startsWith(resolvedRoot)) {
-            item.isCurrentProject = true;
-          }
-        }
-
-        // Also if port is in detected project ports and command is node/python/bun/deno
-        if (!item.isCurrentProject && detectedProjectPorts.includes(item.port)) {
-          const devBinaries = ['node', 'npm', 'pnpm', 'yarn', 'bun', 'deno', 'python', 'ruby', 'go'];
-          if (devBinaries.some(b => item.command.toLowerCase().includes(b))) {
             item.isCurrentProject = true;
           }
         }
