@@ -4,11 +4,13 @@ import { vscode } from './vscodeApi';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
 import { ConvertersView } from './modules/converters/ConvertersView';
-import { CheckCircle2, Code2, RefreshCw } from 'lucide-react';
+import { PortsView } from './modules/ports/PortsView';
+import { CheckCircle2, Code2, RefreshCw, Radio } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
   { id: 'snippets', title: 'Snippets', enabled: true },
   { id: 'converters', title: 'Converters', enabled: true },
+  { id: 'ports', title: 'Ports', enabled: true },
 ];
 
 export const App: React.FC = () => {
@@ -132,7 +134,9 @@ export const App: React.FC = () => {
                 className={`module-tab ${isActive ? 'active' : ''}`}
                 onClick={() => setActiveModule(module.id)}
               >
-                {module.id === 'snippets' ? <Code2 size={13} /> : <RefreshCw size={13} />}
+                {module.id === 'snippets' && <Code2 size={13} />}
+                {module.id === 'converters' && <RefreshCw size={13} />}
+                {module.id === 'ports' && <Radio size={13} />}
                 <span>{module.title}</span>
               </button>
             );
@@ -155,6 +159,7 @@ export const App: React.FC = () => {
           />
         )}
         {activeModule === 'converters' && <ConvertersView />}
+        {activeModule === 'ports' && <PortsView />}
       </main>
 
       {/* Snippet Create / Edit Modal */}

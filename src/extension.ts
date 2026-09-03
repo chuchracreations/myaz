@@ -3,6 +3,7 @@ import { SnippetService } from './modules/snippets/snippetService';
 import { SnippetCommands } from './modules/snippets/snippetCommands';
 import { ConverterService } from './modules/converters/converterService';
 import { ConverterCommands } from './modules/converters/converterCommands';
+import { PortService } from './modules/ports/portService';
 import { SidebarWebviewProvider } from './providers/SidebarWebviewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -11,10 +12,12 @@ export function activate(context: vscode.ExtensionContext) {
   // Initialize services
   const snippetService = new SnippetService(context);
   const converterService = new ConverterService(context);
+  const portService = new PortService(context);
 
   // Initialize Sidebar Webview Provider
   const sidebarProvider = new SidebarWebviewProvider(context.extensionUri, snippetService);
   sidebarProvider.setConverterService(converterService);
+  sidebarProvider.setPortService(portService);
 
   // Initialize and register commands
   const snippetCommands = new SnippetCommands(context, sidebarProvider, snippetService);
@@ -48,7 +51,15 @@ export function activate(context: vscode.ExtensionContext) {
   };
   context.subscriptions.push(
     vscode.commands.registerCommand('coders-canvas.refresh', refreshHandler),
-    vscode.commands.registerCommand('myaz.refresh', refreshHandler)
+    vscode.commands.registerCommand('myaz.refresh', refreshHandler),
+    vscode.commands.registerCommand('coders-canvas.scanPorts', async () => {
+      await vscode.commands.executeCommand('coders-canvas.sidebarView.focus');
+      sidebarProvider.postMessage({
+        type: 'ACTIVE_MODULE_CHANGED',
+        payload: { moduleId: 'ports' },
+      });
+      sidebarProvider.postMessage({ type: 'SCAN_PORTS' } as any);
+    })
   );
 }
 

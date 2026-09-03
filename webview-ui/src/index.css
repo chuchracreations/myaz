@@ -140,7 +140,7 @@ code {
 /* Module Selector Tabs */
 .module-tabs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 4px;
   background: var(--bg-card);
   padding: 3px;
@@ -1478,5 +1478,436 @@ code {
   font-size: 9.5px;
   font-weight: 700;
   color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Ports Janitor & Process Killer
+   ========================================================================== */
+
+.ports-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+.ports-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ports-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ports-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ports-header-icon {
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.ports-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-highlight);
+  margin: 0;
+}
+
+.ports-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.ports-subtitle code {
+  color: #f43f5e !important;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ports-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.ports-refresh-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.ports-refresh-btn.is-spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
+/* Status Alert */
+.ports-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.ports-alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.ports-alert-error {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fb7185;
+}
+
+/* Detected Ports Bar */
+.ports-detected-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.ports-detected-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.ports-detected-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ports-detected-pill {
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.ports-detected-pill:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+}
+
+/* Search Row */
+.ports-search-row {
+  display: flex;
+  gap: 6px;
+}
+
+.ports-search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ports-search-icon {
+  position: absolute;
+  left: 8px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.ports-search-input {
+  width: 100%;
+  height: 28px;
+  padding: 0 24px 0 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 11.5px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.ports-search-input:focus {
+  border-color: var(--focus-border);
+}
+
+.ports-search-clear {
+  position: absolute;
+  right: 6px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.ports-search-clear:hover {
+  color: var(--text-primary);
+}
+
+/* Section Layout */
+.ports-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ports-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ports-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ports-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.ports-indicator-dot.project-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.ports-indicator-dot.system-dot {
+  background: #64748b;
+}
+
+.ports-section-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.ports-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.ports-badge.project-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.ports-badge.system-badge {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Port Cards */
+.ports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.port-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.15s ease;
+}
+
+.port-card.workspace-card {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.02);
+}
+
+.port-card:hover {
+  border-color: var(--border-card);
+}
+
+.port-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.port-identity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.port-number-tag {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.port-number-tag.other-tag {
+  color: var(--text-highlight);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-subtle);
+}
+
+.port-command-tag {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-highlight);
+}
+
+.port-pid-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.port-user-tag {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Kill Buttons */
+.port-kill-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.port-kill-btn.primary-kill {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.port-kill-btn.primary-kill:hover:not(:disabled) {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.port-kill-btn.secondary-kill {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.port-kill-btn.secondary-kill:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.port-kill-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Detail Previews */
+.port-command-preview,
+.port-cwd-preview {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.port-command-preview code {
+  color: var(--text-secondary) !important;
+  font-size: 10px;
+}
+
+.port-cmd-icon,
+.port-cwd-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+/* Empty State */
+.ports-empty-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.text-emerald {
+  color: #10b981;
 }
 

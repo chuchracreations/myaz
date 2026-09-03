@@ -21,10 +21,11 @@
 
 ## ✨ Overview
 
-**Coders Canvas** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and modern flat outline aesthetics, Coders Canvas combines two developer essentials into one unified extension:
+**Coders Canvas** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and modern flat outline aesthetics, Coders Canvas combines three developer essentials into one unified extension:
 
 1. **⚡ Smart Snippets Command Center**: Real-time syntax-highlighted code manager with language auto-detection, tag filtering, editor selection capture, and tab-stop cursor insertion.
 2. **🔄 Universal Local Converters Hub**: 100% offline file transformer supporting batch conversions, multi-resolution SVG icon bundles, interactive slide decks, and PDF text extraction.
+3. **🛑 Port Janitor & Zombie Process Killer**: Project-aware port manager that eliminates `EADDRINUSE` errors and terminates ghost dev servers with 1 click.
 
 ---
 
@@ -80,7 +81,18 @@ Never upload confidential company code, spreadsheets, or documents to third-part
 
 ---
 
-### 3. 📦 Complete Workspace Portability (Backup & Share)
+### 3. 🛑 Port Janitor & Zombie Process Killer
+
+Never fight `Error: listen EADDRINUSE: address already in use :::3000` again. Clean up ghost dev servers and terminate blocked ports in 1 click without memorizing terminal commands.
+
+* **📍 Project-Aware Smart Detection**: Automatically detects your workspace's configured dev ports from `package.json` scripts and `.env*` variables (`PORT`, `VITE_PORT`, `APP_PORT`).
+* **👻 Ghost Process Highlighting**: Detects if a listening process was started inside your active project directory (`cwd`) and badges it with **`📍 THIS WORKSPACE`**.
+* **⚡ 1-Click Safe Process Termination**: Terminate runaway Node, Vite, Python, or Next.js processes with graceful `SIGTERM` followed by `SIGKILL` on Unix, or `taskkill` on Windows.
+* **🔍 Custom Port Quick-Scan**: Search bar to inspect any custom port number (e.g. `8888`) or view standard dev services (`5432` PostgreSQL, `6379` Redis, `8080` Docker).
+
+---
+
+### 4. 📦 Complete Workspace Portability (Backup & Share)
 
 * **Single-File Export**: Export your entire snippet library to a clean `coders-canvas-workspace.json` file in one click.
 * **Flexible Import Modes**:
@@ -111,6 +123,7 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access co
 | Command | Description |
 | :--- | :--- |
 | **`Coders Canvas: Convert File...`** | Converts any right-clicked file in the explorer to PDF, Markdown, WebP, etc. |
+| **`Coders Canvas: Scan & Kill Locked Ports (Port Janitor)`** | Scans dev ports, detects ghost servers, and frees locked ports |
 | **`Coders Canvas: Save Selection as Snippet`** | Creates a new snippet from your current editor selection |
 | **`Coders Canvas: Insert Snippet`** | Inserts a selected snippet directly into your active document |
 | **`Coders Canvas: Open Workspace Data File`** | Opens your local `workspace.json` data file on disk in VS Code |

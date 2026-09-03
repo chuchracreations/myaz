@@ -1,7 +1,7 @@
 {
   "name": "myaz-extension",
   "displayName": "Coders Canvas",
-  "description": "Smart Snippet Manager & Universal Local File Converter: Word to PDF, Markdown Slides, SVG to PNG, WebP image optimizer, Excel to JSON, and offline developer tools.",
+  "description": "Smart Snippet Manager, Universal Offline File Converter & Port Killer: Word to PDF, Markdown Slides, SVG to PNG, WebP optimizer, Excel to JSON, and EADDRINUSE port janitor.",
   "version": "0.2.0",
   "publisher": "himanshuchuchra",
   "icon": "media/icon.png",
@@ -15,6 +15,10 @@
     "snippet manager",
     "converter",
     "file converter",
+    "port killer",
+    "kill port",
+    "eaddrinuse",
+    "process killer",
     "pdf",
     "pdf converter",
     "word to pdf",
@@ -103,6 +107,11 @@
         "command": "coders-canvas.convertFile",
         "title": "Coders Canvas: Convert File...",
         "icon": "$(file-submodule)"
+      },
+      {
+        "command": "coders-canvas.scanPorts",
+        "title": "Coders Canvas: Scan & Kill Locked Ports (Port Janitor)",
+        "icon": "$(radio-tower)"
       }
     ],
     "menus": {

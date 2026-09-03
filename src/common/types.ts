@@ -1,4 +1,4 @@
-export type ModuleId = 'snippets' | 'converters' | 'prompts' | 'templates' | 'notes';
+export type ModuleId = 'snippets' | 'converters' | 'ports' | 'prompts' | 'templates' | 'notes';
 
 export interface ModuleDefinition {
   id: ModuleId;
@@ -21,6 +21,16 @@ export interface Snippet {
   updatedAt: number;
 }
 
+export interface PortProcessInfo {
+  port: number;
+  pid: number;
+  command: string;
+  fullCommand: string;
+  cwd?: string;
+  user?: string;
+  isCurrentProject: boolean;
+}
+
 export type WebviewToHostMessage =
   | { type: 'READY' }
   | { type: 'GET_SNIPPETS' }
@@ -37,7 +47,9 @@ export type WebviewToHostMessage =
   | { type: 'CONVERT_TEXT'; payload: any }
   | { type: 'SAVE_CONVERTED_FILE'; payload: any }
   | { type: 'SAVE_BATCH_FILES'; payload: any }
-  | { type: 'SAVE_BATCH_ZIP'; payload: any };
+  | { type: 'SAVE_BATCH_ZIP'; payload: any }
+  | { type: 'SCAN_PORTS'; payload?: { customPort?: number } }
+  | { type: 'KILL_PORT_PROCESS'; payload: { pid: number; port: number } };
 
 export type HostToWebviewMessage =
   | { type: 'SYNC_SNIPPETS'; payload: { snippets: Snippet[]; storagePath?: string } }
@@ -45,4 +57,6 @@ export type HostToWebviewMessage =
   | { type: 'ACTIVE_EDITOR_LANGUAGE'; payload: { languageId: string } }
   | { type: 'ACTIVE_MODULE_CHANGED'; payload: { moduleId: ModuleId } }
   | { type: 'CONVERT_FILE_RESULT'; payload: any }
-  | { type: 'CONVERT_TEXT_RESULT'; payload: any };
+  | { type: 'CONVERT_TEXT_RESULT'; payload: any }
+  | { type: 'PORT_SCAN_RESULTS'; payload: { ports: PortProcessInfo[]; detectedProjectPorts: number[] } }
+  | { type: 'PORT_KILLED_RESULT'; payload: { success: boolean; pid: number; port: number; error?: string } };

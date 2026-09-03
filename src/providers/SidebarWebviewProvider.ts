@@ -3,12 +3,14 @@ import { HostToWebviewMessage, WebviewToHostMessage } from '../common/types';
 import { SnippetService } from '../modules/snippets/snippetService';
 import { SnippetCommands } from '../modules/snippets/snippetCommands';
 import { ConverterService } from '../modules/converters/converterService';
+import { PortService } from '../modules/ports/portService';
 
 export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'coders-canvas.sidebarView';
   private _view?: vscode.WebviewView;
   private snippetCommands?: SnippetCommands;
   private converterService?: ConverterService;
+  private portService?: PortService;
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -21,6 +23,10 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
   public setConverterService(service: ConverterService): void {
     this.converterService = service;
+  }
+
+  public setPortService(service: PortService): void {
+    this.portService = service;
   }
 
   public resolveWebviewView(
@@ -206,6 +212,39 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
         if (this.converterService) {
           const { zipFileName, items } = (message as any).payload;
           await this.converterService.saveBatchAsZip(zipFileName, items);
+        }
+        break;
+      }
+
+      case 'SCAN_PORTS': {
+        if (this.portService) {
+          const customPort = message.payload?.customPort;
+          const { ports, detectedProjectPorts } = await this.portService.scanPorts(customPort);
+          this.postMessage({
+            type: 'PORT_SCAN_RESULTS',
+            payload: { ports, detectedProjectPorts },
+          });
+        }
+        break;
+      }
+
+      case 'KILL_PORT_PROCESS': {
+        if (this.portService) {
+          const { pid, port } = message.payload;
+          const res = await this.portService.killProcess(pid);
+          this.postMessage({
+            type: 'PORT_KILLED_RESULT',
+            payload: { success: res.success, pid, port, error: res.error },
+          });
+
+          // Automatically trigger a fresh scan after killing
+          if (res.success) {
+            const { ports, detectedProjectPorts } = await this.portService.scanPorts();
+            this.postMessage({
+              type: 'PORT_SCAN_RESULTS',
+              payload: { ports, detectedProjectPorts },
+            });
+          }
         }
         break;
       }
