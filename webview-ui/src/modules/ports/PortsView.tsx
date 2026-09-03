@@ -100,9 +100,12 @@ export const PortsView: React.FC = () => {
     return filteredPorts.filter(p => p.isCurrentProject);
   }, [filteredPorts]);
 
-  const otherPorts = useMemo(() => {
-    return filteredPorts.filter(p => !p.isCurrentProject);
-  }, [filteredPorts]);
+  // If user searched for a specific port number, show that custom inspected port
+  const customInspectedPort = useMemo(() => {
+    const pNum = parseInt(customPortInput.trim(), 10);
+    if (isNaN(pNum)) return null;
+    return filteredPorts.find(p => p.port === pNum && !p.isCurrentProject) || null;
+  }, [filteredPorts, customPortInput]);
 
   return (
     <div className="ports-container">
@@ -111,10 +114,10 @@ export const PortsView: React.FC = () => {
         <div className="ports-header-info">
           <div className="ports-title-row">
             <Radio size={18} className="ports-header-icon" />
-            <h2 className="ports-title">Port Janitor & Process Killer</h2>
+            <h2 className="ports-title">Project Port Janitor</h2>
           </div>
           <p className="ports-subtitle">
-            Instantly eliminate <code>EADDRINUSE</code> errors and kill zombie dev servers.
+            Monitors dev servers and ghost processes launched from this workspace.
           </p>
         </div>
 
@@ -122,10 +125,10 @@ export const PortsView: React.FC = () => {
           className={`ports-refresh-btn ${isScanning ? 'is-spinning' : ''}`}
           onClick={() => handleRefresh()}
           disabled={isScanning}
-          title="Refresh All Ports"
+          title="Refresh Workspace Ports"
         >
           <RefreshCw size={14} />
-          <span>{isScanning ? 'Scanning...' : 'Scan Ports'}</span>
+          <span>{isScanning ? 'Scanning...' : 'Scan'}</span>
         </button>
       </div>
 
@@ -146,7 +149,7 @@ export const PortsView: React.FC = () => {
         <div className="ports-detected-bar">
           <span className="ports-detected-label">
             <Layers size={13} />
-            Detected Project Ports:
+            Project Configured Ports:
           </span>
           <div className="ports-detected-pills">
             {detectedProjectPorts.map(p => (
@@ -157,7 +160,7 @@ export const PortsView: React.FC = () => {
                   setCustomPortInput(p.toString());
                   handleRefresh(p);
                 }}
-                title={`Filter port :${p}`}
+                title={`Inspect port :${p}`}
               >
                 :{p}
               </button>
@@ -173,7 +176,7 @@ export const PortsView: React.FC = () => {
           <input
             type="text"
             className="ports-search-input"
-            placeholder="Search process or enter port (e.g. 3000, 5173)..."
+            placeholder="Inspect any port (e.g. 3000, 5173, 8080)..."
             value={filterQuery || customPortInput}
             onChange={e => {
               setFilterQuery(e.target.value);
@@ -196,15 +199,55 @@ export const PortsView: React.FC = () => {
         </form>
       </div>
 
-      {/* Section 1: This Workspace (High Priority) */}
+      {/* Custom Port Quick Inspection Result */}
+      {customInspectedPort && (
+        <div className="ports-section">
+          <div className="ports-section-header">
+            <div className="ports-section-title-wrap">
+              <span className="ports-indicator-dot system-dot" />
+              <h3 className="ports-section-title">Inspected Port :{customInspectedPort.port}</h3>
+            </div>
+            <span className="ports-badge system-badge">Active</span>
+          </div>
+
+          <div className="port-card other-card">
+            <div className="port-card-top">
+              <div className="port-identity">
+                <span className="port-number-tag other-tag">:{customInspectedPort.port}</span>
+                <span className="port-command-tag">{customInspectedPort.command}</span>
+                <span className="port-pid-tag">PID {customInspectedPort.pid}</span>
+                {customInspectedPort.user && <span className="port-user-tag">{customInspectedPort.user}</span>}
+              </div>
+
+              <button
+                className="port-kill-btn primary-kill"
+                onClick={() => handleKill(customInspectedPort.pid, customInspectedPort.port)}
+                disabled={killingPid === customInspectedPort.pid}
+              >
+                <Zap size={13} />
+                <span>{killingPid === customInspectedPort.pid ? 'Killing...' : 'Kill Process'}</span>
+              </button>
+            </div>
+
+            {customInspectedPort.fullCommand && customInspectedPort.fullCommand !== customInspectedPort.command && (
+              <div className="port-command-preview" title={customInspectedPort.fullCommand}>
+                <Terminal size={12} className="port-cmd-icon" />
+                <code>{customInspectedPort.fullCommand}</code>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Section 1: This Workspace Running Processes */}
       <div className="ports-section">
         <div className="ports-section-header">
           <div className="ports-section-title-wrap">
             <span className="ports-indicator-dot project-dot" />
-            <h3 className="ports-section-title">This Workspace's Ghost Processes</h3>
+            <h3 className="ports-section-title">This Workspace's Processes</h3>
           </div>
           <span className="ports-badge project-badge">
-            {workspacePorts.length} Found
+            {workspacePorts.length} Active
           </span>
         </div>
 
@@ -249,56 +292,6 @@ export const PortsView: React.FC = () => {
           <div className="ports-empty-inline">
             <ShieldCheck size={16} className="text-emerald" />
             <span>No ghost processes running from this workspace. Ports are clean!</span>
-          </div>
-        )}
-      </div>
-
-      {/* Section 2: Other Dev Ports on System */}
-      <div className="ports-section">
-        <div className="ports-section-header">
-          <div className="ports-section-title-wrap">
-            <span className="ports-indicator-dot system-dot" />
-            <h3 className="ports-section-title">Other Active Listening Ports</h3>
-          </div>
-          <span className="ports-badge system-badge">{otherPorts.length}</span>
-        </div>
-
-        {otherPorts.length > 0 ? (
-          <div className="ports-list">
-            {otherPorts.map(item => (
-              <div key={`${item.port}-${item.pid}`} className="port-card other-card">
-                <div className="port-card-top">
-                  <div className="port-identity">
-                    <span className="port-number-tag other-tag">:{item.port}</span>
-                    <span className="port-command-tag">{item.command}</span>
-                    <span className="port-pid-tag">PID {item.pid}</span>
-                    {item.user && <span className="port-user-tag">{item.user}</span>}
-                  </div>
-
-                  <button
-                    className="port-kill-btn secondary-kill"
-                    onClick={() => handleKill(item.pid, item.port)}
-                    disabled={killingPid === item.pid}
-                    title="Terminate this listening process"
-                  >
-                    <Zap size={12} />
-                    <span>{killingPid === item.pid ? 'Killing...' : 'Kill'}</span>
-                  </button>
-                </div>
-
-                {item.fullCommand && item.fullCommand !== item.command && (
-                  <div className="port-command-preview" title={item.fullCommand}>
-                    <Terminal size={12} className="port-cmd-icon" />
-                    <code>{item.fullCommand}</code>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="ports-empty-inline">
-            <Cpu size={16} />
-            <span>No other active dev ports detected.</span>
           </div>
         )}
       </div>
