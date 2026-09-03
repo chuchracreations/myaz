@@ -132,7 +132,7 @@ export const App: React.FC = () => {
                 src={logoUri}
                 alt="Coders Canvas Logo"
                 className="brand-icon"
-                style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'contain' }}
+                style={{ height: 22, width: 'auto', maxWidth: 36, objectFit: 'contain', flexShrink: 0 }}
               />
             ) : (
               <OctopusIcon className="brand-icon" size={19} />
