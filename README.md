@@ -137,6 +137,17 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access co
 
 ---
 
+## 🔍 Supported Use Cases & Search Keywords
+
+Looking for specific tools? **Coders Canvas** provides a 100% local, offline solution:
+
+* **Document & PDF Tools**: `word to pdf`, `docx to pdf converter`, `markdown to pdf`, `markdown to html slides`, `pdf text extractor`, `extract tables from pdf`, `txt to pdf`.
+* **Image & Web Graphics**: `svg to png converter`, `multi-resolution icon generator`, `favicon ico generator`, `png to webp`, `jpg to webp converter`, `image compressor`, `base64 data uri generator`.
+* **Data & Configuration**: `excel to json converter`, `csv to json`, `xlsx to markdown table`, `json to yaml`, `yaml to json converter`, `xml to json`, `env to json`.
+* **Snippet Management**: `vs code snippet manager`, `code snippet organizer`, `interactive snippets`, `tab-stops snippet placeholders`, `insert snippet at cursor`, `snippet search`.
+
+---
+
 <div align="center">
 
   Crafted with care for developers who value speed, craft, and great tooling.

@@ -1,7 +1,7 @@
 {
   "name": "myaz-extension",
   "displayName": "Coders Canvas",
-  "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
+  "description": "Smart Snippet Manager & Universal Local File Converter: Word to PDF, Markdown Slides, SVG to PNG, WebP image optimizer, Excel to JSON, and offline developer tools.",
   "version": "0.2.0",
   "publisher": "himanshuchuchra",
   "icon": "media/icon.png",
@@ -10,13 +10,36 @@
     "type": "git",
     "url": "https://github.com/himanshuchuchra/coders-canvas"
   },
+  "keywords": [
+    "snippets",
+    "snippet manager",
+    "converter",
+    "file converter",
+    "pdf",
+    "pdf converter",
+    "word to pdf",
+    "docx to pdf",
+    "markdown to pdf",
+    "markdown slides",
+    "svg to png",
+    "webp converter",
+    "image converter",
+    "favicon generator",
+    "excel to json",
+    "csv to json",
+    "json to yaml",
+    "yaml to json",
+    "offline converter",
+    "developer productivity"
+  ],
+  "categories": [
+    "Snippets",
+    "Formatters",
+    "Other"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": [
-    "Other",
-    "Snippets"
-  ],
   "main": "./dist/extension.js",
   "activationEvents": [
     "onView:coders-canvas.sidebarView"
