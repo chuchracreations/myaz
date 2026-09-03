@@ -4,7 +4,7 @@ import { SnippetCommands } from './modules/snippets/snippetCommands';
 import { SidebarWebviewProvider } from './providers/SidebarWebviewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('myaz extension is now active!');
+  console.log('Coders Canvas extension is now active!');
 
   // Initialize services
   const snippetService = new SnippetService(context);
@@ -33,14 +33,16 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(...snippetCommands.registerCommands());
 
   // Command: Refresh Sidebar View
+  const refreshHandler = () => {
+    sidebarProvider.syncSnippets();
+    vscode.window.setStatusBarMessage('Coders Canvas: Synced with storage', 2000);
+  };
   context.subscriptions.push(
-    vscode.commands.registerCommand('myaz.refresh', () => {
-      sidebarProvider.syncSnippets();
-      vscode.window.setStatusBarMessage('myaz: Synced with storage', 2000);
-    })
+    vscode.commands.registerCommand('coders-canvas.refresh', refreshHandler),
+    vscode.commands.registerCommand('myaz.refresh', refreshHandler)
   );
 }
 
 export function deactivate() {
-  console.log('myaz Extension deactivated.');
+  console.log('Coders Canvas Extension deactivated.');
 }

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Snippet } from '../../common/types';
 
-const STORAGE_KEY = 'myaz.snippets';
+const STORAGE_KEY = 'coders-canvas.snippets';
 
 const DEFAULT_SNIPPETS: Snippet[] = [
   {
@@ -321,7 +321,7 @@ export class SnippetService {
       }
 
       // Check globalState fallback
-      const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY);
+      const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>('myaz.snippets');
       if (existing && existing.length > 0) {
         this.persistToFile(existing);
       } else {

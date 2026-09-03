@@ -14,55 +14,55 @@
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
-    "onView:myaz.sidebarView"
+    "onView:coders-canvas.sidebarView"
   ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "myaz-sidebar-container",
+          "id": "coders-canvas-container",
           "title": "Coders Canvas",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "myaz-sidebar-container": [
+      "coders-canvas-container": [
         {
           "type": "webview",
-          "id": "myaz.sidebarView",
+          "id": "coders-canvas.sidebarView",
           "name": ""
         }
       ]
     },
     "commands": [
       {
-        "command": "myaz.snippets.createFromSelection",
+        "command": "coders-canvas.snippets.createFromSelection",
         "title": "Coders Canvas: Save Selection as Snippet",
         "icon": "$(add)"
       },
       {
-        "command": "myaz.snippets.insert",
+        "command": "coders-canvas.snippets.insert",
         "title": "Coders Canvas: Insert Snippet",
         "icon": "$(insert)"
       },
       {
-        "command": "myaz.openStorageFile",
+        "command": "coders-canvas.openStorageFile",
         "title": "Coders Canvas: Open Workspace Data File",
         "icon": "$(folder-opened)"
       },
       {
-        "command": "myaz.exportData",
+        "command": "coders-canvas.exportData",
         "title": "Coders Canvas: Export Workspace Data",
         "icon": "$(cloud-download)"
       },
       {
-        "command": "myaz.importData",
+        "command": "coders-canvas.importData",
         "title": "Coders Canvas: Import Workspace Data",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "myaz.refresh",
+        "command": "coders-canvas.refresh",
         "title": "Coders Canvas: Refresh View",
         "icon": "$(refresh)"
       }
@@ -70,9 +70,9 @@
     "menus": {
       "editor/context": [
         {
-          "command": "myaz.snippets.createFromSelection",
+          "command": "coders-canvas.snippets.createFromSelection",
           "when": "editorHasSelection",
-          "group": "myaz@1"
+          "group": "coders-canvas@1"
         }
       ]
     }

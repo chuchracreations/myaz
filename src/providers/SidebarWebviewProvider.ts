@@ -4,7 +4,7 @@ import { SnippetService } from '../modules/snippets/snippetService';
 import { SnippetCommands } from '../modules/snippets/snippetCommands';
 
 export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'myaz.sidebarView';
+  public static readonly viewType = 'coders-canvas.sidebarView';
   private _view?: vscode.WebviewView;
   private snippetCommands?: SnippetCommands;
 

@@ -40,7 +40,7 @@ All your data is saved locally on your device in a human-readable JSON file:
 ## 📂 Architecture
 
 ```
-myaz-extension/
+coders-canvas/
 ├── .vscode/
 │   ├── launch.json              # F5 debug configuration
 │   └── tasks.json               # esbuild build and watch tasks
@@ -92,4 +92,4 @@ npm run watch
 1. Open this repository in VS Code.
 2. Press `F5` (or go to **Run and Debug** -> **Run Extension**).
 3. A new **Extension Development Host** window will open.
-4. Click the **myaz** icon in the Activity Bar (left sidebar) to test the extension!
+4. Click the **Coders Canvas** icon in the Activity Bar (left sidebar) to test the extension!
