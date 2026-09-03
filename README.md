@@ -4,15 +4,15 @@
 
   # Coders Canvas
 
-  ### *The Modular Developer Workspace & Snippet Command Center for VS Code*
+  ### *The All-in-One Snippet Command Center & Universal Offline File Converter for VS Code*
 
   [![Visual Studio Marketplace Version](https://img.shields.io/badge/Marketplace-v0.2.0-blue?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
   [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
-  [![Offline First](https://img.shields.io/badge/Storage-100%25%20Offline%20%26%20Private-orange?style=for-the-badge)](#-where-your-data-is-stored-on-device)
+  [![Offline First](https://img.shields.io/badge/Storage-100%25%20Offline%20%26%20Private-orange?style=for-the-badge)](#-100-offline-private--local)
   [![Stack](https://img.shields.io/badge/Built%20With-React%2018%20%7C%20TypeScript-61dafb?style=for-the-badge&logo=react)](#-technology-stack)
 
   <p align="center">
-    <b>Stop re-writing boilerplate. Organize, search, and instantly insert your favorite code snippets directly from your VS Code sidebar.</b>
+    <b>Stop re-writing boilerplate and stop uploading sensitive project files to online converter sites. Organize code snippets and transform files locally, securely, and with zero context switching.</b>
   </p>
 
 </div>
@@ -21,93 +21,92 @@
 
 ## ✨ Overview
 
-**Coders Canvas** is a high-performance, modular productivity extension designed to streamline your daily programming workflow. Engineered from the ground up with **React 18**, **TypeScript**, and **Google Font Bricolage Grotesque**, Coders Canvas gives you an interactive, visually stunning command center right inside your VS Code Activity Bar.
+**Coders Canvas** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and modern flat outline aesthetics, Coders Canvas combines two developer essentials into one unified extension:
 
-Whether you're juggling TypeScript boilerplates, React hooks, SQL queries, regex patterns, or Python scripts, **Coders Canvas** keeps your highest-value code right at your fingertips with zero context switching.
+1. **⚡ Smart Snippets Command Center**: Real-time syntax-highlighted code manager with language auto-detection, tag filtering, editor selection capture, and tab-stop cursor insertion.
+2. **🔄 Universal Local Converters Hub**: 100% offline file transformer supporting batch conversions, multi-resolution SVG icon bundles, interactive slide decks, and PDF text extraction.
 
 ---
 
 ## 🚀 Key Features
 
-### ⚡ Smart Snippet Command Center
-* **Live Search**: Instant real-time filtering across titles, descriptions, code bodies, and tags.
-* **Auto Language Detection**: Intelligently detects the language of your active editor and highlights matching snippets first.
-* **Favorites & Pinning**: Star your go-to snippets to keep them pinned at the top of your library.
-* **Tag System**: Group snippets by stack, framework, or utility (`#react`, `#frontend`, `#api`, `#sql`, `#docker`).
+---
 
-### 🎨 Language-Based Color Syntax Highlighting
-* **Rich Syntax Highlighting**: Preview code with VS Code Dark+ color syntax tailored to each snippet’s language:
+### 1. 🔄 Universal Local Converters (100% Offline & Private)
+
+Never upload confidential company code, spreadsheets, or documents to third-party web converters again. Convert files locally on your machine with instant speed and zero tracking.
+
+#### ⚡ Conversion Capabilities Matrix
+
+| Category | Input Formats | Available Output Formats |
+| :--- | :--- | :--- |
+| **Vector & Graphics** | `.svg` | **Multi-Res PNG Bundle (16px–512px ZIP)**, **PNG**, **WebP**, **Favicon (`.ico`)**, **Base64 Data URI** |
+| **Raster Images** | `.png`, `.jpg`, `.jpeg`, `.webp` | **WebP (Compressed)**, **PNG (Lossless)**, **JPEG**, **Favicon (`.ico`)**, **Base64** |
+| **Presentations** | `.md`, `.markdown` | **Interactive Slide Deck (`.html`)**, **PDF Document**, **Styled HTML**, **Plain Text** |
+| **PDF Extraction** | `.pdf` | **Markdown (`.md`) with Headings & Pages**, **Plain Text (`.txt`)** |
+| **Documents & Office** | `.docx`, `.txt`, `.html` | **PDF Document**, **Markdown**, **HTML Web Page**, **Plain Text** |
+| **Spreadsheets & Tables**| `.xlsx`, `.xls`, `.csv`, `.tsv` | **JSON Array**, **Markdown Table**, **HTML Table**, **CSV File** |
+| **Data & Config** | `.json`, `.yaml`, `.yml`, `.xml`, `.env` | **JSON**, **YAML**, **XML**, **Environment (`.env`)** |
+
+#### 🛠️ Developer Power Tools:
+* **⚡ Multi-File Batch Queue**: Drag & drop multiple files at once. Choose a global target (e.g. convert 10 PNGs to WebP in 1 click), monitor per-item progress, and **Save All to Folder** or **Export as ZIP Archive**.
+* **🔄 In-Place File Replace**: Optional toggle `[x] Replace original file on disk` automatically swaps the original asset on disk with the new format.
+* **🎨 SVG Multi-Resolution Icon Suite**: Render vector SVGs into a complete icon pack (`16×16`, `32×32`, `48×48`, `64×64`, `128×128`, `256×256`, `512×512`) packaged in a ready-to-use `.zip`.
+* **📑 Markdown ➔ Interactive Slide Deck**: Convert any Markdown file with `---` slide dividers into a standalone, dark-themed HTML presentation deck with keyboard arrow navigation, slide counters, and native fullscreen (`F`).
+* **📄 PDF ➔ Structured Markdown**: Extract headings, page counts, and formatted body text from `.pdf` documents using our built-in offline stream engine.
+* **📂 Explorer Context Menu**: Right-click any file in your VS Code Explorer ➔ **`Coders Canvas: Convert File...`** to convert and save beside the original in one click.
+
+---
+
+### 2. ⚡ Smart Snippet Command Center
+
+* **Live Search & Filtering**: Instant, real-time filtering across snippet titles, descriptions, code bodies, and tags.
+* **Auto Language Detection**: Intelligently identifies your active editor's programming language and highlights matching snippets first.
+* **Rich Color Syntax Highlighting**: Preview snippets with VS Code Dark+ syntax highlighting tailored to:
   * TypeScript & TSX
   * JavaScript & JSX
   * Python
   * HTML / XML
   * CSS / SCSS
-  * JSON
+  * JSON / YAML
   * SQL
   * Bash / Shell
   * Markdown
-* **Interactive Tab-Stops**: Full support for native VS Code snippet placeholders (`$1`, `${1:variableName}`, `$0`) styled with subtle cursor indicators.
+* **Interactive Tab-Stops**: Full support for native VS Code snippet placeholders (`$1`, `${1:variableName}`, `$0`) styled with subtle visual indicators.
+* **1-Click Selection Capture**: Highlight any code in your active editor ➔ right-click ➔ **`Coders Canvas: Save Selection as Snippet`**.
+* **Instant Cursor Insertion**: Click **Insert** to inject code directly at your cursor position with tab-stop navigation between placeholders.
+* **Favorites & Pinning**: Star your go-to snippets to keep them pinned at the top of your library.
+* **Tag System**: Group snippets by stack or topic (`#react`, `#frontend`, `#api`, `#sql`, `#docker`).
 
-### 🪄 Save Selection from Editor in 1 Click
-* Highlight any block of code in your active editor.
-* Right-click and choose **`Coders Canvas: Save Selection as Snippet`**.
-* The sidebar opens with your code, language, and suggested title automatically pre-filled!
+---
 
-### 🎯 Instant Insertion & Copy
-* **Insert at Cursor**: Click **Insert** to inject snippet code right at your active editor cursor position, with instant tab-stop navigation between placeholders.
-* **Copy to Clipboard**: Quick copy button with visual confirmation when you just need the code on your clipboard.
+### 3. 📦 Complete Workspace Portability (Backup & Share)
 
-### 🔄 Universal Local Converters Hub (100% Offline & Private)
-Stop uploading sensitive company files to sketchy converter sites! Convert files locally on your machine with zero lag and zero tracking:
-* **⚡ Batch & Multi-File Queue**:
-  * Drop multiple files at once, convert in parallel, and export all to a destination folder or download as a `.zip` bundle.
-  * Optional **In-Place File Replace**: Overwrite or swap original files on disk in one click.
-* **🎨 SVG & Vector Suite**:
-  * Convert `.svg` icons into a **Multi-Resolution PNG Bundle** (`16px`, `32px`, `48px`, `64px`, `128px`, `256px`, `512px`) ready for app stores and web.
-* **📑 Markdown ➔ Interactive Slide Deck**:
-  * Turn any Markdown file with `---` dividers into a standalone, interactive HTML presentation with dark mode and keyboard arrow navigation.
-* **📄 PDF ➔ Markdown / Text Extractor**:
-  * Extract text, headings, and structure from `.pdf` documents directly into clean Markdown (`.md`) or plain text (`.txt`).
-* **📄 Documents & Office**:
-  * Word (`.docx`) ➔ **PDF**, **Markdown**, **HTML**, **Plain Text**
-  * Markdown (`.md`) ➔ **PDF**, **Slide Deck**, **HTML**, **Plain Text**
-  * Plain Text (`.txt`) ➔ **PDF** (with auto line-wrapping and pagination)
-  * HTML (`.html`) ➔ **Markdown**, **PDF**
-* **🖼️ Images & Graphics**:
-  * Cross-convert **PNG ↔ JPG ↔ WebP** with custom quality compression sliders
-  * Generate **Favicon (`.ico`)** files from any image
-  * Instant **Base64 Data URI** generation for CSS/HTML/React
-* **📊 Spreadsheets & Tables**:
-  * Excel (`.xlsx`, `.xls`), `.csv`, `.tsv` ➔ **JSON Array**, **Markdown Table**, **HTML Table**, **CSV**
-* **⚙️ Data & Config**:
-  * Two-way conversions between **JSON ↔ YAML ↔ XML ↔ .ENV**
-* **VS Code Explorer Context Menu**:
-  * Right-click any file in your project explorer ➔ **`Coders Canvas: Convert File...`** to convert and save beside the original in one click!
-
-### 📦 Complete Workspace Portability (Backup & Restore)
-* **Single-File Export**: Export your entire workspace collection into a clean `coders-canvas-workspace.json` file in one click.
-* **Flexible Import**: Share snippet packs with teammates or restore backups with two convenient modes:
+* **Single-File Export**: Export your entire snippet library to a clean `coders-canvas-workspace.json` file in one click.
+* **Flexible Import Modes**:
   * **Merge with Existing**: Appends new snippets while preserving your current collection.
   * **Replace All**: Replaces your workspace with the imported pack.
 
-### 🔒 100% Offline, Private & Local
-* Your code and documents are yours. **Coders Canvas has zero external telemetry, zero tracking, and makes no network requests.**
-* All data and conversions run locally on your device in human-readable JSON (`workspace.json`).
-* You can open and edit this raw data file anytime by clicking the **Folder** icon in the header or via the command palette.
+---
 
-### 🧩 Modular Architecture (Future-Ready)
-* Coders Canvas is architected as an expandable modular developer hub:
-  * ⚡ **Snippets Command Center** *(Active)*
-  * 🔄 **Universal File Converters** *(Active)*
-  * 💬 **AI Prompts Hub** *(Coming Soon)*
-  * 📑 **Project Templates** *(Coming Soon)*
-  * 📝 **Scratchpad & Notes** *(Coming Soon)*
+## 🔒 100% Offline, Private & Local
+
+* **Zero Telemetry**: Coders Canvas makes zero network requests, has zero tracking, and sends zero data to external servers.
+* **Local Storage**: All snippets are stored locally on your machine in human-readable JSON:
+
+| Operating System | Default Storage Path |
+| :--- | :--- |
+| **macOS** | `~/Library/Application Support/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
+| **Windows** | `%APPDATA%\Code\User\globalStorage\himanshuchuchra.coders-canvas\workspace.json` |
+| **Linux** | `~/.config/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
+
+> 💡 **Pro Tip**: Any manual edits you save directly to `workspace.json` in VS Code are instantly reloaded by the extension!
 
 ---
 
 ## ⌨️ Command Palette Shortcuts
 
-Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access all commands:
+Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access commands:
 
 | Command | Description |
 | :--- | :--- |
@@ -121,38 +120,20 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access al
 
 ---
 
-## 💾 Where Your Data is Stored on Device
-
-All snippets and workspace configurations are stored locally on your machine in a human-readable JSON file:
-
-| Operating System | Default Storage Path |
-| :--- | :--- |
-| **macOS** | `~/Library/Application Support/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
-| **Windows** | `%APPDATA%\Code\User\globalStorage\himanshuchuchra.coders-canvas\workspace.json` |
-| **Linux** | `~/.config/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
-
-> 💡 **Pro Tip**: Any manual edits you save to `workspace.json` in VS Code are instantly reloaded by the extension!
-
----
-
 ## 🛠️ Technology Stack
 
-Coders Canvas is engineered with performance and aesthetics in mind:
-
-- **Extension Host**: TypeScript + Node.js (VS Code Extension API)
-- **Webview Architecture**: React 18 + TypeScript + Lucide Icons
-- **Syntax Highlighting**: Prism.js syntax engine with language grammars
-- **Typography**: Google Font *Bricolage Grotesque* & *JetBrains Mono*
-- **Bundler**: `esbuild` dual-pipeline (Node CJS for host, Browser ESM for webview)
+* **Extension Host**: TypeScript + Node.js (VS Code Extension API)
+* **Webview Architecture**: React 18 + TypeScript + Lucide Icons
+* **Document Engines**: `mammoth` (Word), `jspdf` (PDF generation), `marked` (Markdown), `xlsx` (SheetJS), `js-yaml`, `fast-xml-parser`, `jszip`
+* **Syntax Highlighting**: Prism.js syntax engine with language grammars
+* **Bundler**: `esbuild` dual-pipeline (Node CJS for extension host, Browser ESM for webview)
 
 ---
 
 ## 🤝 Contributing & Feedback
 
-Have ideas, suggestions, or found a bug? We’d love to hear from you!
-
-- **Report Issues & Feature Requests**: Reach out or file an issue on GitHub.
-- **Enjoying Coders Canvas?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.coders-canvas)!
+* **Report Issues & Feature Requests**: Reach out or file an issue on [GitHub](https://github.com/himanshuchuchra/coders-canvas).
+* **Enjoying Coders Canvas?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)!
 
 ---
 
