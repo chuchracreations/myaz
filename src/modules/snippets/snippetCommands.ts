@@ -17,7 +17,7 @@ export class SnippetCommands {
     disposables.push(
       vscode.commands.registerCommand('myaz.snippets.insert', async (snippet?: Snippet) => {
         if (!snippet) {
-          vscode.window.showInformationMessage('Select a snippet from the myaz sidebar to insert.');
+          vscode.window.showInformationMessage('Select a snippet from the Coders Canvas sidebar to insert.');
           return;
         }
         await this.insertSnippetIntoEditor(snippet);
@@ -57,7 +57,7 @@ export class SnippetCommands {
       vscode.commands.registerCommand('myaz.snippets.createFromSelection', async () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
-          vscode.window.showWarningMessage('myaz: Open a file and select text to save as a snippet.');
+          vscode.window.showWarningMessage('Coders Canvas: Open a file and select text to save as a snippet.');
           return;
         }
 
@@ -65,7 +65,7 @@ export class SnippetCommands {
         const selectedText = editor.document.getText(selection);
 
         if (!selectedText.trim()) {
-          vscode.window.showWarningMessage('myaz: Please select some text in the editor first.');
+          vscode.window.showWarningMessage('Coders Canvas: Please select some text in the editor first.');
           return;
         }
 
@@ -95,14 +95,14 @@ export class SnippetCommands {
   public async insertSnippetIntoEditor(snippet: Snippet): Promise<boolean> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-      vscode.window.showWarningMessage('myaz: Open a file editor where you want to insert this snippet.');
+      vscode.window.showWarningMessage('Coders Canvas: Open a file editor where you want to insert this snippet.');
       return false;
     }
 
     const snippetString = new vscode.SnippetString(snippet.body);
     const success = await editor.insertSnippet(snippetString);
     if (success) {
-      vscode.window.setStatusBarMessage(`myaz: Inserted "${snippet.title}"`, 2500);
+      vscode.window.setStatusBarMessage(`Coders Canvas: Inserted "${snippet.title}"`, 2500);
     }
     return success;
   }

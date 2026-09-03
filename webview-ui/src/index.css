@@ -124,7 +124,6 @@ code {
   font-size: 14px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  text-transform: lowercase;
   background: linear-gradient(135deg, #ffffff 40%, #0078d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

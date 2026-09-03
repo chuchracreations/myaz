@@ -102,7 +102,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       case 'SAVE_SNIPPET': {
         const saved = this.snippetService.save(message.payload);
         this.syncSnippets();
-        vscode.window.setStatusBarMessage(`myaz: Saved snippet "${saved.title}"`, 2500);
+        vscode.window.setStatusBarMessage(`Coders Canvas: Saved snippet "${saved.title}"`, 2500);
         break;
       }
 
@@ -115,7 +115,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
         if (confirmed === 'Delete') {
           this.snippetService.delete(message.payload.id);
           this.syncSnippets();
-          vscode.window.setStatusBarMessage('myaz: Snippet deleted', 2500);
+          vscode.window.setStatusBarMessage('Coders Canvas: Snippet deleted', 2500);
         }
         break;
       }
@@ -135,7 +135,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
       case 'COPY_SNIPPET': {
         await vscode.env.clipboard.writeText(message.payload.snippet.body);
-        vscode.window.setStatusBarMessage(`myaz: Copied "${message.payload.snippet.title}" to clipboard`, 2500);
+        vscode.window.setStatusBarMessage(`Coders Canvas: Copied "${message.payload.snippet.title}" to clipboard`, 2500);
         break;
       }
 
@@ -172,7 +172,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src https://fonts.gstatic.com; style-src ${webview.cspSource} 'unsafe-inline' https://fonts.googleapis.com; script-src 'nonce-${nonce}'; img-src ${webview.cspSource} data: https:;">
-  <title>myaz: myaz workspace</title>
+  <title>Coders Canvas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">

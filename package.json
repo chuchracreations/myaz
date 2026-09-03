@@ -1,9 +1,10 @@
 {
-  "name": "myaz-extension",
-  "displayName": "myaz",
+  "name": "coders-canvas",
+  "displayName": "Coders Canvas",
   "description": "Modular productivity assistant for VS Code starting with rich Snippets management.",
   "version": "0.1.0",
   "publisher": "himanshuchuchra",
+  "icon": "coderscanvaslogo.png",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -20,7 +21,7 @@
       "activitybar": [
         {
           "id": "myaz-sidebar-container",
-          "title": "myaz",
+          "title": "Coders Canvas",
           "icon": "media/icon.svg"
         }
       ]
@@ -37,32 +38,32 @@
     "commands": [
       {
         "command": "myaz.snippets.createFromSelection",
-        "title": "myaz: Save Selection as Snippet",
+        "title": "Coders Canvas: Save Selection as Snippet",
         "icon": "$(add)"
       },
       {
         "command": "myaz.snippets.insert",
-        "title": "myaz: Insert Snippet",
+        "title": "Coders Canvas: Insert Snippet",
         "icon": "$(insert)"
       },
       {
         "command": "myaz.openStorageFile",
-        "title": "myaz: Open Workspace Data File",
+        "title": "Coders Canvas: Open Workspace Data File",
         "icon": "$(folder-opened)"
       },
       {
         "command": "myaz.exportData",
-        "title": "myaz: Export Workspace Data",
+        "title": "Coders Canvas: Export Workspace Data",
         "icon": "$(cloud-download)"
       },
       {
         "command": "myaz.importData",
-        "title": "myaz: Import Workspace Data",
+        "title": "Coders Canvas: Import Workspace Data",
         "icon": "$(cloud-upload)"
       },
       {
         "command": "myaz.refresh",
-        "title": "myaz: Refresh View",
+        "title": "Coders Canvas: Refresh View",
         "icon": "$(refresh)"
       }
     ],

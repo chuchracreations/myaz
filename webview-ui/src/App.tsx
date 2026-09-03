@@ -126,7 +126,7 @@ export const App: React.FC = () => {
         <div className="brand-row">
           <div className="brand-identity">
             <OctopusIcon className="brand-icon" size={19} />
-            <h1 className="brand-title">myaz</h1>
+            <h1 className="brand-title">Coders Canvas</h1>
           </div>
           <div className="header-actions">
             <button
