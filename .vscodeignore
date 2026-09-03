@@ -1,0 +1,9 @@
+.vscode/**
+src/**
+webview-ui/**
+build.mjs
+tsconfig.json
+tsconfig.webview.json
+node_modules/**
+.gitignore
+*.vsix
