@@ -7,7 +7,7 @@ const extensionConfig = {
   entryPoints: ['src/extension.ts'],
   bundle: true,
   outfile: 'dist/extension.js',
-  external: ['vscode'],
+  external: ['vscode', 'pdf-parse'],
   format: 'cjs',
   platform: 'node',
   target: 'node18',

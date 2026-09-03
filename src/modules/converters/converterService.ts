@@ -78,11 +78,7 @@ export class ConverterService {
       const parser = new (PDFParse as any)({ data: buffer });
       const textResult = await parser.getText();
       const rawText = typeof textResult === 'string' ? textResult : (textResult as any)?.text || '';
-      let pageCount = 1;
-      try {
-        const info = await parser.getInfo();
-        pageCount = (info as any)?.pages || 1;
-      } catch {}
+      const pageCount = (textResult as any)?.total || (textResult as any)?.pages?.length || 1;
       await parser.destroy();
 
       if (target === 'md' || target === 'markdown') {
