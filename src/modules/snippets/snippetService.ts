@@ -5,109 +5,7 @@ import { Snippet } from '../../common/types';
 
 const STORAGE_KEY = 'coders-canvas.snippets';
 
-const DEFAULT_SNIPPETS: Snippet[] = [
-  {
-    id: 'seed-1',
-    title: 'React Functional Component (TS)',
-    prefix: 'rfc-ts',
-    description: 'Modern React functional component with typed props',
-    language: 'typescriptreact',
-    tags: ['react', 'frontend', 'components'],
-    isFavorite: true,
-    body: `import React from 'react';
-
-interface \${1:ComponentName}Props {
-  \${2:title}: \${3:string};
-}
-
-export const \${1:ComponentName}: React.FC<\${1:ComponentName}Props> = ({ \${2:title} }) => {
-  return (
-    <div className="\${4:container}">
-      <h1>{\${2:title}}</h1>
-      \${0}
-    </div>
-  );
-};
-`,
-    createdAt: Date.now() - 1000 * 60 * 60 * 24,
-    updatedAt: Date.now() - 1000 * 60 * 60 * 24,
-  },
-  {
-    id: 'seed-2',
-    title: 'Safe Async Fetch with Try/Catch',
-    prefix: 'fetch-safe',
-    description: 'Resilient fetch wrapper with typed JSON response and error handling',
-    language: 'typescript',
-    tags: ['typescript', 'api', 'async'],
-    isFavorite: true,
-    body: `async function fetch\${1:Resource}<T>(url: string): Promise<T> {
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(\`HTTP error! status: \${response.status}\`);
-    }
-
-    const data = (await response.json()) as T;
-    return data;
-  } catch (error) {
-    console.error('Fetch error:', error);
-    throw error;
-  }
-}
-`,
-    createdAt: Date.now() - 1000 * 60 * 60 * 12,
-    updatedAt: Date.now() - 1000 * 60 * 60 * 12,
-  },
-  {
-    id: 'seed-3',
-    title: 'Python Typed Function with Docstring',
-    prefix: 'py-func',
-    description: 'Standard Python function structure with type hints and docstring',
-    language: 'python',
-    tags: ['python', 'backend', 'clean-code'],
-    isFavorite: false,
-    body: `def \${1:process_data}(\${2:payload}: dict) -> \${3:bool}:
-    """
-    \${4:Summary of what this function achieves.}
-
-    Args:
-        \${2:payload}: Input dictionary containing data.
-
-    Returns:
-        \${3:bool}: Success status.
-    """
-    \${0:pass}
-`,
-    createdAt: Date.now() - 1000 * 60 * 60 * 6,
-    updatedAt: Date.now() - 1000 * 60 * 60 * 6,
-  },
-  {
-    id: 'seed-4',
-    title: 'CSS Glassmorphism Container',
-    prefix: 'css-glass',
-    description: 'Frosted glass container effect with backdrop filter',
-    language: 'css',
-    tags: ['css', 'styling', 'glassmorphism'],
-    isFavorite: false,
-    body: `.\${1:glass-card} {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 12px;
-  padding: \${2:16px};
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
-`,
-    createdAt: Date.now() - 1000 * 60 * 60 * 2,
-    updatedAt: Date.now() - 1000 * 60 * 60 * 2,
-  }
-];
+const DEFAULT_SNIPPETS: Snippet[] = [];
 
 export class SnippetService {
   private readonly storageFilePath: string;
@@ -314,8 +212,12 @@ export class SnippetService {
         const content = fs.readFileSync(this.storageFilePath, 'utf-8');
         const parsed = JSON.parse(content);
         const list = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
-        if (Array.isArray(list) && list.length > 0) {
-          this.context.globalState.update(STORAGE_KEY, list);
+        if (Array.isArray(list)) {
+          const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
+          this.context.globalState.update(STORAGE_KEY, userOnly);
+          if (userOnly.length !== list.length) {
+            this.persistToFile(userOnly);
+          }
           return;
         }
       }
@@ -323,10 +225,12 @@ export class SnippetService {
       // Check globalState fallback
       const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>('myaz.snippets');
       if (existing && existing.length > 0) {
-        this.persistToFile(existing);
+        const userOnly = existing.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
+        this.context.globalState.update(STORAGE_KEY, userOnly);
+        this.persistToFile(userOnly);
       } else {
-        this.context.globalState.update(STORAGE_KEY, DEFAULT_SNIPPETS);
-        this.persistToFile(DEFAULT_SNIPPETS);
+        this.context.globalState.update(STORAGE_KEY, []);
+        this.persistToFile([]);
       }
     } catch (err) {
       console.error('Failed to initialize workspace file storage:', err);
@@ -360,7 +264,8 @@ export class SnippetService {
         const parsed = JSON.parse(content);
         const list = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
         if (Array.isArray(list)) {
-          return list.sort((a, b) => {
+          const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
+          return userOnly.sort((a, b) => {
             if (a.isFavorite !== b.isFavorite) {
               return a.isFavorite ? -1 : 1;
             }
@@ -372,13 +277,8 @@ export class SnippetService {
       // fallback to globalState
     }
 
-    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY, []);
-    return list.sort((a, b) => {
-      if (a.isFavorite !== b.isFavorite) {
-        return a.isFavorite ? -1 : 1;
-      }
-      return b.updatedAt - a.updatedAt;
-    });
+    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || [];
+    return list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
   }
 
   public save(data: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }): Snippet {
