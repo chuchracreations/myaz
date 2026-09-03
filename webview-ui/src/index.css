@@ -1811,6 +1811,20 @@ code {
   color: var(--text-highlight);
 }
 
+.port-service-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+}
+
 .port-pid-tag {
   font-family: var(--font-mono);
   font-size: 10px;

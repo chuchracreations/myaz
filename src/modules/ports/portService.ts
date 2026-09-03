@@ -13,6 +13,59 @@ export class PortService {
   /**
    * Automatically detect port numbers configured in this workspace's package.json or .env files
    */
+  /**
+   * Recursively search for project configuration files (.env*, package.json, docker-compose*.yml)
+   * across monorepos and microservices (up to 4 directory levels deep, skipping dependencies).
+   */
+  private findProjectConfigFiles(dir: string, maxDepth = 4, currentDepth = 0): string[] {
+    if (currentDepth > maxDepth) return [];
+    const results: string[] = [];
+
+    const IGNORED = new Set([
+      'node_modules',
+      '.git',
+      '.vscode',
+      'dist',
+      'build',
+      '.next',
+      '.nuxt',
+      'out',
+      '.turbo',
+      'vendor',
+      'target',
+      'bin',
+      'obj',
+      '.cache',
+    ]);
+
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.isDirectory()) {
+          if (!IGNORED.has(entry.name) && !entry.name.startsWith('.')) {
+            results.push(...this.findProjectConfigFiles(path.join(dir, entry.name), maxDepth, currentDepth + 1));
+          }
+        } else if (entry.isFile()) {
+          const name = entry.name.toLowerCase();
+          if (
+            name.startsWith('.env') ||
+            name === 'package.json' ||
+            name.startsWith('docker-compose')
+          ) {
+            results.push(path.join(dir, entry.name));
+          }
+        }
+      }
+    } catch {
+      // Ignore permission or unreadable folder errors
+    }
+
+    return results;
+  }
+
+  /**
+   * Automatically detect port numbers configured across this workspace or nested microservices
+   */
   public async detectProjectPorts(workspaceRoot?: string): Promise<number[]> {
     const root = workspaceRoot || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root || !fs.existsSync(root)) {
@@ -20,56 +73,70 @@ export class PortService {
     }
 
     const detected = new Set<number>();
+    const configFiles = this.findProjectConfigFiles(root);
 
-    // 1. Check package.json scripts
-    const pkgPath = path.join(root, 'package.json');
-    if (fs.existsSync(pkgPath)) {
-      try {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-        const scripts = pkg.scripts || {};
-        const scriptText = JSON.stringify(scripts);
+    for (const filePath of configFiles) {
+      const fileName = path.basename(filePath).toLowerCase();
 
-        const portMatches = scriptText.matchAll(/(?:--port|-p|PORT=)\s*(\d{2,5})/gi);
-        for (const m of portMatches) {
-          const p = parseInt(m[1], 10);
-          if (p > 0 && p <= 65535) detected.add(p);
-        }
-
-        // Framework heuristic defaults
-        const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
-        if (allDeps['next']) detected.add(3000);
-        if (allDeps['vite']) detected.add(5173);
-        if (allDeps['@angular/core']) detected.add(4200);
-        if (allDeps['nuxt']) detected.add(3000);
-        if (allDeps['gatsby']) detected.add(8000);
-        if (allDeps['remix']) detected.add(3000);
-      } catch (err) {
-        console.error('Failed to parse package.json for ports:', err);
-      }
-    }
-
-    // 2. Check .env files (.env, .env.local, .env.development)
-    const envNames = ['.env', '.env.local', '.env.development', '.env.dev'];
-    for (const envFile of envNames) {
-      const fullPath = path.join(root, envFile);
-      if (fs.existsSync(fullPath)) {
+      // 1. package.json across root or nested microservice folders
+      if (fileName === 'package.json') {
         try {
-          const content = fs.readFileSync(fullPath, 'utf-8');
+          const pkg = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+          const scripts = pkg.scripts || {};
+          const scriptText = JSON.stringify(scripts);
+
+          const portMatches = scriptText.matchAll(/(?:--port|-p|PORT=)\s*(\d{2,5})/gi);
+          for (const m of portMatches) {
+            const p = parseInt(m[1], 10);
+            if (p > 0 && p <= 65535) detected.add(p);
+          }
+
+          const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+          if (allDeps['next']) detected.add(3000);
+          if (allDeps['vite']) detected.add(5173);
+          if (allDeps['@angular/core']) detected.add(4200);
+          if (allDeps['nuxt']) detected.add(3000);
+          if (allDeps['gatsby']) detected.add(8000);
+          if (allDeps['remix']) detected.add(3000);
+        } catch {}
+      }
+
+      // 2. .env files located ANYWHERE in the workspace (nested microservices)
+      if (fileName.startsWith('.env')) {
+        try {
+          const content = fs.readFileSync(filePath, 'utf-8');
           const lines = content.split('\n');
           for (const line of lines) {
-            const m = line.match(/^(?:PORT|VITE_PORT|APP_PORT|SERVER_PORT|DEV_PORT|API_PORT)\s*=\s*(\d{2,5})/i);
+            const m = line.match(/^(?:PORT|VITE_PORT|APP_PORT|SERVER_PORT|DEV_PORT|API_PORT|CLIENT_PORT|WEB_PORT)\s*=\s*(\d{2,5})/i);
             if (m) {
               const p = parseInt(m[1], 10);
               if (p > 0 && p <= 65535) detected.add(p);
             }
+
+            // Also check for localhost ports in connection URLs (e.g. postgres://localhost:5432, http://localhost:8080)
+            const urlPortMatches = line.matchAll(/localhost:(\d{2,5})/gi);
+            for (const um of urlPortMatches) {
+              const p = parseInt(um[1], 10);
+              if (p > 0 && p <= 65535) detected.add(p);
+            }
           }
-        } catch (err) {
-          console.error(`Failed to parse ${envFile} for ports:`, err);
-        }
+        } catch {}
+      }
+
+      // 3. docker-compose*.yml port mappings
+      if (fileName.startsWith('docker-compose')) {
+        try {
+          const content = fs.readFileSync(filePath, 'utf-8');
+          const composePortMatches = content.matchAll(/["']?(\d{2,5}):\d{2,5}["']?/g);
+          for (const cm of composePortMatches) {
+            const p = parseInt(cm[1], 10);
+            if (p > 0 && p <= 65535) detected.add(p);
+          }
+        } catch {}
       }
     }
 
-    return Array.from(detected);
+    return Array.from(detected).sort((a, b) => a - b);
   }
 
   /**
@@ -212,12 +279,14 @@ export class PortService {
           }
         } catch {}
 
-        // Check if process belongs to current workspace
+        // Check if process belongs to current workspace or any microservice subfolder
         if (workspaceRoot && item.cwd) {
           const resolvedRoot = path.resolve(workspaceRoot);
           const resolvedCwd = path.resolve(item.cwd);
           if (resolvedCwd.startsWith(resolvedRoot)) {
             item.isCurrentProject = true;
+            const rel = path.relative(resolvedRoot, resolvedCwd);
+            item.relativeCwd = rel ? rel : '.';
           }
         }
       })

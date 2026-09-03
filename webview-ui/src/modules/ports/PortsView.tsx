@@ -259,6 +259,12 @@ export const PortsView: React.FC = () => {
                   <div className="port-identity">
                     <span className="port-number-tag">:{item.port}</span>
                     <span className="port-command-tag">{item.command}</span>
+                    {item.relativeCwd && item.relativeCwd !== '.' && (
+                      <span className="port-service-tag" title={`Microservice folder: ${item.relativeCwd}`}>
+                        <Folder size={11} />
+                        {item.relativeCwd}
+                      </span>
+                    )}
                     <span className="port-pid-tag">PID {item.pid}</span>
                   </div>
 

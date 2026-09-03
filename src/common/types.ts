@@ -27,6 +27,7 @@ export interface PortProcessInfo {
   command: string;
   fullCommand: string;
   cwd?: string;
+  relativeCwd?: string;
   user?: string;
   isCurrentProject: boolean;
 }
