@@ -21,19 +21,20 @@ export class ConverterService {
     const target = req.targetFormat.toLowerCase().replace('.', '');
 
     try {
-      // 1. Documents & PDF conversions
-      if (['docx', 'md', 'txt', 'html', 'pdf'].includes(ext) || ['pdf', 'md', 'html', 'txt', 'slide-deck', 'slides'].includes(target)) {
-        return await this.convertDocument(req, ext, target);
-      }
-
-      // 2. Spreadsheets & Tables
+      // 1. Spreadsheets & Tables (checked first: unambiguous by source extension, and their
+      // targets like "md"/"html" would otherwise collide with the document branch below)
       if (['xlsx', 'xls', 'csv', 'tsv'].includes(ext)) {
         return await this.convertSpreadsheet(req, ext, target);
       }
 
-      // 3. Data & Config formats
+      // 2. Data & Config formats (also unambiguous by source extension)
       if (['json', 'yaml', 'yml', 'xml', 'env'].includes(ext)) {
         return await this.convertData(req, ext, target);
+      }
+
+      // 3. Documents & PDF conversions
+      if (['docx', 'md', 'txt', 'html', 'pdf'].includes(ext) || ['pdf', 'md', 'html', 'txt', 'slide-deck', 'slides'].includes(target)) {
+        return await this.convertDocument(req, ext, target);
       }
 
       throw new Error(`Unsupported conversion from .${ext} to .${target}`);

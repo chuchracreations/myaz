@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { vscode } from '../../vscodeApi';
 import { convertImage, ConvertedImageResult, MultiResPngItem } from './imageConverter';
 import {
@@ -199,6 +199,25 @@ interface BatchQueueItem {
   error?: string;
 }
 
+/**
+ * Target formats valid for every file currently in the batch queue (the intersection of each
+ * file's own preset targets). Files with an unrecognized extension have no targets, so they
+ * contribute none — the dropdown only ever offers a target every queued file can actually reach.
+ */
+function computeBatchTargetOptions(
+  items: { ext: string }[]
+): { format: string; label: string; ext: string; isBinary: boolean }[] {
+  const presets = items.map(i => PRESETS[i.ext]).filter((p): p is ConversionPreset => !!p);
+  if (presets.length === 0 || presets.length !== items.length) return [];
+
+  const [first, ...rest] = presets;
+  return first.targets
+    // Batch mode saves one output per queued file, so a target that produces a bundle of
+    // multiple files (e.g. the multi-res icon pack) isn't offered here — only in the single-file flow.
+    .filter(t => t.format !== 'multi-res-png')
+    .filter(t => rest.every(p => p.targets.some(pt => pt.format === t.format)));
+}
+
 export const ConvertersView: React.FC = () => {
   // Mode Selection: Single File vs Batch Queue
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -264,14 +283,9 @@ export const ConvertersView: React.FC = () => {
 
       setBatchQueue(items);
 
-      // Auto-determine common target format
-      const firstExt = items[0].ext;
-      const preset = PRESETS[firstExt];
-      if (preset && preset.targets.length > 0) {
-        setBatchTarget(preset.targets[0].format);
-      } else {
-        setBatchTarget('');
-      }
+      // Auto-determine a target format common to every file's supported presets
+      const options = computeBatchTargetOptions(items);
+      setBatchTarget(options.length > 0 ? options[0].format : '');
     }
   };
 
@@ -595,6 +609,7 @@ export const ConvertersView: React.FC = () => {
 
   const preset = sourceExt ? PRESETS[sourceExt] : null;
   const batchCompletedCount = batchQueue.filter(i => i.status === 'done').length;
+  const batchTargetOptions = useMemo(() => computeBatchTargetOptions(batchQueue), [batchQueue]);
 
   return (
     <div className="converters-container">
@@ -739,21 +754,26 @@ export const ConvertersView: React.FC = () => {
 
           {/* Batch Target Selector */}
           <div className="batch-control-box">
-            <div className="batch-target-row">
-              <label>Convert all to:</label>
-              <select
-                value={batchTarget}
-                onChange={e => setBatchTarget(e.target.value)}
-                className="batch-select-input"
-              >
-                <option value="webp">WebP (Compressed)</option>
-                <option value="png">PNG (Lossless)</option>
-                <option value="jpg">JPEG (.jpg)</option>
-                <option value="pdf">PDF Document</option>
-                <option value="md">Markdown (.md)</option>
-                <option value="json">JSON (.json)</option>
-              </select>
-            </div>
+            {batchTargetOptions.length > 0 ? (
+              <div className="batch-target-row">
+                <label>Convert all to:</label>
+                <select
+                  value={batchTarget}
+                  onChange={e => setBatchTarget(e.target.value)}
+                  className="batch-select-input"
+                >
+                  {batchTargetOptions.map(t => (
+                    <option key={t.format} value={t.format}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className="unsupported-format-box">
+                <span>These files don't share a common target format. Remove files of a different type, or convert them separately.</span>
+              </div>
+            )}
 
             <label className="replace-toggle-label">
               <input

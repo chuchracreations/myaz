@@ -1,4 +1,4 @@
-export type ModuleId = 'snippets' | 'converters' | 'ports' | 'prompts' | 'templates' | 'notes';
+export type ModuleId = 'snippets' | 'converters' | 'ports' | 'utility' | 'prompts' | 'templates' | 'notes';
 
 export interface ModuleDefinition {
   id: ModuleId;

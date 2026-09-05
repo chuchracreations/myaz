@@ -5,12 +5,14 @@ import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
 import { ConvertersView } from './modules/converters/ConvertersView';
 import { PortsView } from './modules/ports/PortsView';
-import { CheckCircle2, Code2, RefreshCw, Radio } from 'lucide-react';
+import { UtilityView } from './modules/utility/UtilityView';
+import { CheckCircle2, Code2, RefreshCw, Radio, Wrench } from 'lucide-react';
 
 const MODULES: ModuleDefinition[] = [
   { id: 'snippets', title: 'Snippets', enabled: true },
   { id: 'converters', title: 'Converters', enabled: true },
   { id: 'ports', title: 'Ports', enabled: true },
+  { id: 'utility', title: 'Utility', enabled: true },
 ];
 
 export const App: React.FC = () => {
@@ -137,6 +139,7 @@ export const App: React.FC = () => {
                 {module.id === 'snippets' && <Code2 size={13} />}
                 {module.id === 'converters' && <RefreshCw size={13} />}
                 {module.id === 'ports' && <Radio size={13} />}
+                {module.id === 'utility' && <Wrench size={13} />}
                 <span>{module.title}</span>
               </button>
             );
@@ -160,6 +163,7 @@ export const App: React.FC = () => {
         )}
         {activeModule === 'converters' && <ConvertersView />}
         {activeModule === 'ports' && <PortsView />}
+        {activeModule === 'utility' && <UtilityView />}
       </main>
 
       {/* Snippet Create / Edit Modal */}
