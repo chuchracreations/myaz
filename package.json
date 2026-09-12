@@ -2,7 +2,7 @@
   "name": "myaz-extension",
   "displayName": "myaz",
   "description": "All-in-One Developer Toolkit: Snippet Manager, 100% Offline File Converter (PDF, Word, Markdown, SVG, Excel & more), Port Killer (kill EADDRINUSE ghosts in 1 click), Dev Utilities (JWT, UUID, Base64, Regex) & a Random Data Generator — five tools, zero telemetry.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "himanshuchuchra",
   "icon": "media/icon.png",
   "license": "MIT",
