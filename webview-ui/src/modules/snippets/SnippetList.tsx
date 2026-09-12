@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Snippet } from '../../../../src/common/types';
 import { SnippetCard } from './SnippetCard';
 import { Search, X, Star, FileCode, PlusCircle, Sparkles } from 'lucide-react';
@@ -26,6 +26,21 @@ export const SnippetList: React.FC<SnippetListProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'favorites' | string>('all');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Press "/" anywhere in the list to jump into search, like a command palette
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isTyping = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+      if (e.key === '/' && !isTyping) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Extract all unique languages available in snippets
   const availableLanguages = useMemo(() => {
@@ -73,13 +88,14 @@ export const SnippetList: React.FC<SnippetListProps> = ({
       <div className="search-container">
         <Search size={13} className="search-icon" />
         <input
+          ref={searchInputRef}
           className="search-input"
           type="text"
           placeholder="Search snippets by name, tag, code..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
         />
-        {searchQuery && (
+        {searchQuery ? (
           <button
             className="btn-icon"
             style={{ padding: '2px' }}
@@ -88,6 +104,8 @@ export const SnippetList: React.FC<SnippetListProps> = ({
           >
             <X size={12} />
           </button>
+        ) : (
+          <span className="search-kbd">/</span>
         )}
       </div>
 
@@ -97,7 +115,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
           className={`filter-pill ${selectedFilter === 'all' ? 'active' : ''}`}
           onClick={() => setSelectedFilter('all')}
         >
-          All ({snippets.length})
+          All <span className="count">{snippets.length}</span>
         </button>
 
         <button

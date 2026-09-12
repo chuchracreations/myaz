@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Snippet } from '../../../../src/common/types';
 import { highlightSnippetCode } from '../../utils/syntaxHighlight';
+import { getLanguageAccent, getLanguageShortLabel, formatRelativeTime } from '../../utils/snippetDisplay';
 import { Play, Copy, Check, Star, Edit3, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface SnippetCardProps {
@@ -29,25 +30,32 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const lineCount = snippet.body.split('\n').length;
+  const lines = useMemo(() => snippet.body.split('\n'), [snippet.body]);
+  const lineCount = lines.length;
   const isMultiLine = lineCount > 4;
 
   const highlightedCode = useMemo(() => {
     return highlightSnippetCode(snippet.body, snippet.language);
   }, [snippet.body, snippet.language]);
 
+  const { accent, soft } = getLanguageAccent(snippet.language);
+  const shortLabel = getLanguageShortLabel(snippet.language);
+
   return (
-    <div className="snippet-card">
+    <div
+      className="snippet-card"
+      style={{ '--lang-accent': accent, '--lang-accent-soft': soft } as React.CSSProperties}
+    >
       <div className="card-top">
         <div className="card-title-group">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div className="card-heading-row">
             <button
-              className={`btn-icon ${snippet.isFavorite ? 'active' : ''}`}
+              className={`fav-btn ${snippet.isFavorite ? 'is-fav' : ''}`}
               onClick={() => onToggleFavorite(snippet.id)}
               title={snippet.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
               aria-label="Favorite"
             >
-              <Star size={13} fill={snippet.isFavorite ? '#f59e0b' : 'none'} />
+              <Star size={14} fill={snippet.isFavorite ? 'currentColor' : 'none'} />
             </button>
             <h3 className="card-title" title={snippet.title}>
               {snippet.title}
@@ -56,15 +64,16 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
           {snippet.description && <p className="card-desc">{snippet.description}</p>}
         </div>
 
-        <div className="card-badges">
-          <span className="lang-badge">{snippet.language}</span>
-          {snippet.prefix && <span className="prefix-badge">{snippet.prefix}</span>}
-        </div>
+        <span className="lang-tag" title={snippet.language}>
+          <span className="lang-dot" />
+          {shortLabel}
+        </span>
       </div>
 
-      {snippet.tags && snippet.tags.length > 0 && (
-        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          {snippet.tags.map((tag: string, idx: number) => (
+      {(snippet.prefix || (snippet.tags && snippet.tags.length > 0)) && (
+        <div className="card-badges">
+          {snippet.prefix && <span className="prefix-badge">{snippet.prefix}</span>}
+          {snippet.tags?.map((tag: string, idx: number) => (
             <span key={idx} className="tag-badge">
               #{tag}
             </span>
@@ -72,34 +81,20 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
         </div>
       )}
 
-      {/* Code preview block with syntax highlighting */}
+      {/* Code preview block: line-numbered gutter + syntax-highlighted code */}
       <div className="code-preview-container">
-        <pre
-          className="code-preview"
-          style={{
-            maxHeight: isExpanded ? '400px' : '100px',
-          }}
-        >
-          <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-        </pre>
+        <div className="code-flex" style={{ maxHeight: isExpanded ? '400px' : '100px' }}>
+          <div className="code-lines" aria-hidden="true">
+            {lines.map((_, idx) => (
+              <div key={idx}>{idx + 1}</div>
+            ))}
+          </div>
+          <pre className="code-preview">
+            <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+          </pre>
+        </div>
         {isMultiLine && (
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              padding: '3px',
-              background: 'rgba(0,0,0,0.2)',
-              border: 'none',
-              borderTop: '1px solid rgba(255,255,255,0.05)',
-              color: 'var(--text-muted)',
-              fontSize: '10px',
-              cursor: 'pointer',
-            }}
-          >
+          <button className="show-more-btn" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? (
               <>
                 <ChevronUp size={12} /> Show less
@@ -117,7 +112,7 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
       <div className="card-actions">
         <div className="card-actions-left">
           <button
-            className="btn btn-primary"
+            className="btn btn-insert"
             onClick={() => onInsert(snippet)}
             title="Insert this snippet directly at current cursor position"
           >
@@ -134,6 +129,7 @@ export const SnippetCard: React.FC<SnippetCardProps> = ({
         </div>
 
         <div className="card-actions-right">
+          <span className="card-meta">Updated {formatRelativeTime(snippet.updatedAt)}</span>
           <button
             className="btn-icon"
             onClick={() => onEdit(snippet)}
