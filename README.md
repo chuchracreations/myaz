@@ -2,8 +2,6 @@
 
   <img src="https://res.cloudinary.com/dquzactsh/image/upload/v1789235525/logo_stxkje.png" alt="myaz Logo" width="220" style="max-width: 100%; height: auto;" />
 
-# myaz
-
 ### _The All-in-One Offline Developer Toolkit for VS Code_
 
 **Snippets · File Converters · Port Killer · Dev Utilities · Fake Data Generator — in one sidebar, zero network calls.**
@@ -26,8 +24,6 @@
 <a href="https://github.com/chuchracreations/myaz"><b>Star on GitHub ⭐</b></a>
 
 </div>
-
----
 
 ## 📋 Table of Contents
 
