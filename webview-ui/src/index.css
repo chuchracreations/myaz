@@ -346,6 +346,40 @@ code {
   color: var(--card-accent);
 }
 
+.feedback-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #4fd8fc, #7050fb);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -12px rgba(112, 80, 251, 0.55);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+.feedback-cta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px -12px rgba(112, 80, 251, 0.65);
+  filter: brightness(1.06);
+}
+
+.feedback-cta-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+
 .home-footer {
   margin-top: auto;
   padding-top: 6px;
@@ -2706,6 +2740,61 @@ code {
 .tool-back-btn:hover {
   color: var(--text-highlight);
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Feedback (embedded Google Form) */
+.feedback-view {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.feedback-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+  background: linear-gradient(160deg, rgba(79, 216, 252, 0.1), rgba(112, 80, 251, 0.07));
+  box-shadow: 0 16px 36px -22px rgba(0, 0, 0, 0.7);
+}
+
+.feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feedback-icon-tile {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #4fd8fc, #7050fb);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px -6px rgba(112, 80, 251, 0.55);
+}
+
+.feedback-frame-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: #fff;
+  box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.6);
+}
+
+.feedback-frame {
+  display: block;
+  border: none;
+  transform-origin: top left;
 }
 
 .tool-icon-tile {

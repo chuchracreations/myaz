@@ -1,6 +1,14 @@
 import React from 'react';
 import { Screen } from '../../../../src/common/types';
-import { Code2, RefreshCw, Radio, Wrench, Dices, ChevronRight } from 'lucide-react';
+import {
+  Code2,
+  RefreshCw,
+  Radio,
+  Wrench,
+  Dices,
+  ChevronRight,
+  MessageSquareHeart,
+} from 'lucide-react';
 
 declare global {
   interface Window {
@@ -90,6 +98,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
           </button>
         ))}
       </div>
+
+      <button type="button" className="feedback-cta-btn" onClick={() => onNavigate('feedback')}>
+        <MessageSquareHeart size={16} />
+        <span>Please provide me Feedback</span>
+      </button>
 
       <div className="home-footer">
         <div className="footer-row">

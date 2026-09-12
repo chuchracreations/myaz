@@ -4,7 +4,7 @@
 
 ### _The All-in-One Offline Developer Toolkit for VS Code_
 
-**Snippets · File Converters · Port Killer · Dev Utilities · Fake Data Generator — in one sidebar, zero network calls.**
+**Snippets · File Converters · Port Killer · Dev Utilities · Fake Data Generator — in one sidebar, offline by default.**
 
 [![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/himanshuchuchra.myaz-extension?style=for-the-badge&logo=visual-studio-code&label=Marketplace&color=blue)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
 [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/himanshuchuchra.myaz-extension?style=for-the-badge&label=Installs&color=success)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
@@ -196,7 +196,8 @@ Need realistic fake data for a demo, a seed script, or a UI mockup? Generate it 
 
 ## 🔒 100% Offline, Private & Local
 
-- **Zero Telemetry**: myaz makes zero network requests, has zero tracking, and sends zero data to external servers.
+- **Zero Telemetry**: All five core modules — Snippets, Converters, Ports, Utilities, and Random Data — make zero network requests, have zero tracking, and send zero data to external servers.
+- **The one exception**: the optional **Feedback** button on the Home screen (_"Please provide me Feedback"_) loads a Google Form. It only makes a network request when you open it, and only sends data if you submit the form yourself — nothing runs automatically or in the background.
 - **Local Storage**: All snippets are stored locally on your machine in human-readable JSON:
 
 | Operating System | Default Storage Path                                                                                  |
@@ -238,6 +239,7 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access co
 
 ## 🤝 Contributing & Feedback
 
+- **In-editor Feedback**: Click **Please provide me Feedback** on the Home screen to share thoughts without leaving VS Code.
 - **Report Issues & Feature Requests**: Reach out or file an issue on [GitHub](https://github.com/chuchracreations/myaz).
 - **Enjoying myaz?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)!
 

@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>myaz</title>
-<meta name="description" content="Snippets, file converters, a port killer, dev utilities and a fake-data generator — five tools in one VS Code sidebar, 100% offline." />
+<meta name="description" content="Snippets, file converters, a port killer, dev utilities and a fake-data generator — five tools in one VS Code sidebar, offline by default." />
 <meta property="og:title" content="myaz — offline developer toolkit for VS Code" />
-<meta property="og:description" content="Five tools you open ten times a day. One offline sidebar. Zero network requests." />
+<meta property="og:description" content="Five tools you open ten times a day. One offline sidebar. Zero network requests, across all five." />
 <meta property="og:image" content="https://res.cloudinary.com/dquzactsh/image/upload/v1789235525/logo_stxkje.png" />
 <meta name="theme-color" content="#0a0c14" />
 <link rel="icon" href="assets/logo-mark.png" />
@@ -56,6 +56,8 @@
   }
 
   * { box-sizing: border-box; }
+
+  [hidden] { display: none !important; }
 
   html { color-scheme: dark; }
 
@@ -430,7 +432,7 @@
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     overflow: hidden;
-    margin-block: 8px 64px;
+    margin-block: 8px 0;
   }
   .stat-strip .stat {
     flex: 1 1 160px;
@@ -449,6 +451,11 @@
     font-variant-numeric: tabular-nums;
   }
   .stat-strip .lbl { font-size: 0.82rem; color: var(--ink-dim); }
+  .stat-note {
+    margin: 10px 0 64px;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
 
   /* ---------- section shell ---------- */
 
@@ -603,6 +610,82 @@
   .steps p, .steps .terminal { font-size: 0.86rem; color: var(--ink-dim); margin-top: 6px; }
   .steps .terminal { margin-top: 8px; padding: 8px 10px; font-size: 0.78rem; }
 
+  /* ---------- feedback dialog ---------- */
+  /* Google's embedded form isn't responsive below ~640px, so it's rendered at
+     its real design width and scaled down to fit the dialog via JS, the same
+     trick used for the in-editor Feedback screen. */
+
+  .feedback-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .feedback-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 11px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--brand);
+    color: var(--ground);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 14px 30px -16px rgba(112, 80, 251, 0.6);
+  }
+  .feedback-cta svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .feedback-cta:hover { transform: translateY(-1px); box-shadow: 0 18px 34px -14px rgba(112, 80, 251, 0.7); }
+  .feedback-cta:active { transform: translateY(0); }
+
+  .feedback-dialog {
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-md);
+    width: min(640px, 92vw);
+    max-height: 88vh;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.8);
+  }
+  .feedback-dialog::backdrop { background: rgba(5, 6, 12, 0.72); backdrop-filter: blur(2px); }
+
+  .feedback-dialog-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(10, 12, 20, 0.55);
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .feedback-dialog-close:hover { background: rgba(10, 12, 20, 0.8); }
+
+  .feedback-frame-wrap {
+    position: relative;
+    width: 100%;
+    max-height: 88vh;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  #feedbackFrame { display: block; border: none; overflow: hidden; transform-origin: top left; }
+
   /* ---------- status-bar footer ---------- */
 
   footer.statusbar {
@@ -633,6 +716,7 @@
     .compare { grid-template-columns: 1fr; }
     .compare .col-head.with { border-top: 1px solid var(--line); }
     footer.statusbar .spacer { margin-left: 0; }
+    .feedback-cta { width: 100%; justify-content: center; }
   }
 </style>
 </head>
@@ -651,6 +735,7 @@
     <a class="tab" href="#modules">Modules</a>
     <a class="tab" href="#why-local">Why local</a>
     <a class="tab" href="#install">Install</a>
+    <a class="tab" href="#feedback">Feedback</a>
     <span class="cta">
       <a class="btn btn-primary" href="https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
@@ -717,7 +802,7 @@
 
           <div class="sb-footer">
             <span class="fb"><img src="assets/logo-mark.png" alt="" /><span class="fbt">myaz</span></span>
-            <span class="fv">v0.4.0</span>
+            <span class="fv">v0.5.0</span>
           </div>
         </div>
 
@@ -736,11 +821,12 @@
     </section>
 
     <div class="stat-strip">
-      <div class="stat"><span class="num">0</span><span class="lbl">network requests</span></div>
+      <div class="stat"><span class="num">0</span><span class="lbl">network requests*</span></div>
       <div class="stat"><span class="num">5</span><span class="lbl">modules</span></div>
       <div class="stat"><span class="num">21</span><span class="lbl">built-in tools &amp; generators</span></div>
       <div class="stat"><span class="num">MIT</span><span class="lbl">licensed</span></div>
     </div>
+    <p class="stat-note">*Across all five core modules. The optional in-editor Feedback form is the one exception — it loads only when you open it.</p>
 
     <section id="modules">
       <div class="section-head">
@@ -863,19 +949,89 @@
       </ol>
     </section>
 
+    <section id="feedback">
+      <div class="feedback-row">
+        <div class="section-head" style="margin-bottom: 0">
+          <p class="eyebrow">We're listening</p>
+          <h2>Tell us what's working — or what's not</h2>
+          <p>Opens right here on the page — no redirect, no sign-in.</p>
+        </div>
+
+        <button type="button" class="feedback-cta" id="feedbackOpen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H8l-4 4V5a2 2 0 012-2h13a2 2 0 012 2z"/></svg>
+          <span>Please provide me Feedback</span>
+        </button>
+      </div>
+    </section>
+
   </main>
+
+  <dialog class="feedback-dialog" id="feedbackDialog">
+    <button type="button" class="feedback-dialog-close" id="feedbackClose" aria-label="Close">&times;</button>
+    <div class="feedback-frame-wrap" id="feedbackFrameWrap">
+      <iframe
+        id="feedbackFrame"
+        data-src="https://docs.google.com/forms/d/e/1FAIpQLScHgr-s8Bd-WFL5P6LhJxFFo7rJeXGX1UjdIVnia5vBsEB-Fg/viewform?embedded=true"
+        title="myaz feedback form"
+        scrolling="no"
+      >Loading feedback form…</iframe>
+    </div>
+  </dialog>
 
   <footer class="statusbar">
     <div class="wrap">
       <span>MIT License</span>
       <a href="https://github.com/chuchracreations/myaz">chuchracreations/myaz</a>
       <span class="spacer">
-        <span>v0.4.0</span>
-        <span>100% offline</span>
+        <span>v0.5.0</span>
+        <span>offline by default</span>
         <a href="https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension">Marketplace</a>
       </span>
     </div>
   </footer>
 
+  <script>
+    (function () {
+      var FORM_WIDTH = 640;
+      var FORM_HEIGHT = 1645;
+      var openBtn = document.getElementById('feedbackOpen');
+      var closeBtn = document.getElementById('feedbackClose');
+      var dialog = document.getElementById('feedbackDialog');
+      var wrap = document.getElementById('feedbackFrameWrap');
+      var frame = document.getElementById('feedbackFrame');
+      if (!openBtn || !closeBtn || !dialog || !wrap || !frame) return;
+
+      function updateScale() {
+        var scale = wrap.clientWidth / FORM_WIDTH;
+        frame.style.width = FORM_WIDTH + 'px';
+        frame.style.height = FORM_HEIGHT + 'px';
+        frame.style.transform = 'scale(' + scale + ')';
+        wrap.style.height = Math.min(FORM_HEIGHT * scale, window.innerHeight * 0.88) + 'px';
+      }
+
+      openBtn.addEventListener('click', function () {
+        if (!frame.src) frame.src = frame.dataset.src;
+        dialog.showModal();
+        document.body.style.overflow = 'hidden';
+        requestAnimationFrame(updateScale);
+      });
+
+      closeBtn.addEventListener('click', function () {
+        dialog.close();
+      });
+
+      dialog.addEventListener('close', function () {
+        document.body.style.overflow = '';
+      });
+
+      dialog.addEventListener('click', function (event) {
+        if (event.target === dialog) dialog.close();
+      });
+
+      window.addEventListener('resize', function () {
+        if (dialog.open) updateScale();
+      });
+    })();
+  </script>
 </body>
 </html>
