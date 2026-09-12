@@ -48,6 +48,7 @@ export type WebviewToHostMessage =
   | { type: 'IMPORT_SNIPPETS' }
   | { type: 'CONVERT_FILE'; payload: any }
   | { type: 'CONVERT_TEXT'; payload: any }
+  | { type: 'PICK_CONVERT_FILE' }
   | { type: 'SAVE_CONVERTED_FILE'; payload: any }
   | { type: 'SAVE_BATCH_FILES'; payload: any }
   | { type: 'SAVE_BATCH_ZIP'; payload: any }
@@ -65,6 +66,7 @@ export type HostToWebviewMessage =
   | { type: 'NAVIGATE_HOME' }
   | { type: 'CONVERT_FILE_RESULT'; payload: any }
   | { type: 'CONVERT_TEXT_RESULT'; payload: any }
+  | { type: 'CONVERT_FILE_PICKED'; payload: { files: { fileName: string; dataBase64: string; originalPath: string }[] } }
   | { type: 'PORT_SCAN_RESULTS'; payload: { ports: PortProcessInfo[]; detectedProjectPorts: number[] } }
   | { type: 'PORT_KILLED_RESULT'; payload: { success: boolean; pid: number; port: number; error?: string } }
   | { type: 'PORT_KILL_ALL_RESULT'; payload: { killedCount: number; failedCount: number; cancelled?: boolean } }

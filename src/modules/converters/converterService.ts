@@ -470,15 +470,15 @@ ${parsedBody}
   }
 
   /**
-   * Save converted file to disk via VS Code Save Dialog with optional in-place replacement
+   * Save converted file to disk via VS Code Save Dialog. When the source file's original
+   * path is known, the save dialog defaults to that same folder for convenience.
    */
   public async saveConvertedFile(
     defaultFileName: string,
     outputDataBase64?: string,
     outputText?: string,
     defaultDirectory?: string,
-    originalPath?: string,
-    replaceOriginal?: boolean
+    originalPath?: string
   ): Promise<string | null> {
     const ext = path.extname(defaultFileName);
     const filterName = ext ? `${ext.toUpperCase().replace('.', '')} File` : 'All Files';
@@ -512,23 +512,11 @@ ${parsedBody}
 
     fs.writeFileSync(targetUri.fsPath, buffer);
 
-    // In-place replacement: remove original file if requested
-    if (replaceOriginal && originalPath && fs.existsSync(originalPath)) {
-      try {
-        if (path.resolve(targetUri.fsPath) !== path.resolve(originalPath)) {
-          fs.unlinkSync(originalPath);
-          vscode.window.showInformationMessage(`Replaced original: ${path.basename(originalPath)} with ${path.basename(targetUri.fsPath)}`);
-        }
-      } catch (err: unknown) {
-        console.error('Failed to remove original file:', err);
+    vscode.window.showInformationMessage(`Saved: ${path.basename(targetUri.fsPath)}`, 'Open File').then(action => {
+      if (action === 'Open File') {
+        vscode.commands.executeCommand('vscode.open', targetUri);
       }
-    } else {
-      vscode.window.showInformationMessage(`Saved: ${path.basename(targetUri.fsPath)}`, 'Open File').then(action => {
-        if (action === 'Open File') {
-          vscode.commands.executeCommand('vscode.open', targetUri);
-        }
-      });
-    }
+    });
 
     return targetUri.fsPath;
   }
@@ -537,8 +525,7 @@ ${parsedBody}
    * Save multiple batch converted files to a selected folder
    */
   public async saveBatchFiles(
-    items: { fileName: string; outputDataBase64?: string; outputText?: string; originalPath?: string }[],
-    replaceOriginal?: boolean
+    items: { fileName: string; outputDataBase64?: string; outputText?: string }[]
   ): Promise<{ savedCount: number; destinationDir: string } | null> {
     const defaultUri = vscode.workspace.workspaceFolders?.[0]?.uri;
     const folderUri = await vscode.window.showOpenDialog({
@@ -570,13 +557,6 @@ ${parsedBody}
 
         fs.writeFileSync(filePath, buf);
         count++;
-
-        // Delete original if requested
-        if (replaceOriginal && item.originalPath && fs.existsSync(item.originalPath)) {
-          if (path.resolve(filePath) !== path.resolve(item.originalPath)) {
-            fs.unlinkSync(item.originalPath);
-          }
-        }
       } catch (err: unknown) {
         console.error(`Failed to save batch item ${item.fileName}:`, err);
       }

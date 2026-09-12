@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { HostToWebviewMessage, Screen, WebviewToHostMessage } from '../common/types';
 import { SnippetService } from '../modules/snippets/snippetService';
 import { SnippetCommands } from '../modules/snippets/snippetCommands';
@@ -185,6 +186,37 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
         break;
       }
 
+      case 'PICK_CONVERT_FILE': {
+        // Opened via the native file dialog (not the webview's sandboxed <input type="file">)
+        // specifically so we get a real filesystem path — that's what "Replace original file
+        // on disk" needs, and a browser File object picked inside the webview can never carry one.
+        const uris = await vscode.window.showOpenDialog({
+          canSelectFiles: true,
+          canSelectFolders: false,
+          canSelectMany: true,
+          openLabel: 'Select File(s) to Convert',
+        });
+
+        if (uris && uris.length > 0) {
+          const files = await Promise.all(
+            uris.map(async uri => {
+              const bytes = await vscode.workspace.fs.readFile(uri);
+              return {
+                fileName: path.basename(uri.fsPath),
+                dataBase64: Buffer.from(bytes).toString('base64'),
+                originalPath: uri.fsPath,
+              };
+            })
+          );
+
+          this.postMessage({
+            type: 'CONVERT_FILE_PICKED',
+            payload: { files },
+          });
+        }
+        break;
+      }
+
       case 'CONVERT_TEXT': {
         if (this.converterService) {
           const { text, sourceFormat, targetFormat } = (message as any).payload;
@@ -205,16 +237,16 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
       case 'SAVE_CONVERTED_FILE': {
         if (this.converterService) {
-          const { fileName, outputDataBase64, outputText, originalPath, replaceOriginal } = (message as any).payload;
-          await this.converterService.saveConvertedFile(fileName, outputDataBase64, outputText, undefined, originalPath, replaceOriginal);
+          const { fileName, outputDataBase64, outputText, originalPath } = (message as any).payload;
+          await this.converterService.saveConvertedFile(fileName, outputDataBase64, outputText, undefined, originalPath);
         }
         break;
       }
 
       case 'SAVE_BATCH_FILES': {
         if (this.converterService) {
-          const { items, replaceOriginal } = (message as any).payload;
-          await this.converterService.saveBatchFiles(items, replaceOriginal);
+          const { items } = (message as any).payload;
+          await this.converterService.saveBatchFiles(items);
         }
         break;
       }

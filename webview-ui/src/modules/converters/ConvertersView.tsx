@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { vscode } from '../../vscodeApi';
 import { convertImage, ConvertedImageResult, MultiResPngItem } from './imageConverter';
 import {
@@ -11,21 +11,30 @@ import {
   FileText,
   Image as ImageIcon,
   Table as TableIcon,
+  Braces,
   FileCode,
   FolderOpen,
   ArrowRight,
   X,
   RotateCcw,
-  Presentation,
   Archive,
-  Layers,
-  FileSearch,
+  ShieldCheck,
 } from 'lucide-react';
+
+interface ConversionTarget {
+  format: string;
+  label: string;
+  ext: string;
+  isBinary: boolean;
+  badge: string;
+  shortLabel: string;
+  desc: string;
+}
 
 interface ConversionPreset {
   sourceExts: string[];
   category: 'images' | 'documents' | 'spreadsheets' | 'data';
-  targets: { format: string; label: string; ext: string; isBinary: boolean }[];
+  targets: ConversionTarget[];
 }
 
 const PRESETS: Record<string, ConversionPreset> = {
@@ -34,11 +43,11 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['svg'],
     category: 'images',
     targets: [
-      { format: 'multi-res-png', label: 'Multi-Res PNG Bundle (16px-512px)', ext: 'zip', isBinary: true },
-      { format: 'png', label: 'PNG (Rasterized)', ext: 'png', isBinary: true },
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false },
+      { format: 'multi-res-png', label: 'Multi-Res PNG Bundle (16px-512px)', ext: 'zip', isBinary: true, badge: 'ZIP', shortLabel: 'Icon Pack', desc: '16px–512px bundle' },
+      { format: 'png', label: 'PNG (Rasterized)', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Rasterized' },
+      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
+      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
+      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
     ],
   },
   // Images
@@ -46,40 +55,40 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['png'],
     category: 'images',
     targets: [
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true },
-      { format: 'jpg', label: 'JPEG (.jpg)', ext: 'jpg', isBinary: true },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false },
+      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
+      { format: 'jpg', label: 'JPEG (.jpg)', ext: 'jpg', isBinary: true, badge: 'JPG', shortLabel: 'JPEG', desc: 'Lossy compressed' },
+      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
+      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
     ],
   },
   jpg: {
     sourceExts: ['jpg', 'jpeg'],
     category: 'images',
     targets: [
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true },
-      { format: 'png', label: 'PNG (Lossless)', ext: 'png', isBinary: true },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false },
+      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
+      { format: 'png', label: 'PNG (Lossless)', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Lossless' },
+      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
+      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
     ],
   },
   jpeg: {
     sourceExts: ['jpeg'],
     category: 'images',
     targets: [
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true },
-      { format: 'png', label: 'PNG', ext: 'png', isBinary: true },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false },
+      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
+      { format: 'png', label: 'PNG', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Lossless' },
+      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
+      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
     ],
   },
   webp: {
     sourceExts: ['webp'],
     category: 'images',
     targets: [
-      { format: 'png', label: 'PNG (Lossless)', ext: 'png', isBinary: true },
-      { format: 'jpg', label: 'JPEG (.jpg)', ext: 'jpg', isBinary: true },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false },
+      { format: 'png', label: 'PNG (Lossless)', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Lossless' },
+      { format: 'jpg', label: 'JPEG (.jpg)', ext: 'jpg', isBinary: true, badge: 'JPG', shortLabel: 'JPEG', desc: 'Lossy compressed' },
+      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
+      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
     ],
   },
   // PDF Document Extractor
@@ -87,8 +96,8 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['pdf'],
     category: 'documents',
     targets: [
-      { format: 'md', label: 'Markdown (.md) - Text & Headings', ext: 'md', isBinary: false },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false },
+      { format: 'md', label: 'Markdown (.md) - Text & Headings', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Text & headings' },
+      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Raw text only' },
     ],
   },
   // Markdown Suite
@@ -96,10 +105,10 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['md', 'markdown'],
     category: 'documents',
     targets: [
-      { format: 'slide-deck', label: 'Interactive Slide Deck (.html)', ext: 'slides.html', isBinary: false },
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true },
-      { format: 'html', label: 'Styled Web Page (.html)', ext: 'html', isBinary: false },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false },
+      { format: 'slide-deck', label: 'Interactive Slide Deck (.html)', ext: 'slides.html', isBinary: false, badge: 'DECK', shortLabel: 'Slide Deck', desc: 'Interactive presentation' },
+      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
+      { format: 'html', label: 'Styled Web Page (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'Web Page', desc: 'Styled HTML' },
+      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Strip formatting' },
     ],
   },
   // Documents
@@ -107,26 +116,26 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['docx'],
     category: 'documents',
     targets: [
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true },
-      { format: 'md', label: 'Markdown (.md)', ext: 'md', isBinary: false },
-      { format: 'html', label: 'HTML Web Page (.html)', ext: 'html', isBinary: false },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false },
+      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
+      { format: 'md', label: 'Markdown (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Text & headings' },
+      { format: 'html', label: 'HTML Web Page (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'Web Page', desc: 'Styled HTML' },
+      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Strip formatting' },
     ],
   },
   txt: {
     sourceExts: ['txt'],
     category: 'documents',
     targets: [
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true },
+      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
     ],
   },
   html: {
     sourceExts: ['html', 'htm'],
     category: 'documents',
     targets: [
-      { format: 'md', label: 'Markdown (.md)', ext: 'md', isBinary: false },
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false },
+      { format: 'md', label: 'Markdown (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Text & headings' },
+      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
+      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Strip formatting' },
     ],
   },
   // Spreadsheets
@@ -134,19 +143,19 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['xlsx', 'xls'],
     category: 'spreadsheets',
     targets: [
-      { format: 'json', label: 'JSON Array (.json)', ext: 'json', isBinary: false },
-      { format: 'md', label: 'Markdown Table (.md)', ext: 'md', isBinary: false },
-      { format: 'html', label: 'HTML Table (.html)', ext: 'html', isBinary: false },
-      { format: 'csv', label: 'CSV File (.csv)', ext: 'csv', isBinary: false },
+      { format: 'json', label: 'JSON Array (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Array of rows' },
+      { format: 'md', label: 'Markdown Table (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Table format' },
+      { format: 'html', label: 'HTML Table (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'HTML Table', desc: 'Styled table' },
+      { format: 'csv', label: 'CSV File (.csv)', ext: 'csv', isBinary: false, badge: 'CSV', shortLabel: 'CSV', desc: 'Comma-separated' },
     ],
   },
   csv: {
     sourceExts: ['csv', 'tsv'],
     category: 'spreadsheets',
     targets: [
-      { format: 'json', label: 'JSON Array (.json)', ext: 'json', isBinary: false },
-      { format: 'md', label: 'Markdown Table (.md)', ext: 'md', isBinary: false },
-      { format: 'html', label: 'HTML Table (.html)', ext: 'html', isBinary: false },
+      { format: 'json', label: 'JSON Array (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Array of rows' },
+      { format: 'md', label: 'Markdown Table (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Table format' },
+      { format: 'html', label: 'HTML Table (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'HTML Table', desc: 'Styled table' },
     ],
   },
   // Data & Config
@@ -154,36 +163,54 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['json'],
     category: 'data',
     targets: [
-      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false },
-      { format: 'xml', label: 'XML (.xml)', ext: 'xml', isBinary: false },
-      { format: 'env', label: 'Environment (.env)', ext: 'env', isBinary: false },
+      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false, badge: 'YAML', shortLabel: 'YAML', desc: 'Human-readable config' },
+      { format: 'xml', label: 'XML (.xml)', ext: 'xml', isBinary: false, badge: 'XML', shortLabel: 'XML', desc: 'Markup format' },
+      { format: 'env', label: 'Environment (.env)', ext: 'env', isBinary: false, badge: 'ENV', shortLabel: '.env', desc: 'Key=value pairs' },
     ],
   },
   yaml: {
     sourceExts: ['yaml', 'yml'],
     category: 'data',
     targets: [
-      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false },
-      { format: 'xml', label: 'XML (.xml)', ext: 'xml', isBinary: false },
+      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Structured data' },
+      { format: 'xml', label: 'XML (.xml)', ext: 'xml', isBinary: false, badge: 'XML', shortLabel: 'XML', desc: 'Markup format' },
     ],
   },
   xml: {
     sourceExts: ['xml'],
     category: 'data',
     targets: [
-      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false },
-      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false },
+      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Structured data' },
+      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false, badge: 'YAML', shortLabel: 'YAML', desc: 'Human-readable config' },
     ],
   },
   env: {
     sourceExts: ['env'],
     category: 'data',
     targets: [
-      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false },
-      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false },
+      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Structured data' },
+      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false, badge: 'YAML', shortLabel: 'YAML', desc: 'Human-readable config' },
     ],
   },
 };
+
+// Capability overview shown on the landing state, derived directly from PRESETS
+// so it can never drift out of sync with what's actually supported.
+const CATEGORY_META: Record<ConversionPreset['category'], { label: string; icon: React.ReactNode; accentClass: string }> = {
+  images: { label: 'Images', icon: <ImageIcon size={12} />, accentClass: 'cat-card--images' },
+  documents: { label: 'Documents', icon: <FileText size={12} />, accentClass: 'cat-card--documents' },
+  spreadsheets: { label: 'Spreadsheets', icon: <TableIcon size={12} />, accentClass: 'cat-card--spreadsheets' },
+  data: { label: 'Data & Config', icon: <Braces size={12} />, accentClass: 'cat-card--data' },
+};
+
+const CATEGORY_ORDER: ConversionPreset['category'][] = ['images', 'documents', 'spreadsheets', 'data'];
+
+const CATEGORY_CAPABILITIES = CATEGORY_ORDER.map(category => {
+  const presetsInCategory = Object.values(PRESETS).filter(p => p.category === category);
+  const fromExts = Array.from(new Set(presetsInCategory.flatMap(p => p.sourceExts)));
+  const toBadges = Array.from(new Set(presetsInCategory.flatMap(p => p.targets.map(t => t.badge))));
+  return { id: category, fromExts, toBadges, ...CATEGORY_META[category] };
+});
 
 interface BatchQueueItem {
   id: string;
@@ -206,7 +233,7 @@ interface BatchQueueItem {
  */
 function computeBatchTargetOptions(
   items: { ext: string }[]
-): { format: string; label: string; ext: string; isBinary: boolean }[] {
+): ConversionTarget[] {
   const presets = items.map(i => PRESETS[i.ext]).filter((p): p is ConversionPreset => !!p);
   if (presets.length === 0 || presets.length !== items.length) return [];
 
@@ -218,6 +245,20 @@ function computeBatchTargetOptions(
     .filter(t => rest.every(p => p.targets.some(pt => pt.format === t.format)));
 }
 
+/**
+ * Reconstruct a real browser File from base64 bytes the extension host read off disk.
+ * Used for files picked via the native file dialog, so the rest of the conversion flow
+ * (which is written against the standard File API) doesn't need to know the difference.
+ */
+function base64ToFile(base64: string, fileName: string): File {
+  const bytes = atob(base64);
+  const buffer = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) {
+    buffer[i] = bytes.charCodeAt(i);
+  }
+  return new File([buffer], fileName);
+}
+
 export const ConvertersView: React.FC = () => {
   // Mode Selection: Single File vs Batch Queue
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -226,9 +267,9 @@ export const ConvertersView: React.FC = () => {
 
   // Single File State
   const [sourceExt, setSourceExt] = useState<string>('');
+  const [selectedFileOriginalPath, setSelectedFileOriginalPath] = useState<string | null>(null);
   const [targetFormat, setTargetFormat] = useState<string>('');
   const [imageQuality, setImageQuality] = useState<number>(0.9);
-  const [replaceOriginal, setReplaceOriginal] = useState<boolean>(false);
   const [isConverting, setIsConverting] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -241,10 +282,11 @@ export const ConvertersView: React.FC = () => {
   const [hasCopied, setHasCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Handle file selection (single or multiple)
-  const handleFilesSelected = (files: FileList | File[]) => {
+  // Handle file selection (single or multiple). `pathsByName` carries real filesystem
+  // paths when files came from the native file dialog (see handleBrowseClick) — files
+  // dropped via drag-and-drop never get one, since a browser File object in a VS Code
+  // webview has no access to its real path.
+  const handleFilesSelected = (files: FileList | File[], pathsByName?: Record<string, string>) => {
     setErrorMsg(null);
     setConvertedText(null);
     setConvertedImage(null);
@@ -255,6 +297,7 @@ export const ConvertersView: React.FC = () => {
       // Single file flow
       const file = files[0];
       setSelectedFile(file);
+      setSelectedFileOriginalPath(pathsByName?.[file.name] || null);
       setBatchQueue([]);
 
       const ext = file.name.split('.').pop()?.toLowerCase() || '';
@@ -289,8 +332,30 @@ export const ConvertersView: React.FC = () => {
     }
   };
 
+  // Open the native "Open File" dialog in the extension host (instead of the webview's
+  // sandboxed <input type="file">), specifically so we get real filesystem paths back —
+  // that's what makes "Replace original file on disk" actually able to work.
+  const handleBrowseClick = () => {
+    vscode.postMessage({ type: 'PICK_CONVERT_FILE' });
+  };
+
+  useEffect(() => {
+    const unsub = vscode.onMessage(msg => {
+      if (msg.type === 'CONVERT_FILE_PICKED') {
+        const pathsByName: Record<string, string> = {};
+        const files = msg.payload.files.map(f => {
+          pathsByName[f.fileName] = f.originalPath;
+          return base64ToFile(f.dataBase64, f.fileName);
+        });
+        handleFilesSelected(files, pathsByName);
+      }
+    });
+    return () => unsub();
+  }, []);
+
   const handleReset = () => {
     setSelectedFile(null);
+    setSelectedFileOriginalPath(null);
     setBatchQueue([]);
     setSourceExt('');
     setTargetFormat('');
@@ -301,9 +366,6 @@ export const ConvertersView: React.FC = () => {
     setMultiResFiles(null);
     setOutputFileName('');
     setErrorMsg(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -555,7 +617,7 @@ export const ConvertersView: React.FC = () => {
         fileName: outputFileName,
         outputDataBase64: convertedDataBase64 || undefined,
         outputText: convertedText || undefined,
-        replaceOriginal,
+        originalPath: selectedFileOriginalPath || undefined,
       },
     });
   };
@@ -573,7 +635,6 @@ export const ConvertersView: React.FC = () => {
           outputDataBase64: i.outputDataBase64,
           outputText: i.outputText,
         })),
-        replaceOriginal,
       },
     });
   };
@@ -613,130 +674,73 @@ export const ConvertersView: React.FC = () => {
 
   return (
     <div className="converters-container">
-      {/* Hidden file input with multiple support */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        multiple
-        style={{ display: 'none' }}
-        onChange={e => {
-          if (e.target.files && e.target.files.length > 0) {
-            handleFilesSelected(e.target.files);
-          }
-        }}
-      />
-
-      {/* STATE 1: Empty Dropzone */}
+      {/* STATE 1: Landing / Discovery */}
       {!selectedFile && batchQueue.length === 0 ? (
-        <div className="empty-dropzone-wrapper">
-          <div
-            className={`dropzone-card ${isDragOver ? 'drag-over' : ''}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {/* Title & subtitle positioned above icon */}
-            <div className="dropzone-text-block">
-              <h3 className="dropzone-main-title">Drop your file(s) here</h3>
-              <p className="dropzone-sub-title">Single or batch multiple files supported</p>
+        <div className="converters-landing">
+          <div className="converters-header">
+            <div className="converters-icon-tile">
+              <RefreshCw size={16} />
             </div>
-
-            <div className="dropzone-icon-ring">
-              <FileUp size={24} className="dropzone-icon" />
-            </div>
-
-            <button
-              type="button"
-              className="dropzone-cta-btn"
-              onClick={e => {
-                e.stopPropagation();
-                fileInputRef.current?.click();
-              }}
-            >
-              <FolderOpen size={14} />
-              <span>Browse Files</span>
-            </button>
-
-            <div className="dropzone-supported-tags">
-              <span className="tag-pill">DOCX</span>
-              <span className="tag-pill">PDF</span>
-              <span className="tag-pill">SVG</span>
-              <span className="tag-pill">PNG / WebP</span>
-              <span className="tag-pill">XLSX</span>
-              <span className="tag-pill">MD</span>
-              <span className="tag-pill">JSON / YAML</span>
+            <div>
+              <div className="converters-title">Converters</div>
+              <div className="converters-subtitle">Offline file conversion, no uploads</div>
             </div>
           </div>
 
-          {/* Specialized Tools & Popular Presets */}
-          <div className="specialized-tools-shelf">
-            <div className="shelf-heading">
-              <Sparkles size={12} className="shelf-sparkle-icon" />
-              <span>Developer Power Tools</span>
+          <div
+            className={`dropzone-compact ${isDragOver ? 'drag-over' : ''}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={handleBrowseClick}
+          >
+            <div className="dropzone-icon-ring-sm">
+              <FileUp size={16} />
             </div>
-
-            <div className="power-tools-grid">
-              <button
-                type="button"
-                className="tool-shortcut-card"
-                onClick={() => fileInputRef.current?.click()}
-                title="Drop an SVG to generate a full set of PNG icon resolutions (16px to 512px)"
-              >
-                <div className="tool-card-icon svg-accent">
-                  <Layers size={16} />
-                </div>
-                <div className="tool-card-info">
-                  <span className="tool-card-title">SVG Multi-Res Suite</span>
-                  <span className="tool-card-desc">16px to 512px icon pack</span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                className="tool-shortcut-card"
-                onClick={() => fileInputRef.current?.click()}
-                title="Convert Markdown with --- dividers into an interactive HTML slide deck"
-              >
-                <div className="tool-card-icon slide-accent">
-                  <Presentation size={16} />
-                </div>
-                <div className="tool-card-info">
-                  <span className="tool-card-title">Markdown ➔ Slide Deck</span>
-                  <span className="tool-card-desc">Interactive HTML presentation</span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                className="tool-shortcut-card"
-                onClick={() => fileInputRef.current?.click()}
-                title="Extract text, headings and tables from PDF documents into Markdown"
-              >
-                <div className="tool-card-icon pdf-accent">
-                  <FileSearch size={16} />
-                </div>
-                <div className="tool-card-info">
-                  <span className="tool-card-title">PDF ➔ Markdown</span>
-                  <span className="tool-card-desc">Extract text & structure</span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                className="tool-shortcut-card"
-                onClick={() => fileInputRef.current?.click()}
-                title="Drop multiple images or documents to convert together in 1 click"
-              >
-                <div className="tool-card-icon batch-accent">
-                  <Archive size={16} />
-                </div>
-                <div className="tool-card-info">
-                  <span className="tool-card-title">Batch Multi-File</span>
-                  <span className="tool-card-desc">Convert & Save to ZIP</span>
-                </div>
-              </button>
+            <div className="dropzone-text-sm">
+              <span className="dropzone-title-sm">Drop a file here</span>
+              <span className="dropzone-sub-sm">or drop several to batch-convert</span>
             </div>
+            <button
+              type="button"
+              className="dropzone-browse-chip"
+              onClick={e => {
+                e.stopPropagation();
+                handleBrowseClick();
+              }}
+            >
+              <FolderOpen size={11} />
+              Browse
+            </button>
+          </div>
+
+          <div className="discover-label">What can I convert?</div>
+          <div className="cat-list">
+            {CATEGORY_CAPABILITIES.map(cat => (
+              <div key={cat.id} className={`cat-card ${cat.accentClass}`}>
+                <div className="cat-head">
+                  <div className="cat-icon">{cat.icon}</div>
+                  <span className="cat-name">{cat.label}</span>
+                  <span className="cat-count">{cat.fromExts.length} formats</span>
+                </div>
+                <div className="cat-flow">
+                  {cat.fromExts.map(ext => (
+                    <span key={ext} className="fmt-chip from">{ext.toUpperCase()}</span>
+                  ))}
+                  <span className="cat-arrow">
+                    <ArrowRight size={11} />
+                  </span>
+                  {cat.toBadges.map(badge => (
+                    <span key={badge} className="fmt-chip to">{badge}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="converters-privacy-line">
+            <ShieldCheck size={11} />
+            <span>Every conversion runs locally</span>
           </div>
         </div>
       ) : batchQueue.length > 1 ? (
@@ -774,15 +778,6 @@ export const ConvertersView: React.FC = () => {
                 <span>These files don't share a common target format. Remove files of a different type, or convert them separately.</span>
               </div>
             )}
-
-            <label className="replace-toggle-label">
-              <input
-                type="checkbox"
-                checked={replaceOriginal}
-                onChange={e => setReplaceOriginal(e.target.checked)}
-              />
-              <span>Replace original files on disk</span>
-            </label>
 
             <button
               type="button"
@@ -889,20 +884,32 @@ export const ConvertersView: React.FC = () => {
           {preset ? (
             <div className="target-selection-card">
               <div className="selection-label">
-                <span>Convert to format:</span>
+                <span>Convert to:</span>
               </div>
 
-              <div className="targets-grid">
-                {preset.targets.map(t => (
-                  <button
-                    key={t.format}
-                    type="button"
-                    className={`target-pill-btn ${targetFormat === t.format ? 'active' : ''}`}
-                    onClick={() => setTargetFormat(t.format)}
-                  >
-                    <span className="target-pill-label">{t.label}</span>
-                  </button>
-                ))}
+              <div className="fmt-grid">
+                {preset.targets.map(t => {
+                  const isSelected = targetFormat === t.format;
+                  return (
+                    <button
+                      key={t.format}
+                      type="button"
+                      className={`fmt-card ${isSelected ? 'is-selected' : ''}`}
+                      onClick={() => setTargetFormat(t.format)}
+                    >
+                      <span className="fmt-badge">{t.badge}</span>
+                      <span className="fmt-info">
+                        <span className="fmt-name">{t.shortLabel}</span>
+                        <span className="fmt-desc">{t.desc}</span>
+                      </span>
+                      {isSelected && (
+                        <span className="fmt-check">
+                          <Check size={9} />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Quality Slider for lossy images */}
@@ -924,15 +931,6 @@ export const ConvertersView: React.FC = () => {
                 </div>
               )}
 
-              {/* In-Place Replace Option */}
-              <label className="replace-toggle-label">
-                <input
-                  type="checkbox"
-                  checked={replaceOriginal}
-                  onChange={e => setReplaceOriginal(e.target.checked)}
-                />
-                <span>Replace original file on disk</span>
-              </label>
 
               {/* Convert Action CTA */}
               <button
