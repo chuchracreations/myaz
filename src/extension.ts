@@ -7,7 +7,7 @@ import { PortService } from './modules/ports/portService';
 import { SidebarWebviewProvider } from './providers/SidebarWebviewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Coders Canvas extension is now active!');
+  console.log('myaz extension is now active!');
 
   // Initialize services
   const snippetService = new SnippetService(context);
@@ -47,13 +47,12 @@ export function activate(context: vscode.ExtensionContext) {
   // Command: Refresh Sidebar View
   const refreshHandler = () => {
     sidebarProvider.syncSnippets();
-    vscode.window.setStatusBarMessage('Coders Canvas: Synced with storage', 2000);
+    vscode.window.setStatusBarMessage('myaz: Synced with storage', 2000);
   };
   context.subscriptions.push(
-    vscode.commands.registerCommand('coders-canvas.refresh', refreshHandler),
     vscode.commands.registerCommand('myaz.refresh', refreshHandler),
-    vscode.commands.registerCommand('coders-canvas.scanPorts', async () => {
-      await vscode.commands.executeCommand('coders-canvas.sidebarView.focus');
+    vscode.commands.registerCommand('myaz.scanPorts', async () => {
+      await vscode.commands.executeCommand('myaz.sidebarView.focus');
       sidebarProvider.postMessage({
         type: 'ACTIVE_MODULE_CHANGED',
         payload: { moduleId: 'ports' },
@@ -64,5 +63,5 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
-  console.log('Coders Canvas Extension deactivated.');
+  console.log('myaz Extension deactivated.');
 }

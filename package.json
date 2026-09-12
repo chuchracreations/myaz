@@ -1,6 +1,6 @@
 {
   "name": "myaz-extension",
-  "displayName": "Coders Canvas",
+  "displayName": "myaz",
   "description": "All-in-One Developer Hub: Smart Snippet Manager, 100% Offline File Converter (Word to PDF, Markdown Slides, SVG to PNG, Excel to JSON, WebP), and Port Killer (kill EADDRINUSE ghost processes in 1 click).",
   "version": "0.3.0",
   "publisher": "himanshuchuchra",
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/himanshuchuchra/coders-canvas"
+    "url": "https://github.com/himanshuchuchra/myaz-extension"
   },
   "keywords": [
     "snippets",
@@ -49,113 +49,113 @@
   },
   "main": "./dist/extension.js",
   "activationEvents": [
-    "onView:coders-canvas.sidebarView"
+    "onView:myaz.sidebarView"
   ],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "coders-canvas-container",
-          "title": "Coders Canvas",
+          "id": "myaz-container",
+          "title": "myaz",
           "icon": "media/icon.png"
         }
       ]
     },
     "views": {
-      "coders-canvas-container": [
+      "myaz-container": [
         {
           "type": "webview",
-          "id": "coders-canvas.sidebarView",
+          "id": "myaz.sidebarView",
           "name": ""
         }
       ]
     },
     "commands": [
       {
-        "command": "coders-canvas.snippets.createFromSelection",
-        "title": "Coders Canvas: Save Selection as Snippet",
+        "command": "myaz.snippets.createFromSelection",
+        "title": "myaz: Save Selection as Snippet",
         "icon": "$(add)"
       },
       {
-        "command": "coders-canvas.snippets.insert",
-        "title": "Coders Canvas: Insert Snippet",
+        "command": "myaz.snippets.insert",
+        "title": "myaz: Insert Snippet",
         "icon": "$(insert)"
       },
       {
-        "command": "coders-canvas.openStorageFile",
-        "title": "Coders Canvas: Open Workspace Data File",
+        "command": "myaz.openStorageFile",
+        "title": "myaz: Open Workspace Data File",
         "icon": "$(folder-opened)"
       },
       {
-        "command": "coders-canvas.exportData",
-        "title": "Coders Canvas: Export Workspace Data",
+        "command": "myaz.exportData",
+        "title": "myaz: Export Workspace Data",
         "icon": "$(cloud-download)"
       },
       {
-        "command": "coders-canvas.importData",
-        "title": "Coders Canvas: Import Workspace Data",
+        "command": "myaz.importData",
+        "title": "myaz: Import Workspace Data",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "coders-canvas.refresh",
-        "title": "Coders Canvas: Refresh View",
+        "command": "myaz.refresh",
+        "title": "myaz: Refresh View",
         "icon": "$(refresh)"
       },
       {
-        "command": "coders-canvas.snippets.create",
+        "command": "myaz.snippets.create",
         "title": "New Snippet",
         "icon": "$(add)"
       },
       {
-        "command": "coders-canvas.convertFile",
-        "title": "Coders Canvas: Convert File...",
+        "command": "myaz.convertFile",
+        "title": "myaz: Convert File...",
         "icon": "$(file-submodule)"
       },
       {
-        "command": "coders-canvas.scanPorts",
-        "title": "Coders Canvas: Scan & Kill Locked Ports (Port Janitor)",
+        "command": "myaz.scanPorts",
+        "title": "myaz: Scan & Kill Locked Ports (Port Janitor)",
         "icon": "$(radio-tower)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "coders-canvas.exportData",
-          "when": "view == coders-canvas.sidebarView",
+          "command": "myaz.exportData",
+          "when": "view == myaz.sidebarView",
           "group": "navigation@1"
         },
         {
-          "command": "coders-canvas.importData",
-          "when": "view == coders-canvas.sidebarView",
+          "command": "myaz.importData",
+          "when": "view == myaz.sidebarView",
           "group": "navigation@2"
         },
         {
-          "command": "coders-canvas.openStorageFile",
-          "when": "view == coders-canvas.sidebarView",
+          "command": "myaz.openStorageFile",
+          "when": "view == myaz.sidebarView",
           "group": "navigation@3"
         },
         {
-          "command": "coders-canvas.refresh",
-          "when": "view == coders-canvas.sidebarView",
+          "command": "myaz.refresh",
+          "when": "view == myaz.sidebarView",
           "group": "navigation@4"
         },
         {
-          "command": "coders-canvas.snippets.create",
-          "when": "view == coders-canvas.sidebarView",
+          "command": "myaz.snippets.create",
+          "when": "view == myaz.sidebarView",
           "group": "navigation@5"
         }
       ],
       "editor/context": [
         {
-          "command": "coders-canvas.snippets.createFromSelection",
+          "command": "myaz.snippets.createFromSelection",
           "when": "editorHasSelection",
-          "group": "coders-canvas@1"
+          "group": "myaz@1"
         }
       ],
       "explorer/context": [
         {
-          "command": "coders-canvas.convertFile",
-          "group": "coders-canvas@1"
+          "command": "myaz.convertFile",
+          "group": "myaz@1"
         }
       ]
     }

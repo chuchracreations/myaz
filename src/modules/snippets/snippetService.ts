@@ -3,21 +3,22 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Snippet } from '../../common/types';
 
-const STORAGE_KEY = 'coders-canvas.snippets';
+const STORAGE_KEY = 'myaz.snippets';
+const LEGACY_STORAGE_KEY = 'coders-canvas.snippets';
 
 const DEFAULT_SNIPPETS: Snippet[] = [
   {
     id: 'welcome-snippet',
-    title: 'Welcome to Coders Canvas ✨',
+    title: 'Welcome to myaz ✨',
     prefix: 'welcome',
     description: 'Quick starter snippet — press Tab to jump through placeholders',
     language: 'javascript',
     tags: ['welcome', 'starter'],
     isFavorite: true,
-    body: `// 🎨 Welcome to Coders Canvas! Press TAB to navigate:
+    body: `// 🎨 Welcome to myaz! Press TAB to navigate:
 const coder = {
   name: "\${1:Developer}",
-  workspace: "Coders Canvas",
+  workspace: "myaz",
   status: "Ready to build \${2:something awesome} 🚀",
 };
 
@@ -56,13 +57,13 @@ export class SnippetService {
   public async exportToFile(): Promise<boolean> {
     const snippets = this.getAll();
     const uri = await vscode.window.showSaveDialog({
-      defaultUri: vscode.Uri.file('coders-canvas-workspace.json'),
+      defaultUri: vscode.Uri.file('myaz-workspace.json'),
       filters: {
         'JSON Files': ['json'],
         'All Files': ['*'],
       },
       saveLabel: 'Export Workspace',
-      title: 'Export Coders Canvas Workspace Data (JSON)',
+      title: 'Export myaz Workspace Data (JSON)',
     });
 
     if (!uri) {
@@ -72,7 +73,7 @@ export class SnippetService {
     try {
       const workspacePayload = {
         version: '1.0',
-        appName: 'coders-canvas',
+        appName: 'myaz',
         exportedAt: new Date().toISOString(),
         snippets,
         prompts: [],
@@ -81,11 +82,11 @@ export class SnippetService {
       const jsonContent = JSON.stringify(workspacePayload, null, 2);
       await vscode.workspace.fs.writeFile(uri, Buffer.from(jsonContent, 'utf-8'));
       vscode.window.showInformationMessage(
-        `Coders Canvas: Successfully exported workspace data to ${path.basename(uri.fsPath)}`
+        `myaz: Successfully exported workspace data to ${path.basename(uri.fsPath)}`
       );
       return true;
     } catch (err) {
-      vscode.window.showErrorMessage(`Coders Canvas: Failed to export workspace data: ${err}`);
+      vscode.window.showErrorMessage(`myaz: Failed to export workspace data: ${err}`);
       return false;
     }
   }
@@ -100,7 +101,7 @@ export class SnippetService {
         'All Files': ['*'],
       },
       openLabel: 'Import Workspace',
-      title: 'Import Coders Canvas Workspace Data (JSON)',
+      title: 'Import myaz Workspace Data (JSON)',
     });
 
     if (!uris || uris.length === 0) {
@@ -125,7 +126,7 @@ export class SnippetService {
       }
 
       if (rawSnippets.length === 0) {
-        vscode.window.showWarningMessage('Coders Canvas: No valid snippets or workspace data found in the selected file.');
+        vscode.window.showWarningMessage('myaz: No valid snippets or workspace data found in the selected file.');
         return 0;
       }
 
@@ -151,7 +152,7 @@ export class SnippetService {
       }
 
       if (validSnippets.length === 0) {
-        vscode.window.showWarningMessage('Coders Canvas: No valid data items found in the selected JSON file.');
+        vscode.window.showWarningMessage('myaz: No valid data items found in the selected JSON file.');
         return 0;
       }
 
@@ -196,11 +197,11 @@ export class SnippetService {
       this.context.globalState.update(STORAGE_KEY, updatedList);
       this.persistToFile(updatedList);
       vscode.window.showInformationMessage(
-        `Coders Canvas: Successfully imported workspace data (${validSnippets.length} snippet(s))!`
+        `myaz: Successfully imported workspace data (${validSnippets.length} snippet(s))!`
       );
       return validSnippets.length;
     } catch (err) {
-      vscode.window.showErrorMessage(`Coders Canvas: Failed to import workspace data: ${err}`);
+      vscode.window.showErrorMessage(`myaz: Failed to import workspace data: ${err}`);
       return 0;
     }
   }
@@ -244,8 +245,8 @@ export class SnippetService {
         }
       }
 
-      // Check globalState fallback
-      const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>('myaz.snippets');
+      // Check globalState fallback (including the legacy pre-rename key for migration)
+      const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
       if (existing && existing.length > 0) {
         const userOnly = existing.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
         const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
@@ -268,7 +269,7 @@ export class SnippetService {
       }
       const workspacePayload = {
         version: '1.0',
-        appName: 'coders-canvas',
+        appName: 'myaz',
         updatedAt: new Date().toISOString(),
         snippets: list,
         prompts: [],
@@ -301,7 +302,7 @@ export class SnippetService {
       // fallback to globalState
     }
 
-    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY);
+    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
     if (list && list.length > 0) {
       const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
       if (userOnly.length > 0) {

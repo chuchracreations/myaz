@@ -15,29 +15,23 @@ export class SnippetCommands {
 
     // Command: Insert snippet into active editor
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.snippets.insert', async (snippet?: Snippet) => {
+      vscode.commands.registerCommand('myaz.snippets.insert', async (snippet?: Snippet) => {
         if (!snippet) {
-          vscode.window.showInformationMessage('Select a snippet from the Coders Canvas sidebar to insert.');
+          vscode.window.showInformationMessage('Select a snippet from the myaz sidebar to insert.');
           return;
         }
         await this.insertSnippetIntoEditor(snippet);
-      }),
-      vscode.commands.registerCommand('myaz.snippets.insert', async (snippet?: Snippet) => {
-        if (snippet) {
-          await this.insertSnippetIntoEditor(snippet);
-        }
       })
     );
 
     // Command: Open modal to create new snippet
     const createSnippetHandler = async () => {
-      await vscode.commands.executeCommand('coders-canvas.sidebarView.focus');
+      await vscode.commands.executeCommand('myaz.sidebarView.focus');
       this.sidebarProvider.postMessage({
         type: 'OPEN_CREATE_SNIPPET_MODAL',
       });
     };
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.snippets.create', createSnippetHandler),
       vscode.commands.registerCommand('myaz.snippets.create', createSnippetHandler)
     );
 
@@ -46,7 +40,6 @@ export class SnippetCommands {
       await this.snippetService.openStorageFile();
     };
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.openStorageFile', openStorageHandler),
       vscode.commands.registerCommand('myaz.openStorageFile', openStorageHandler)
     );
 
@@ -55,8 +48,6 @@ export class SnippetCommands {
       await this.snippetService.exportToFile();
     };
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.exportData', exportHandler),
-      vscode.commands.registerCommand('coders-canvas.exportSnippets', exportHandler),
       vscode.commands.registerCommand('myaz.exportData', exportHandler)
     );
 
@@ -68,8 +59,6 @@ export class SnippetCommands {
       }
     };
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.importData', importHandler),
-      vscode.commands.registerCommand('coders-canvas.importSnippets', importHandler),
       vscode.commands.registerCommand('myaz.importData', importHandler)
     );
 
@@ -77,7 +66,7 @@ export class SnippetCommands {
     const createSelectionHandler = async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) {
-        vscode.window.showWarningMessage('Coders Canvas: Open a file and select text to save as a snippet.');
+        vscode.window.showWarningMessage('myaz: Open a file and select text to save as a snippet.');
         return;
       }
 
@@ -85,7 +74,7 @@ export class SnippetCommands {
       const selectedText = editor.document.getText(selection);
 
       if (!selectedText.trim()) {
-        vscode.window.showWarningMessage('Coders Canvas: Please select some text in the editor first.');
+        vscode.window.showWarningMessage('myaz: Please select some text in the editor first.');
         return;
       }
 
@@ -94,7 +83,7 @@ export class SnippetCommands {
       const suggestedTitle = `Snippet (${lineCount} lines)`;
 
       // Focus sidebar
-      await vscode.commands.executeCommand('coders-canvas.sidebarView.focus');
+      await vscode.commands.executeCommand('myaz.sidebarView.focus');
 
       // Post message to webview to open create modal with pre-filled selection
       this.sidebarProvider.postMessage({
@@ -109,7 +98,6 @@ export class SnippetCommands {
     };
 
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.snippets.createFromSelection', createSelectionHandler),
       vscode.commands.registerCommand('myaz.snippets.createFromSelection', createSelectionHandler)
     );
 
@@ -119,14 +107,14 @@ export class SnippetCommands {
   public async insertSnippetIntoEditor(snippet: Snippet): Promise<boolean> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-      vscode.window.showWarningMessage('Coders Canvas: Open a file editor where you want to insert this snippet.');
+      vscode.window.showWarningMessage('myaz: Open a file editor where you want to insert this snippet.');
       return false;
     }
 
     const snippetString = new vscode.SnippetString(snippet.body);
     const success = await editor.insertSnippet(snippetString);
     if (success) {
-      vscode.window.setStatusBarMessage(`Coders Canvas: Inserted "${snippet.title}"`, 2500);
+      vscode.window.setStatusBarMessage(`myaz: Inserted "${snippet.title}"`, 2500);
     }
     return success;
   }

@@ -1,8 +1,8 @@
 <div align="center">
 
-  <img src="https://raw.githubusercontent.com/himanshuchuchra/coders-canvas/main/media/logo.png" alt="Coders Canvas Logo" width="300" style="max-width: 100%; height: auto;" />
+  <img src="https://raw.githubusercontent.com/himanshuchuchra/myaz-extension/main/media/logo.png" alt="myaz Logo" width="300" style="max-width: 100%; height: auto;" />
 
-  # Coders Canvas
+  # myaz
 
   ### *The All-in-One Snippet Command Center, Universal Offline File Converter & Port Killer for VS Code*
 
@@ -21,7 +21,7 @@
 
 ## ✨ Overview
 
-**Coders Canvas** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and modern flat outline aesthetics, Coders Canvas combines three developer essentials into one unified extension:
+**myaz** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and modern flat outline aesthetics, myaz combines three developer essentials into one unified extension:
 
 1. **⚡ Smart Snippets Command Center**: Real-time syntax-highlighted code manager with language auto-detection, tag filtering, editor selection capture, and tab-stop cursor insertion.
 2. **🔄 Universal Local Converters Hub**: 100% offline file transformer supporting batch conversions, multi-resolution SVG icon bundles, interactive slide decks, and PDF text extraction.
@@ -55,7 +55,7 @@ Never upload confidential company code, spreadsheets, or documents to third-part
 * **🎨 SVG Multi-Resolution Icon Suite**: Render vector SVGs into a complete icon pack (`16×16`, `32×32`, `48×48`, `64×64`, `128×128`, `256×256`, `512×512`) packaged in a ready-to-use `.zip`.
 * **📑 Markdown ➔ Interactive Slide Deck**: Convert any Markdown file with `---` slide dividers into a standalone, dark-themed HTML presentation deck with keyboard arrow navigation, slide counters, and native fullscreen (`F`).
 * **📄 PDF ➔ Structured Markdown**: Extract headings, page counts, and formatted body text from `.pdf` documents using our built-in offline stream engine.
-* **📂 Explorer Context Menu**: Right-click any file in your VS Code Explorer ➔ **`Coders Canvas: Convert File...`** to convert and save beside the original in one click.
+* **📂 Explorer Context Menu**: Right-click any file in your VS Code Explorer ➔ **`myaz: Convert File...`** to convert and save beside the original in one click.
 
 ---
 
@@ -74,7 +74,7 @@ Never upload confidential company code, spreadsheets, or documents to third-part
   * Bash / Shell
   * Markdown
 * **Interactive Tab-Stops**: Full support for native VS Code snippet placeholders (`$1`, `${1:variableName}`, `$0`) styled with subtle visual indicators.
-* **1-Click Selection Capture**: Highlight any code in your active editor ➔ right-click ➔ **`Coders Canvas: Save Selection as Snippet`**.
+* **1-Click Selection Capture**: Highlight any code in your active editor ➔ right-click ➔ **`myaz: Save Selection as Snippet`**.
 * **Instant Cursor Insertion**: Click **Insert** to inject code directly at your cursor position with tab-stop navigation between placeholders.
 * **Favorites & Pinning**: Star your go-to snippets to keep them pinned at the top of your library.
 * **Tag System**: Group snippets by stack or topic (`#react`, `#frontend`, `#api`, `#sql`, `#docker`).
@@ -96,7 +96,7 @@ Never fight `Error: listen EADDRINUSE: address already in use :::3000` again. Cl
 
 ### 4. 📦 Complete Workspace Portability (Backup & Share)
 
-* **Single-File Export**: Export your entire snippet library to a clean `coders-canvas-workspace.json` file in one click.
+* **Single-File Export**: Export your entire snippet library to a clean `myaz-workspace.json` file in one click.
 * **Flexible Import Modes**:
   * **Merge with Existing**: Appends new snippets while preserving your current collection.
   * **Replace All**: Replaces your workspace with the imported pack.
@@ -105,14 +105,14 @@ Never fight `Error: listen EADDRINUSE: address already in use :::3000` again. Cl
 
 ## 🔒 100% Offline, Private & Local
 
-* **Zero Telemetry**: Coders Canvas makes zero network requests, has zero tracking, and sends zero data to external servers.
+* **Zero Telemetry**: myaz makes zero network requests, has zero tracking, and sends zero data to external servers.
 * **Local Storage**: All snippets are stored locally on your machine in human-readable JSON:
 
 | Operating System | Default Storage Path |
 | :--- | :--- |
-| **macOS** | `~/Library/Application Support/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
-| **Windows** | `%APPDATA%\Code\User\globalStorage\himanshuchuchra.coders-canvas\workspace.json` |
-| **Linux** | `~/.config/Code/User/globalStorage/himanshuchuchra.coders-canvas/workspace.json` |
+| **macOS** | `~/Library/Application Support/Code/User/globalStorage/himanshuchuchra.myaz-extension/workspace.json` |
+| **Windows** | `%APPDATA%\Code\User\globalStorage\himanshuchuchra.myaz-extension\workspace.json` |
+| **Linux** | `~/.config/Code/User/globalStorage/himanshuchuchra.myaz-extension/workspace.json` |
 
 > 💡 **Pro Tip**: Any manual edits you save directly to `workspace.json` in VS Code are instantly reloaded by the extension!
 
@@ -124,14 +124,14 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access co
 
 | Command | Description |
 | :--- | :--- |
-| **`Coders Canvas: Convert File...`** | Converts any right-clicked file in the explorer to PDF, Markdown, WebP, etc. |
-| **`Coders Canvas: Scan & Kill Locked Ports (Port Janitor)`** | Scans dev ports, detects ghost servers, and frees locked ports |
-| **`Coders Canvas: Save Selection as Snippet`** | Creates a new snippet from your current editor selection |
-| **`Coders Canvas: Insert Snippet`** | Inserts a selected snippet directly into your active document |
-| **`Coders Canvas: Open Workspace Data File`** | Opens your local `workspace.json` data file on disk in VS Code |
-| **`Coders Canvas: Export Workspace Data`** | Exports all workspace data to a standalone JSON file |
-| **`Coders Canvas: Import Workspace Data`** | Imports workspace snippets from a JSON file (Merge or Replace) |
-| **`Coders Canvas: Refresh View`** | Syncs the sidebar with disk storage |
+| **`myaz: Convert File...`** | Converts any right-clicked file in the explorer to PDF, Markdown, WebP, etc. |
+| **`myaz: Scan & Kill Locked Ports (Port Janitor)`** | Scans dev ports, detects ghost servers, and frees locked ports |
+| **`myaz: Save Selection as Snippet`** | Creates a new snippet from your current editor selection |
+| **`myaz: Insert Snippet`** | Inserts a selected snippet directly into your active document |
+| **`myaz: Open Workspace Data File`** | Opens your local `workspace.json` data file on disk in VS Code |
+| **`myaz: Export Workspace Data`** | Exports all workspace data to a standalone JSON file |
+| **`myaz: Import Workspace Data`** | Imports workspace snippets from a JSON file (Merge or Replace) |
+| **`myaz: Refresh View`** | Syncs the sidebar with disk storage |
 
 ---
 
@@ -147,14 +147,14 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access co
 
 ## 🤝 Contributing & Feedback
 
-* **Report Issues & Feature Requests**: Reach out or file an issue on [GitHub](https://github.com/himanshuchuchra/coders-canvas).
-* **Enjoying Coders Canvas?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)!
+* **Report Issues & Feature Requests**: Reach out or file an issue on [GitHub](https://github.com/himanshuchuchra/myaz-extension).
+* **Enjoying myaz?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)!
 
 ---
 
 ## 🔍 Supported Use Cases & Search Keywords
 
-Looking for specific tools? **Coders Canvas** provides a 100% local, offline solution:
+Looking for specific tools? **myaz** provides a 100% local, offline solution:
 
 * **Document & PDF Tools**: `word to pdf`, `docx to pdf converter`, `markdown to pdf`, `markdown to html slides`, `pdf text extractor`, `extract tables from pdf`, `txt to pdf`.
 * **Image & Web Graphics**: `svg to png converter`, `multi-resolution icon generator`, `favicon ico generator`, `png to webp`, `jpg to webp converter`, `image compressor`, `base64 data uri generator`.
@@ -168,6 +168,6 @@ Looking for specific tools? **Coders Canvas** provides a 100% local, offline sol
 
   Crafted with care for developers who value speed, craft, and great tooling.
 
-  **Coders Canvas** © 2026
+  **myaz** © 2026
 
 </div>

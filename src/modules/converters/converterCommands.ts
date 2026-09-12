@@ -11,7 +11,7 @@ export class ConverterCommands {
 
     // Right-click in explorer: Convert file
     disposables.push(
-      vscode.commands.registerCommand('coders-canvas.convertFile', async (uri?: vscode.Uri) => {
+      vscode.commands.registerCommand('myaz.convertFile', async (uri?: vscode.Uri) => {
         const targetUri = uri || vscode.window.activeTextEditor?.document.uri;
         if (!targetUri) {
           vscode.window.showInformationMessage('Right-click a file in the explorer to convert it.');
@@ -34,7 +34,7 @@ export class ConverterCommands {
     // Map extension to available conversion targets
     const targets = this.getAvailableTargets(ext);
     if (!targets || targets.length === 0) {
-      vscode.window.showWarningMessage(`Coders Canvas does not support converting .${ext} files yet.`);
+      vscode.window.showWarningMessage(`myaz does not support converting .${ext} files yet.`);
       return;
     }
 
@@ -56,7 +56,7 @@ export class ConverterCommands {
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: `Coders Canvas: Converting ${path.basename(filePath)} to .${selected.targetExt}...`,
+        title: `myaz: Converting ${path.basename(filePath)} to .${selected.targetExt}...`,
         cancellable: false,
       },
       async () => {

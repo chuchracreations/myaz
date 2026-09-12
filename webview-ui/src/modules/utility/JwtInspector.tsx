@@ -224,8 +224,8 @@ export const JwtInspector: React.FC = () => {
       email: 'alex.mercer@dev.io',
       roles: ['staff_engineer', 'devops_admin'],
       permissions: ['repo:read', 'repo:write', 'deploy:staging', 'ports:manage'],
-      iss: 'https://auth.coders-canvas.io',
-      aud: 'https://api.coders-canvas.io/v1',
+      iss: 'https://auth.myaz.io',
+      aud: 'https://api.myaz.io/v1',
       iat: curTime,
       exp: expTime,
     };
