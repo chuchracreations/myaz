@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { ShieldCheck, KeyRound, Wrench, Hash, Binary, Globe, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShieldCheck, KeyRound, Wrench, Hash, Binary, Globe, Clock, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { JwtInspector } from './JwtInspector';
 import { UuidTool } from './tools/UuidTool';
 import { Base64Tool } from './tools/Base64Tool';
 import { HashTool } from './tools/HashTool';
 import { UrlEncoderTool } from './tools/UrlEncoderTool';
 import { DateTimezoneTool } from './tools/DateTimezoneTool';
+import { RegexTool } from './tools/RegexTool';
 
-type ToolId = 'jwt' | 'uuid' | 'base64' | 'hash' | 'url' | 'datetime';
+type ToolId = 'jwt' | 'uuid' | 'base64' | 'hash' | 'url' | 'datetime' | 'regex';
 
 interface ToolMeta {
   id: ToolId;
@@ -61,6 +62,13 @@ const TOOLS: ToolMeta[] = [
     desc: 'Convert dates across timezones',
     icon: <Clock size={16} />,
     accentClass: 'launch-card--datetime',
+  },
+  {
+    id: 'regex',
+    title: 'Regex Tester',
+    desc: 'Test patterns with live match highlighting',
+    icon: <Search size={16} />,
+    accentClass: 'launch-card--regex',
     tag: 'new',
   },
 ];
@@ -91,6 +99,7 @@ export const UtilityView: React.FC = () => {
         {activeTool === 'hash' && <HashTool />}
         {activeTool === 'url' && <UrlEncoderTool />}
         {activeTool === 'datetime' && <DateTimezoneTool />}
+        {activeTool === 'regex' && <RegexTool />}
       </div>
     );
   }
