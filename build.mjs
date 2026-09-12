@@ -1,4 +1,8 @@
 import * as esbuild from 'esbuild';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
 
 const isWatch = process.argv.includes('--watch');
 
@@ -27,6 +31,7 @@ const webviewConfig = {
   logLevel: 'info',
   define: {
     'process.env.NODE_ENV': isWatch ? '"development"' : '"production"',
+    'process.env.APP_VERSION': JSON.stringify(pkg.version),
   },
   loader: {
     '.svg': 'dataurl',

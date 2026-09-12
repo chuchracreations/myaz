@@ -56,7 +56,7 @@ export class ConverterCommands {
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: `myaz: Converting ${path.basename(filePath)} to .${selected.targetExt}...`,
+        title: `Converting ${path.basename(filePath)} to .${selected.targetExt}...`,
         cancellable: false,
       },
       async () => {

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { HostToWebviewMessage, WebviewToHostMessage } from '../common/types';
+import { HostToWebviewMessage, Screen, WebviewToHostMessage } from '../common/types';
 import { SnippetService } from '../modules/snippets/snippetService';
 import { SnippetCommands } from '../modules/snippets/snippetCommands';
 import { ConverterService } from '../modules/converters/converterService';
@@ -11,6 +11,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   private snippetCommands?: SnippetCommands;
   private converterService?: ConverterService;
   private portService?: PortService;
+  private currentScreen: Screen = 'home';
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -42,6 +43,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     };
 
     webviewView.webview.html = this.getHtmlForWebview(webviewView.webview);
+    this.applyScreenChrome(this.currentScreen);
 
     // Handle messages from the webview React frontend
     webviewView.webview.onDidReceiveMessage(async (message: WebviewToHostMessage) => {
@@ -68,6 +70,15 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     if (this._view) {
       this._view.webview.postMessage(message);
     }
+  }
+
+  private applyScreenChrome(screen: Screen): void {
+    this.currentScreen = screen;
+    // Note: we deliberately don't set `this._view.title` here — VS Code renders a
+    // custom WebviewView title as "<container title>: <view title>" for a single-view
+    // container, which is exactly the "Myaz: ..." prefix we don't want. The context
+    // key below only drives which view/title icons are visible.
+    vscode.commands.executeCommand('setContext', 'myaz.screen', screen);
   }
 
   public syncSnippets(): void {
@@ -114,7 +125,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       case 'SAVE_SNIPPET': {
         const saved = this.snippetService.save(message.payload);
         this.syncSnippets();
-        vscode.window.setStatusBarMessage(`myaz: Saved snippet "${saved.title}"`, 2500);
+        vscode.window.setStatusBarMessage(`Saved snippet "${saved.title}"`, 2500);
         break;
       }
 
@@ -127,7 +138,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
         if (confirmed === 'Delete') {
           this.snippetService.delete(message.payload.id);
           this.syncSnippets();
-          vscode.window.setStatusBarMessage('myaz: Snippet deleted', 2500);
+          vscode.window.setStatusBarMessage('Snippet deleted', 2500);
         }
         break;
       }
@@ -147,7 +158,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
       case 'COPY_SNIPPET': {
         await vscode.env.clipboard.writeText(message.payload.snippet.body);
-        vscode.window.setStatusBarMessage(`myaz: Copied "${message.payload.snippet.title}" to clipboard`, 2500);
+        vscode.window.setStatusBarMessage(`Copied "${message.payload.snippet.title}" to clipboard`, 2500);
         break;
       }
 
@@ -225,6 +236,11 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
             payload: { ports, detectedProjectPorts },
           });
         }
+        break;
+      }
+
+      case 'SCREEN_CHANGED': {
+        this.applyScreenChrome(message.payload.screen);
         break;
       }
 

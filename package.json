@@ -56,7 +56,7 @@
       "activitybar": [
         {
           "id": "myaz-container",
-          "title": "myaz",
+          "title": "MYAZ",
           "icon": "media/icon.png"
         }
       ]
@@ -73,32 +73,32 @@
     "commands": [
       {
         "command": "myaz.snippets.createFromSelection",
-        "title": "myaz: Save Selection as Snippet",
+        "title": "Save Selection as Snippet",
         "icon": "$(add)"
       },
       {
         "command": "myaz.snippets.insert",
-        "title": "myaz: Insert Snippet",
+        "title": "Insert Snippet",
         "icon": "$(insert)"
       },
       {
         "command": "myaz.openStorageFile",
-        "title": "myaz: Open Workspace Data File",
+        "title": "Open Workspace Data File",
         "icon": "$(folder-opened)"
       },
       {
         "command": "myaz.exportData",
-        "title": "myaz: Export Workspace Data",
+        "title": "Export Workspace Data",
         "icon": "$(cloud-download)"
       },
       {
         "command": "myaz.importData",
-        "title": "myaz: Import Workspace Data",
+        "title": "Import Workspace Data",
         "icon": "$(cloud-upload)"
       },
       {
         "command": "myaz.refresh",
-        "title": "myaz: Refresh View",
+        "title": "Refresh View",
         "icon": "$(refresh)"
       },
       {
@@ -108,40 +108,50 @@
       },
       {
         "command": "myaz.convertFile",
-        "title": "myaz: Convert File...",
+        "title": "Convert File...",
         "icon": "$(file-submodule)"
       },
       {
         "command": "myaz.scanPorts",
-        "title": "myaz: Scan & Kill Locked Ports (Port Janitor)",
+        "title": "Scan & Kill Locked Ports (Port Janitor)",
         "icon": "$(radio-tower)"
+      },
+      {
+        "command": "myaz.goHome",
+        "title": "Back to Home",
+        "icon": "$(arrow-left)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "myaz.exportData",
-          "when": "view == myaz.sidebarView",
+          "command": "myaz.goHome",
+          "when": "view == myaz.sidebarView && myaz.screen != home",
           "group": "navigation@1"
         },
         {
-          "command": "myaz.importData",
-          "when": "view == myaz.sidebarView",
+          "command": "myaz.refresh",
+          "when": "view == myaz.sidebarView && myaz.screen == home",
           "group": "navigation@2"
         },
         {
-          "command": "myaz.openStorageFile",
-          "when": "view == myaz.sidebarView",
+          "command": "myaz.exportData",
+          "when": "view == myaz.sidebarView && myaz.screen == snippets",
+          "group": "navigation@2"
+        },
+        {
+          "command": "myaz.importData",
+          "when": "view == myaz.sidebarView && myaz.screen == snippets",
           "group": "navigation@3"
         },
         {
-          "command": "myaz.refresh",
-          "when": "view == myaz.sidebarView",
+          "command": "myaz.openStorageFile",
+          "when": "view == myaz.sidebarView && myaz.screen == snippets",
           "group": "navigation@4"
         },
         {
           "command": "myaz.snippets.create",
-          "when": "view == myaz.sidebarView",
+          "when": "view == myaz.sidebarView && myaz.screen == snippets",
           "group": "navigation@5"
         }
       ],

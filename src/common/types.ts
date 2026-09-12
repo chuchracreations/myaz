@@ -1,5 +1,7 @@
 export type ModuleId = 'snippets' | 'converters' | 'ports' | 'utility' | 'prompts' | 'templates' | 'notes';
 
+export type Screen = 'home' | 'snippets' | 'converters' | 'ports' | 'utility';
+
 export interface ModuleDefinition {
   id: ModuleId;
   title: string;
@@ -50,13 +52,15 @@ export type WebviewToHostMessage =
   | { type: 'SAVE_BATCH_FILES'; payload: any }
   | { type: 'SAVE_BATCH_ZIP'; payload: any }
   | { type: 'SCAN_PORTS'; payload?: { customPort?: number } }
-  | { type: 'KILL_PORT_PROCESS'; payload: { pid: number; port: number } };
+  | { type: 'KILL_PORT_PROCESS'; payload: { pid: number; port: number } }
+  | { type: 'SCREEN_CHANGED'; payload: { screen: Screen } };
 
 export type HostToWebviewMessage =
   | { type: 'SYNC_SNIPPETS'; payload: { snippets: Snippet[]; storagePath?: string } }
   | { type: 'OPEN_CREATE_SNIPPET_MODAL'; payload?: Partial<Snippet> }
   | { type: 'ACTIVE_EDITOR_LANGUAGE'; payload: { languageId: string } }
   | { type: 'ACTIVE_MODULE_CHANGED'; payload: { moduleId: ModuleId } }
+  | { type: 'NAVIGATE_HOME' }
   | { type: 'CONVERT_FILE_RESULT'; payload: any }
   | { type: 'CONVERT_TEXT_RESULT'; payload: any }
   | { type: 'PORT_SCAN_RESULTS'; payload: { ports: PortProcessInfo[]; detectedProjectPorts: number[] } }

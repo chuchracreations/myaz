@@ -82,11 +82,11 @@ export class SnippetService {
       const jsonContent = JSON.stringify(workspacePayload, null, 2);
       await vscode.workspace.fs.writeFile(uri, Buffer.from(jsonContent, 'utf-8'));
       vscode.window.showInformationMessage(
-        `myaz: Successfully exported workspace data to ${path.basename(uri.fsPath)}`
+        `Successfully exported workspace data to ${path.basename(uri.fsPath)}`
       );
       return true;
     } catch (err) {
-      vscode.window.showErrorMessage(`myaz: Failed to export workspace data: ${err}`);
+      vscode.window.showErrorMessage(`Failed to export workspace data: ${err}`);
       return false;
     }
   }
@@ -126,7 +126,7 @@ export class SnippetService {
       }
 
       if (rawSnippets.length === 0) {
-        vscode.window.showWarningMessage('myaz: No valid snippets or workspace data found in the selected file.');
+        vscode.window.showWarningMessage('No valid snippets or workspace data found in the selected file.');
         return 0;
       }
 
@@ -152,7 +152,7 @@ export class SnippetService {
       }
 
       if (validSnippets.length === 0) {
-        vscode.window.showWarningMessage('myaz: No valid data items found in the selected JSON file.');
+        vscode.window.showWarningMessage('No valid data items found in the selected JSON file.');
         return 0;
       }
 
@@ -197,11 +197,11 @@ export class SnippetService {
       this.context.globalState.update(STORAGE_KEY, updatedList);
       this.persistToFile(updatedList);
       vscode.window.showInformationMessage(
-        `myaz: Successfully imported workspace data (${validSnippets.length} snippet(s))!`
+        `Successfully imported workspace data (${validSnippets.length} snippet(s))!`
       );
       return validSnippets.length;
     } catch (err) {
-      vscode.window.showErrorMessage(`myaz: Failed to import workspace data: ${err}`);
+      vscode.window.showErrorMessage(`Failed to import workspace data: ${err}`);
       return 0;
     }
   }

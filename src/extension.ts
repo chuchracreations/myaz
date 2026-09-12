@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Command: Refresh Sidebar View
   const refreshHandler = () => {
     sidebarProvider.syncSnippets();
-    vscode.window.setStatusBarMessage('myaz: Synced with storage', 2000);
+    vscode.window.setStatusBarMessage('Synced with storage', 2000);
   };
   context.subscriptions.push(
     vscode.commands.registerCommand('myaz.refresh', refreshHandler),
@@ -58,6 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
         payload: { moduleId: 'ports' },
       });
       sidebarProvider.postMessage({ type: 'SCAN_PORTS' } as any);
+    }),
+    vscode.commands.registerCommand('myaz.goHome', () => {
+      sidebarProvider.postMessage({ type: 'NAVIGATE_HOME' });
     })
   );
 }

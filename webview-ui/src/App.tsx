@@ -1,22 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ModuleDefinition, ModuleId, Snippet } from '../../src/common/types';
+import { Screen, Snippet } from '../../src/common/types';
 import { vscode } from './vscodeApi';
+import { HomeView } from './modules/home/HomeView';
 import { SnippetList } from './modules/snippets/SnippetList';
 import { SnippetModal } from './modules/snippets/SnippetModal';
 import { ConvertersView } from './modules/converters/ConvertersView';
 import { PortsView } from './modules/ports/PortsView';
 import { UtilityView } from './modules/utility/UtilityView';
-import { CheckCircle2, Code2, RefreshCw, Radio, Wrench } from 'lucide-react';
-
-const MODULES: ModuleDefinition[] = [
-  { id: 'snippets', title: 'Snippets', enabled: true },
-  { id: 'converters', title: 'Converters', enabled: true },
-  { id: 'ports', title: 'Ports', enabled: true },
-  { id: 'utility', title: 'Utility', enabled: true },
-];
+import { CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeModule, setActiveModule] = useState<ModuleId>('snippets');
+  const [screen, setScreen] = useState<Screen>('home');
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [storagePath, setStoragePath] = useState<string>('');
   const [activeEditorLanguage, setActiveEditorLanguage] = useState<string>('');
@@ -45,12 +39,17 @@ export const App: React.FC = () => {
           break;
 
         case 'OPEN_CREATE_SNIPPET_MODAL':
+          setScreen('snippets');
           setModalData(msg.payload || null);
           setIsModalOpen(true);
           break;
 
         case 'ACTIVE_MODULE_CHANGED':
-          setActiveModule(msg.payload.moduleId);
+          setScreen(msg.payload.moduleId as Screen);
+          break;
+
+        case 'NAVIGATE_HOME':
+          setScreen('home');
           break;
       }
     });
@@ -60,6 +59,11 @@ export const App: React.FC = () => {
 
     return () => unsubscribe();
   }, []);
+
+  // Keep the native VS Code title bar (title text + action icons) in sync with the active screen
+  useEffect(() => {
+    vscode.postMessage({ type: 'SCREEN_CHANGED', payload: { screen } });
+  }, [screen]);
 
   const handleInsert = (snippet: Snippet) => {
     vscode.postMessage({
@@ -104,67 +108,29 @@ export const App: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleRefresh = () => {
-    vscode.postMessage({ type: 'GET_SNIPPETS' });
-    showToast('Refreshed workspace');
-  };
-
-  const handleOpenStorageFile = () => {
-    vscode.postMessage({ type: 'OPEN_STORAGE_FILE' });
-    showToast('Opened workspace data');
-  };
-
-  const handleExport = () => {
-    vscode.postMessage({ type: 'EXPORT_SNIPPETS' });
-  };
-
-  const handleImport = () => {
-    vscode.postMessage({ type: 'IMPORT_SNIPPETS' });
-  };
-
   return (
     <div className="app-container">
-      {/* Header Bar */}
-      <header className="app-header">
-        {/* Modular Navigation Bar */}
-        <nav className="module-tabs" aria-label="Extension Modules">
-          {MODULES.map(module => {
-            const isActive = activeModule === module.id;
-            return (
-              <button
-                key={module.id}
-                className={`module-tab ${isActive ? 'active' : ''}`}
-                onClick={() => setActiveModule(module.id)}
-              >
-                {module.id === 'snippets' && <Code2 size={13} />}
-                {module.id === 'converters' && <RefreshCw size={13} />}
-                {module.id === 'ports' && <Radio size={13} />}
-                {module.id === 'utility' && <Wrench size={13} />}
-                <span>{module.title}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </header>
-
-      {/* Main Module Body */}
-      <main style={{ flex: 1 }}>
-        {activeModule === 'snippets' && (
-          <SnippetList
-            snippets={snippets}
-            activeEditorLanguage={activeEditorLanguage}
-            onInsert={handleInsert}
-            onCopy={handleCopy}
-            onEdit={s => handleOpenCreateModal(s)}
-            onDelete={handleDeleteSnippet}
-            onToggleFavorite={handleToggleFavorite}
-            onOpenCreateModal={() => handleOpenCreateModal()}
-          />
-        )}
-        {activeModule === 'converters' && <ConvertersView />}
-        {activeModule === 'ports' && <PortsView />}
-        {activeModule === 'utility' && <UtilityView />}
-      </main>
+      {screen === 'home' ? (
+        <HomeView snippetCount={snippets.length} onNavigate={setScreen} />
+      ) : (
+        <main style={{ flex: 1 }}>
+          {screen === 'snippets' && (
+            <SnippetList
+              snippets={snippets}
+              activeEditorLanguage={activeEditorLanguage}
+              onInsert={handleInsert}
+              onCopy={handleCopy}
+              onEdit={s => handleOpenCreateModal(s)}
+              onDelete={handleDeleteSnippet}
+              onToggleFavorite={handleToggleFavorite}
+              onOpenCreateModal={() => handleOpenCreateModal()}
+            />
+          )}
+          {screen === 'converters' && <ConvertersView />}
+          {screen === 'ports' && <PortsView />}
+          {screen === 'utility' && <UtilityView />}
+        </main>
+      )}
 
       {/* Snippet Create / Edit Modal */}
       <SnippetModal
