@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import { Copy, Check, Shuffle } from 'lucide-react';
+import { Copy, Check, Shuffle, Plus, X } from 'lucide-react';
 import { FIELDS, FieldId } from './generators';
 import { PHONE_FORMATS } from './phoneFormats';
+import { DATE_FORMATS } from './dateFormats';
+
+interface CustomField {
+  id: string;
+  name: string;
+  typeId: FieldId;
+}
 
 const DEFAULT_SELECTED: FieldId[] = ['name', 'email', 'phone'];
 const MAX_RECORDS = 50;
@@ -9,6 +16,8 @@ const MAX_RECORDS = 50;
 export const BatchGeneratorView: React.FC = () => {
   const [selected, setSelected] = useState<Set<FieldId>>(new Set(DEFAULT_SELECTED));
   const [phoneCountry, setPhoneCountry] = useState(PHONE_FORMATS[0].code);
+  const [dateFormat, setDateFormat] = useState(DATE_FORMATS[0].code);
+  const [customFields, setCustomFields] = useState<CustomField[]>([]);
   const [count, setCount] = useState(5);
   const [records, setRecords] = useState<Record<string, string>[] | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
@@ -24,7 +33,31 @@ export const BatchGeneratorView: React.FC = () => {
     setRecords(null);
   };
 
+  const addCustomField = () => {
+    setCustomFields((prev) => [
+      ...prev,
+      { id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name: '', typeId: FIELDS[0].id },
+    ]);
+    setRecords(null);
+  };
+
+  const updateCustomFieldName = (id: string, name: string) => {
+    setCustomFields((prev) => prev.map((cf) => (cf.id === id ? { ...cf, name } : cf)));
+    setRecords(null);
+  };
+
+  const updateCustomFieldType = (id: string, typeId: FieldId) => {
+    setCustomFields((prev) => prev.map((cf) => (cf.id === id ? { ...cf, typeId } : cf)));
+    setRecords(null);
+  };
+
+  const removeCustomField = (id: string) => {
+    setCustomFields((prev) => prev.filter((cf) => cf.id !== id));
+    setRecords(null);
+  };
+
   const selectedFields = FIELDS.filter((f) => selected.has(f.id));
+  const activeCustomFields = customFields.filter((cf) => cf.name.trim().length > 0);
 
   const handleCountChange = (raw: string) => {
     const parsed = Number(raw);
@@ -35,12 +68,21 @@ export const BatchGeneratorView: React.FC = () => {
   };
 
   const handleGenerate = () => {
-    if (selectedFields.length === 0) return;
+    if (selectedFields.length === 0 && activeCustomFields.length === 0) return;
     const phoneFormat = PHONE_FORMATS.find((p) => p.code === phoneCountry) || PHONE_FORMATS[0];
+    const dobFormat = DATE_FORMATS.find((d) => d.code === dateFormat) || DATE_FORMATS[0];
+    const generateByType = (typeId: FieldId): string => {
+      if (typeId === 'phone') return phoneFormat.generate();
+      if (typeId === 'dob') return dobFormat.generate();
+      return (FIELDS.find((f) => f.id === typeId) || FIELDS[0]).generate();
+    };
     const rows = Array.from({ length: count }, () => {
       const row: Record<string, string> = {};
       selectedFields.forEach((f) => {
-        row[f.id] = f.id === 'phone' ? phoneFormat.generate() : f.generate();
+        row[f.id] = generateByType(f.id);
+      });
+      activeCustomFields.forEach((cf) => {
+        row[cf.name.trim()] = generateByType(cf.typeId);
       });
       return row;
     });
@@ -93,6 +135,63 @@ export const BatchGeneratorView: React.FC = () => {
         </div>
       )}
 
+      {selected.has('dob') && (
+        <div className="field-row">
+          <span className="field-label">Date format</span>
+          <select
+            className="tz-select"
+            value={dateFormat}
+            onChange={(e) => setDateFormat(e.target.value)}
+          >
+            {DATE_FORMATS.map((f) => (
+              <option key={f.code} value={f.code}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="batch-custom-fields">
+        <div className="batch-custom-header">
+          <span className="field-label">Custom fields</span>
+          <button type="button" className="btn-mini" onClick={addCustomField}>
+            <Plus size={11} />
+            Add Field
+          </button>
+        </div>
+        {customFields.map((cf) => (
+          <div key={cf.id} className="batch-custom-row">
+            <input
+              type="text"
+              className="field-input batch-custom-key-input"
+              placeholder="Key name"
+              value={cf.name}
+              onChange={(e) => updateCustomFieldName(cf.id, e.target.value)}
+            />
+            <select
+              className="tz-select batch-custom-type-select"
+              value={cf.typeId}
+              onChange={(e) => updateCustomFieldType(cf.id, e.target.value as FieldId)}
+            >
+              {FIELDS.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.title}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className="btn-mini batch-custom-remove"
+              onClick={() => removeCustomField(cf.id)}
+              aria-label="Remove custom field"
+            >
+              <X size={12} />
+            </button>
+          </div>
+        ))}
+      </div>
+
       <div className="batch-count-row">
         <span className="field-label">Records</span>
         <input
@@ -109,7 +208,7 @@ export const BatchGeneratorView: React.FC = () => {
         type="button"
         className="batch-generate-btn"
         onClick={handleGenerate}
-        disabled={selectedFields.length === 0}
+        disabled={selectedFields.length === 0 && activeCustomFields.length === 0}
       >
         <Shuffle size={13} />
         Generate {count} Record{count === 1 ? '' : 's'}
@@ -144,9 +243,30 @@ export const BatchGeneratorView: React.FC = () => {
                         style={{ backgroundColor: row[f.id] }}
                       />
                     )}
+                    {f.id === 'image' && (
+                      <img src={row[f.id]} alt="" className="image-swatch image-swatch--inline" />
+                    )}
                     <span className="batch-record-value">{row[f.id]}</span>
                   </div>
                 ))}
+                {activeCustomFields.map((cf) => {
+                  const key = cf.name.trim();
+                  return (
+                    <div key={cf.id} className="batch-record-field">
+                      <span className="batch-record-label">{key}</span>
+                      {cf.typeId === 'color' && (
+                        <span
+                          className="color-swatch color-swatch--inline"
+                          style={{ backgroundColor: row[key] }}
+                        />
+                      )}
+                      {cf.typeId === 'image' && (
+                        <img src={row[key]} alt="" className="image-swatch image-swatch--inline" />
+                      )}
+                      <span className="batch-record-value">{row[key]}</span>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>

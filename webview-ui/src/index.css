@@ -2599,6 +2599,21 @@ code {
   margin-top: 0;
 }
 
+.image-swatch {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.image-swatch--inline {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
 /* ==========================================================================
    Utilities Landing (Home-style launch list)
    ========================================================================== */
@@ -3424,6 +3439,41 @@ code {
   font-family: var(--font-mono);
   color: var(--text-highlight);
   word-break: break-word;
+}
+
+.batch-custom-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.batch-custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.batch-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.batch-custom-key-input {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.batch-custom-type-select {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.batch-custom-remove {
+  flex-shrink: 0;
+  padding: 5px 6px;
 }
 
 /* JWT Inspector */

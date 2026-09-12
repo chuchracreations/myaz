@@ -27,6 +27,7 @@ export const SingleGeneratorTool: React.FC<Props> = ({ field }) => {
         {field.id === 'color' && (
           <span className="color-swatch" style={{ backgroundColor: value }} />
         )}
+        {field.id === 'image' && <img src={value} alt="Random preview" className="image-swatch" />}
         <pre className="drawer-output-text">{value}</pre>
       </div>
       <div className="drawer-actions">

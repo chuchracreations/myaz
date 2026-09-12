@@ -3,6 +3,7 @@ import { Dices, Layers, ShieldCheck, ChevronLeft, ChevronRight, ChevronDown } fr
 import { FIELDS, FieldId } from './generators';
 import { SingleGeneratorTool } from './SingleGeneratorTool';
 import { PhoneGeneratorTool } from './PhoneGeneratorTool';
+import { DateGeneratorTool } from './DateGeneratorTool';
 import { BatchGeneratorView } from './BatchGeneratorView';
 
 const BATCH_ACCENT_STYLE = {
@@ -91,6 +92,8 @@ export const RandomDataView: React.FC = () => {
                 <div className="accordion-body">
                   {f.id === 'phone' ? (
                     <PhoneGeneratorTool />
+                  ) : f.id === 'dob' ? (
+                    <DateGeneratorTool />
                   ) : (
                     <SingleGeneratorTool key={f.id} field={f} />
                   )}
@@ -103,7 +106,9 @@ export const RandomDataView: React.FC = () => {
 
       <div className="utility-privacy-line">
         <ShieldCheck size={11} />
-        <span>Every value is fake, generated locally on your machine</span>
+        <span>
+          Every value is fake, generated locally — except Image, which loads from picsum.photos
+        </span>
       </div>
     </div>
   );

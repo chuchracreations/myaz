@@ -14,8 +14,15 @@ import {
   Monitor,
   Palette,
   AlignLeft,
+  Image,
+  Hash,
+  CreditCard,
+  Link2,
+  Clock,
+  Compass,
 } from 'lucide-react';
 import { PHONE_FORMATS } from './phoneFormats';
+import { DATE_FORMATS } from './dateFormats';
 
 export type FieldId =
   | 'email'
@@ -31,7 +38,13 @@ export type FieldId =
   | 'mac'
   | 'useragent'
   | 'color'
-  | 'lorem';
+  | 'lorem'
+  | 'image'
+  | 'uuid'
+  | 'creditcard'
+  | 'url'
+  | 'timestamp'
+  | 'latlong';
 
 export interface FieldDef {
   id: FieldId;
@@ -289,11 +302,11 @@ function generateCompany(): string {
   return `${pick(COMPANY_PREFIX)} ${pick(COMPANY_CORE)} ${pick(COMPANY_SUFFIX)}`;
 }
 
+// Used as the default (ISO) format wherever a single DOB value is needed without a
+// format picker — e.g. Batch Generator. The dedicated Date screen lets you choose a
+// format via DATE_FORMATS directly.
 function generateDob(): string {
-  const year = new Date().getFullYear() - randInt(18, 65);
-  const month = String(randInt(1, 12)).padStart(2, '0');
-  const day = String(randInt(1, 28)).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return DATE_FORMATS[0].generate();
 }
 
 function generateIp(): string {
@@ -320,6 +333,77 @@ function generateMac(): string {
 
 function generateColor(): string {
   return `#${randHex(6)}`;
+}
+
+// picsum.photos serves a random photo per seed with no API key or account required.
+function generateImage(): string {
+  const seed = randHex(8);
+  return `https://picsum.photos/seed/${seed}/640/480`;
+}
+
+function generateUuid(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0'));
+  return [
+    hex.slice(0, 4).join(''),
+    hex.slice(4, 6).join(''),
+    hex.slice(6, 8).join(''),
+    hex.slice(8, 10).join(''),
+    hex.slice(10, 16).join(''),
+  ].join('-');
+}
+
+function luhnCheckDigit(numWithoutCheck: string): number {
+  let sum = 0;
+  let doubleDigit = true;
+  for (let i = numWithoutCheck.length - 1; i >= 0; i--) {
+    let d = Number(numWithoutCheck[i]);
+    if (doubleDigit) {
+      d *= 2;
+      if (d > 9) d -= 9;
+    }
+    sum += d;
+    doubleDigit = !doubleDigit;
+  }
+  return (10 - (sum % 10)) % 10;
+}
+
+// Luhn-valid card numbers using well-known test-only issuer prefixes — format-valid
+// for UI testing, not real card data.
+function generateCreditCard(): string {
+  const prefix = pick(['4', '51', '52', '53', '54', '55', '34', '37']);
+  const isAmex = prefix === '34' || prefix === '37';
+  const length = isAmex ? 15 : 16;
+  let body = prefix;
+  while (body.length < length - 1) body += String(randInt(0, 9));
+  const full = body + String(luhnCheckDigit(body));
+  return isAmex
+    ? `${full.slice(0, 4)} ${full.slice(4, 10)} ${full.slice(10)}`
+    : (full.match(/.{1,4}/g) || []).join(' ');
+}
+
+// example.com/.org/.net are reserved for documentation use (RFC 2606) — guaranteed never real.
+function generateUrl(): string {
+  const protocol = pick(['https', 'https', 'https', 'http']);
+  const sub = pick(['www', 'app', 'shop', 'blog', 'api', 'docs']);
+  const domain = pick(['example.com', 'example.org', 'example.net']);
+  const path = pick(['', '/products', '/about', `/blog/post-${randInt(1, 999)}`, `/api/v1/users/${randInt(1, 9999)}`]);
+  return `${protocol}://${sub}.${domain}${path}`;
+}
+
+function generateTimestamp(): string {
+  const fiveYearsMs = 5 * 365 * 24 * 60 * 60 * 1000;
+  const past = Date.now() - randInt(0, fiveYearsMs);
+  return String(Math.floor(past / 1000));
+}
+
+function generateLatLong(): string {
+  const lat = (Math.random() * 180 - 90).toFixed(6);
+  const lon = (Math.random() * 360 - 180).toFixed(6);
+  return `${lat}, ${lon}`;
 }
 
 function generateLorem(): string {
@@ -398,8 +482,8 @@ export const FIELDS: FieldDef[] = [
   },
   {
     id: 'dob',
-    title: 'Date of Birth',
-    desc: 'A random adult birth date',
+    title: 'Date',
+    desc: 'Pick a format for the birth date',
     icon: React.createElement(Calendar, { size: 16 }),
     generate: generateDob,
     ...ACCENTS[0],
@@ -451,5 +535,53 @@ export const FIELDS: FieldDef[] = [
     icon: React.createElement(AlignLeft, { size: 16 }),
     generate: generateLorem,
     ...ACCENTS[6],
+  },
+  {
+    id: 'image',
+    title: 'Image',
+    desc: 'A random placeholder photo URL',
+    icon: React.createElement(Image, { size: 16 }),
+    generate: generateImage,
+    ...ACCENTS[0],
+  },
+  {
+    id: 'uuid',
+    title: 'UUID',
+    desc: 'A random v4 UUID',
+    icon: React.createElement(Hash, { size: 16 }),
+    generate: generateUuid,
+    ...ACCENTS[1],
+  },
+  {
+    id: 'creditcard',
+    title: 'Credit Card Number',
+    desc: 'A format-valid (Luhn) test card number',
+    icon: React.createElement(CreditCard, { size: 16 }),
+    generate: generateCreditCard,
+    ...ACCENTS[2],
+  },
+  {
+    id: 'url',
+    title: 'URL',
+    desc: 'A random website URL',
+    icon: React.createElement(Link2, { size: 16 }),
+    generate: generateUrl,
+    ...ACCENTS[3],
+  },
+  {
+    id: 'timestamp',
+    title: 'Timestamp',
+    desc: 'A random Unix timestamp (seconds)',
+    icon: React.createElement(Clock, { size: 16 }),
+    generate: generateTimestamp,
+    ...ACCENTS[4],
+  },
+  {
+    id: 'latlong',
+    title: 'Latitude/Longitude',
+    desc: 'A random geographic coordinate',
+    icon: React.createElement(Compass, { size: 16 }),
+    generate: generateLatLong,
+    ...ACCENTS[5],
   },
 ];
