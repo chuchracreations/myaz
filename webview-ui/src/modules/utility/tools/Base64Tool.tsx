@@ -36,7 +36,7 @@ export const Base64Tool: React.FC = () => {
         rows={4}
         placeholder="Type or paste plain text or Base64 here..."
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
       />
       <div className="drawer-actions">
         <button type="button" className="btn-action-primary" onClick={handleEncode}>

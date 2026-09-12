@@ -43,11 +43,51 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['svg'],
     category: 'images',
     targets: [
-      { format: 'multi-res-png', label: 'Multi-Res PNG Bundle (16px-512px)', ext: 'zip', isBinary: true, badge: 'ZIP', shortLabel: 'Icon Pack', desc: '16px–512px bundle' },
-      { format: 'png', label: 'PNG (Rasterized)', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Rasterized' },
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
+      {
+        format: 'multi-res-png',
+        label: 'Multi-Res PNG Bundle (16px-512px)',
+        ext: 'zip',
+        isBinary: true,
+        badge: 'ZIP',
+        shortLabel: 'Icon Pack',
+        desc: '16px–512px bundle',
+      },
+      {
+        format: 'png',
+        label: 'PNG (Rasterized)',
+        ext: 'png',
+        isBinary: true,
+        badge: 'PNG',
+        shortLabel: 'PNG',
+        desc: 'Rasterized',
+      },
+      {
+        format: 'webp',
+        label: 'WebP (Compressed)',
+        ext: 'webp',
+        isBinary: true,
+        badge: 'WEBP',
+        shortLabel: 'WebP',
+        desc: 'Compressed',
+      },
+      {
+        format: 'ico',
+        label: 'Favicon (.ico)',
+        ext: 'ico',
+        isBinary: true,
+        badge: 'ICO',
+        shortLabel: 'Favicon',
+        desc: '.ico for apps',
+      },
+      {
+        format: 'base64',
+        label: 'Base64 Data URI',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'B64',
+        shortLabel: 'Base64',
+        desc: 'Data URI string',
+      },
     ],
   },
   // Images
@@ -55,40 +95,168 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['png'],
     category: 'images',
     targets: [
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
-      { format: 'jpg', label: 'JPEG (.jpg)', ext: 'jpg', isBinary: true, badge: 'JPG', shortLabel: 'JPEG', desc: 'Lossy compressed' },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
+      {
+        format: 'webp',
+        label: 'WebP (Compressed)',
+        ext: 'webp',
+        isBinary: true,
+        badge: 'WEBP',
+        shortLabel: 'WebP',
+        desc: 'Compressed',
+      },
+      {
+        format: 'jpg',
+        label: 'JPEG (.jpg)',
+        ext: 'jpg',
+        isBinary: true,
+        badge: 'JPG',
+        shortLabel: 'JPEG',
+        desc: 'Lossy compressed',
+      },
+      {
+        format: 'ico',
+        label: 'Favicon (.ico)',
+        ext: 'ico',
+        isBinary: true,
+        badge: 'ICO',
+        shortLabel: 'Favicon',
+        desc: '.ico for apps',
+      },
+      {
+        format: 'base64',
+        label: 'Base64 Data URI',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'B64',
+        shortLabel: 'Base64',
+        desc: 'Data URI string',
+      },
     ],
   },
   jpg: {
     sourceExts: ['jpg', 'jpeg'],
     category: 'images',
     targets: [
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
-      { format: 'png', label: 'PNG (Lossless)', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Lossless' },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
+      {
+        format: 'webp',
+        label: 'WebP (Compressed)',
+        ext: 'webp',
+        isBinary: true,
+        badge: 'WEBP',
+        shortLabel: 'WebP',
+        desc: 'Compressed',
+      },
+      {
+        format: 'png',
+        label: 'PNG (Lossless)',
+        ext: 'png',
+        isBinary: true,
+        badge: 'PNG',
+        shortLabel: 'PNG',
+        desc: 'Lossless',
+      },
+      {
+        format: 'ico',
+        label: 'Favicon (.ico)',
+        ext: 'ico',
+        isBinary: true,
+        badge: 'ICO',
+        shortLabel: 'Favicon',
+        desc: '.ico for apps',
+      },
+      {
+        format: 'base64',
+        label: 'Base64 Data URI',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'B64',
+        shortLabel: 'Base64',
+        desc: 'Data URI string',
+      },
     ],
   },
   jpeg: {
     sourceExts: ['jpeg'],
     category: 'images',
     targets: [
-      { format: 'webp', label: 'WebP (Compressed)', ext: 'webp', isBinary: true, badge: 'WEBP', shortLabel: 'WebP', desc: 'Compressed' },
-      { format: 'png', label: 'PNG', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Lossless' },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
+      {
+        format: 'webp',
+        label: 'WebP (Compressed)',
+        ext: 'webp',
+        isBinary: true,
+        badge: 'WEBP',
+        shortLabel: 'WebP',
+        desc: 'Compressed',
+      },
+      {
+        format: 'png',
+        label: 'PNG',
+        ext: 'png',
+        isBinary: true,
+        badge: 'PNG',
+        shortLabel: 'PNG',
+        desc: 'Lossless',
+      },
+      {
+        format: 'ico',
+        label: 'Favicon (.ico)',
+        ext: 'ico',
+        isBinary: true,
+        badge: 'ICO',
+        shortLabel: 'Favicon',
+        desc: '.ico for apps',
+      },
+      {
+        format: 'base64',
+        label: 'Base64 Data URI',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'B64',
+        shortLabel: 'Base64',
+        desc: 'Data URI string',
+      },
     ],
   },
   webp: {
     sourceExts: ['webp'],
     category: 'images',
     targets: [
-      { format: 'png', label: 'PNG (Lossless)', ext: 'png', isBinary: true, badge: 'PNG', shortLabel: 'PNG', desc: 'Lossless' },
-      { format: 'jpg', label: 'JPEG (.jpg)', ext: 'jpg', isBinary: true, badge: 'JPG', shortLabel: 'JPEG', desc: 'Lossy compressed' },
-      { format: 'ico', label: 'Favicon (.ico)', ext: 'ico', isBinary: true, badge: 'ICO', shortLabel: 'Favicon', desc: '.ico for apps' },
-      { format: 'base64', label: 'Base64 Data URI', ext: 'txt', isBinary: false, badge: 'B64', shortLabel: 'Base64', desc: 'Data URI string' },
+      {
+        format: 'png',
+        label: 'PNG (Lossless)',
+        ext: 'png',
+        isBinary: true,
+        badge: 'PNG',
+        shortLabel: 'PNG',
+        desc: 'Lossless',
+      },
+      {
+        format: 'jpg',
+        label: 'JPEG (.jpg)',
+        ext: 'jpg',
+        isBinary: true,
+        badge: 'JPG',
+        shortLabel: 'JPEG',
+        desc: 'Lossy compressed',
+      },
+      {
+        format: 'ico',
+        label: 'Favicon (.ico)',
+        ext: 'ico',
+        isBinary: true,
+        badge: 'ICO',
+        shortLabel: 'Favicon',
+        desc: '.ico for apps',
+      },
+      {
+        format: 'base64',
+        label: 'Base64 Data URI',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'B64',
+        shortLabel: 'Base64',
+        desc: 'Data URI string',
+      },
     ],
   },
   // PDF Document Extractor
@@ -96,8 +264,24 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['pdf'],
     category: 'documents',
     targets: [
-      { format: 'md', label: 'Markdown (.md) - Text & Headings', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Text & headings' },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Raw text only' },
+      {
+        format: 'md',
+        label: 'Markdown (.md) - Text & Headings',
+        ext: 'md',
+        isBinary: false,
+        badge: 'MD',
+        shortLabel: 'Markdown',
+        desc: 'Text & headings',
+      },
+      {
+        format: 'txt',
+        label: 'Plain Text (.txt)',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'TXT',
+        shortLabel: 'Plain Text',
+        desc: 'Raw text only',
+      },
     ],
   },
   // Markdown Suite
@@ -105,10 +289,42 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['md', 'markdown'],
     category: 'documents',
     targets: [
-      { format: 'slide-deck', label: 'Interactive Slide Deck (.html)', ext: 'slides.html', isBinary: false, badge: 'DECK', shortLabel: 'Slide Deck', desc: 'Interactive presentation' },
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
-      { format: 'html', label: 'Styled Web Page (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'Web Page', desc: 'Styled HTML' },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Strip formatting' },
+      {
+        format: 'slide-deck',
+        label: 'Interactive Slide Deck (.html)',
+        ext: 'slides.html',
+        isBinary: false,
+        badge: 'DECK',
+        shortLabel: 'Slide Deck',
+        desc: 'Interactive presentation',
+      },
+      {
+        format: 'pdf',
+        label: 'PDF Document (.pdf)',
+        ext: 'pdf',
+        isBinary: true,
+        badge: 'PDF',
+        shortLabel: 'PDF',
+        desc: 'Print-ready document',
+      },
+      {
+        format: 'html',
+        label: 'Styled Web Page (.html)',
+        ext: 'html',
+        isBinary: false,
+        badge: 'HTML',
+        shortLabel: 'Web Page',
+        desc: 'Styled HTML',
+      },
+      {
+        format: 'txt',
+        label: 'Plain Text (.txt)',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'TXT',
+        shortLabel: 'Plain Text',
+        desc: 'Strip formatting',
+      },
     ],
   },
   // Documents
@@ -116,26 +332,90 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['docx'],
     category: 'documents',
     targets: [
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
-      { format: 'md', label: 'Markdown (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Text & headings' },
-      { format: 'html', label: 'HTML Web Page (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'Web Page', desc: 'Styled HTML' },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Strip formatting' },
+      {
+        format: 'pdf',
+        label: 'PDF Document (.pdf)',
+        ext: 'pdf',
+        isBinary: true,
+        badge: 'PDF',
+        shortLabel: 'PDF',
+        desc: 'Print-ready document',
+      },
+      {
+        format: 'md',
+        label: 'Markdown (.md)',
+        ext: 'md',
+        isBinary: false,
+        badge: 'MD',
+        shortLabel: 'Markdown',
+        desc: 'Text & headings',
+      },
+      {
+        format: 'html',
+        label: 'HTML Web Page (.html)',
+        ext: 'html',
+        isBinary: false,
+        badge: 'HTML',
+        shortLabel: 'Web Page',
+        desc: 'Styled HTML',
+      },
+      {
+        format: 'txt',
+        label: 'Plain Text (.txt)',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'TXT',
+        shortLabel: 'Plain Text',
+        desc: 'Strip formatting',
+      },
     ],
   },
   txt: {
     sourceExts: ['txt'],
     category: 'documents',
     targets: [
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
+      {
+        format: 'pdf',
+        label: 'PDF Document (.pdf)',
+        ext: 'pdf',
+        isBinary: true,
+        badge: 'PDF',
+        shortLabel: 'PDF',
+        desc: 'Print-ready document',
+      },
     ],
   },
   html: {
     sourceExts: ['html', 'htm'],
     category: 'documents',
     targets: [
-      { format: 'md', label: 'Markdown (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Text & headings' },
-      { format: 'pdf', label: 'PDF Document (.pdf)', ext: 'pdf', isBinary: true, badge: 'PDF', shortLabel: 'PDF', desc: 'Print-ready document' },
-      { format: 'txt', label: 'Plain Text (.txt)', ext: 'txt', isBinary: false, badge: 'TXT', shortLabel: 'Plain Text', desc: 'Strip formatting' },
+      {
+        format: 'md',
+        label: 'Markdown (.md)',
+        ext: 'md',
+        isBinary: false,
+        badge: 'MD',
+        shortLabel: 'Markdown',
+        desc: 'Text & headings',
+      },
+      {
+        format: 'pdf',
+        label: 'PDF Document (.pdf)',
+        ext: 'pdf',
+        isBinary: true,
+        badge: 'PDF',
+        shortLabel: 'PDF',
+        desc: 'Print-ready document',
+      },
+      {
+        format: 'txt',
+        label: 'Plain Text (.txt)',
+        ext: 'txt',
+        isBinary: false,
+        badge: 'TXT',
+        shortLabel: 'Plain Text',
+        desc: 'Strip formatting',
+      },
     ],
   },
   // Spreadsheets
@@ -143,19 +423,75 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['xlsx', 'xls'],
     category: 'spreadsheets',
     targets: [
-      { format: 'json', label: 'JSON Array (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Array of rows' },
-      { format: 'md', label: 'Markdown Table (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Table format' },
-      { format: 'html', label: 'HTML Table (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'HTML Table', desc: 'Styled table' },
-      { format: 'csv', label: 'CSV File (.csv)', ext: 'csv', isBinary: false, badge: 'CSV', shortLabel: 'CSV', desc: 'Comma-separated' },
+      {
+        format: 'json',
+        label: 'JSON Array (.json)',
+        ext: 'json',
+        isBinary: false,
+        badge: 'JSON',
+        shortLabel: 'JSON',
+        desc: 'Array of rows',
+      },
+      {
+        format: 'md',
+        label: 'Markdown Table (.md)',
+        ext: 'md',
+        isBinary: false,
+        badge: 'MD',
+        shortLabel: 'Markdown',
+        desc: 'Table format',
+      },
+      {
+        format: 'html',
+        label: 'HTML Table (.html)',
+        ext: 'html',
+        isBinary: false,
+        badge: 'HTML',
+        shortLabel: 'HTML Table',
+        desc: 'Styled table',
+      },
+      {
+        format: 'csv',
+        label: 'CSV File (.csv)',
+        ext: 'csv',
+        isBinary: false,
+        badge: 'CSV',
+        shortLabel: 'CSV',
+        desc: 'Comma-separated',
+      },
     ],
   },
   csv: {
     sourceExts: ['csv', 'tsv'],
     category: 'spreadsheets',
     targets: [
-      { format: 'json', label: 'JSON Array (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Array of rows' },
-      { format: 'md', label: 'Markdown Table (.md)', ext: 'md', isBinary: false, badge: 'MD', shortLabel: 'Markdown', desc: 'Table format' },
-      { format: 'html', label: 'HTML Table (.html)', ext: 'html', isBinary: false, badge: 'HTML', shortLabel: 'HTML Table', desc: 'Styled table' },
+      {
+        format: 'json',
+        label: 'JSON Array (.json)',
+        ext: 'json',
+        isBinary: false,
+        badge: 'JSON',
+        shortLabel: 'JSON',
+        desc: 'Array of rows',
+      },
+      {
+        format: 'md',
+        label: 'Markdown Table (.md)',
+        ext: 'md',
+        isBinary: false,
+        badge: 'MD',
+        shortLabel: 'Markdown',
+        desc: 'Table format',
+      },
+      {
+        format: 'html',
+        label: 'HTML Table (.html)',
+        ext: 'html',
+        isBinary: false,
+        badge: 'HTML',
+        shortLabel: 'HTML Table',
+        desc: 'Styled table',
+      },
     ],
   },
   // Data & Config
@@ -163,52 +499,142 @@ const PRESETS: Record<string, ConversionPreset> = {
     sourceExts: ['json'],
     category: 'data',
     targets: [
-      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false, badge: 'YAML', shortLabel: 'YAML', desc: 'Human-readable config' },
-      { format: 'xml', label: 'XML (.xml)', ext: 'xml', isBinary: false, badge: 'XML', shortLabel: 'XML', desc: 'Markup format' },
-      { format: 'env', label: 'Environment (.env)', ext: 'env', isBinary: false, badge: 'ENV', shortLabel: '.env', desc: 'Key=value pairs' },
+      {
+        format: 'yaml',
+        label: 'YAML (.yaml)',
+        ext: 'yaml',
+        isBinary: false,
+        badge: 'YAML',
+        shortLabel: 'YAML',
+        desc: 'Human-readable config',
+      },
+      {
+        format: 'xml',
+        label: 'XML (.xml)',
+        ext: 'xml',
+        isBinary: false,
+        badge: 'XML',
+        shortLabel: 'XML',
+        desc: 'Markup format',
+      },
+      {
+        format: 'env',
+        label: 'Environment (.env)',
+        ext: 'env',
+        isBinary: false,
+        badge: 'ENV',
+        shortLabel: '.env',
+        desc: 'Key=value pairs',
+      },
     ],
   },
   yaml: {
     sourceExts: ['yaml', 'yml'],
     category: 'data',
     targets: [
-      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Structured data' },
-      { format: 'xml', label: 'XML (.xml)', ext: 'xml', isBinary: false, badge: 'XML', shortLabel: 'XML', desc: 'Markup format' },
+      {
+        format: 'json',
+        label: 'JSON (.json)',
+        ext: 'json',
+        isBinary: false,
+        badge: 'JSON',
+        shortLabel: 'JSON',
+        desc: 'Structured data',
+      },
+      {
+        format: 'xml',
+        label: 'XML (.xml)',
+        ext: 'xml',
+        isBinary: false,
+        badge: 'XML',
+        shortLabel: 'XML',
+        desc: 'Markup format',
+      },
     ],
   },
   xml: {
     sourceExts: ['xml'],
     category: 'data',
     targets: [
-      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Structured data' },
-      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false, badge: 'YAML', shortLabel: 'YAML', desc: 'Human-readable config' },
+      {
+        format: 'json',
+        label: 'JSON (.json)',
+        ext: 'json',
+        isBinary: false,
+        badge: 'JSON',
+        shortLabel: 'JSON',
+        desc: 'Structured data',
+      },
+      {
+        format: 'yaml',
+        label: 'YAML (.yaml)',
+        ext: 'yaml',
+        isBinary: false,
+        badge: 'YAML',
+        shortLabel: 'YAML',
+        desc: 'Human-readable config',
+      },
     ],
   },
   env: {
     sourceExts: ['env'],
     category: 'data',
     targets: [
-      { format: 'json', label: 'JSON (.json)', ext: 'json', isBinary: false, badge: 'JSON', shortLabel: 'JSON', desc: 'Structured data' },
-      { format: 'yaml', label: 'YAML (.yaml)', ext: 'yaml', isBinary: false, badge: 'YAML', shortLabel: 'YAML', desc: 'Human-readable config' },
+      {
+        format: 'json',
+        label: 'JSON (.json)',
+        ext: 'json',
+        isBinary: false,
+        badge: 'JSON',
+        shortLabel: 'JSON',
+        desc: 'Structured data',
+      },
+      {
+        format: 'yaml',
+        label: 'YAML (.yaml)',
+        ext: 'yaml',
+        isBinary: false,
+        badge: 'YAML',
+        shortLabel: 'YAML',
+        desc: 'Human-readable config',
+      },
     ],
   },
 };
 
 // Capability overview shown on the landing state, derived directly from PRESETS
 // so it can never drift out of sync with what's actually supported.
-const CATEGORY_META: Record<ConversionPreset['category'], { label: string; icon: React.ReactNode; accentClass: string }> = {
+const CATEGORY_META: Record<
+  ConversionPreset['category'],
+  { label: string; icon: React.ReactNode; accentClass: string }
+> = {
   images: { label: 'Images', icon: <ImageIcon size={12} />, accentClass: 'cat-card--images' },
-  documents: { label: 'Documents', icon: <FileText size={12} />, accentClass: 'cat-card--documents' },
-  spreadsheets: { label: 'Spreadsheets', icon: <TableIcon size={12} />, accentClass: 'cat-card--spreadsheets' },
+  documents: {
+    label: 'Documents',
+    icon: <FileText size={12} />,
+    accentClass: 'cat-card--documents',
+  },
+  spreadsheets: {
+    label: 'Spreadsheets',
+    icon: <TableIcon size={12} />,
+    accentClass: 'cat-card--spreadsheets',
+  },
   data: { label: 'Data & Config', icon: <Braces size={12} />, accentClass: 'cat-card--data' },
 };
 
-const CATEGORY_ORDER: ConversionPreset['category'][] = ['images', 'documents', 'spreadsheets', 'data'];
+const CATEGORY_ORDER: ConversionPreset['category'][] = [
+  'images',
+  'documents',
+  'spreadsheets',
+  'data',
+];
 
-const CATEGORY_CAPABILITIES = CATEGORY_ORDER.map(category => {
-  const presetsInCategory = Object.values(PRESETS).filter(p => p.category === category);
-  const fromExts = Array.from(new Set(presetsInCategory.flatMap(p => p.sourceExts)));
-  const toBadges = Array.from(new Set(presetsInCategory.flatMap(p => p.targets.map(t => t.badge))));
+const CATEGORY_CAPABILITIES = CATEGORY_ORDER.map((category) => {
+  const presetsInCategory = Object.values(PRESETS).filter((p) => p.category === category);
+  const fromExts = Array.from(new Set(presetsInCategory.flatMap((p) => p.sourceExts)));
+  const toBadges = Array.from(
+    new Set(presetsInCategory.flatMap((p) => p.targets.map((t) => t.badge)))
+  );
   return { id: category, fromExts, toBadges, ...CATEGORY_META[category] };
 });
 
@@ -231,18 +657,18 @@ interface BatchQueueItem {
  * file's own preset targets). Files with an unrecognized extension have no targets, so they
  * contribute none — the dropdown only ever offers a target every queued file can actually reach.
  */
-function computeBatchTargetOptions(
-  items: { ext: string }[]
-): ConversionTarget[] {
-  const presets = items.map(i => PRESETS[i.ext]).filter((p): p is ConversionPreset => !!p);
+function computeBatchTargetOptions(items: { ext: string }[]): ConversionTarget[] {
+  const presets = items.map((i) => PRESETS[i.ext]).filter((p): p is ConversionPreset => !!p);
   if (presets.length === 0 || presets.length !== items.length) return [];
 
   const [first, ...rest] = presets;
-  return first.targets
-    // Batch mode saves one output per queued file, so a target that produces a bundle of
-    // multiple files (e.g. the multi-res icon pack) isn't offered here — only in the single-file flow.
-    .filter(t => t.format !== 'multi-res-png')
-    .filter(t => rest.every(p => p.targets.some(pt => pt.format === t.format)));
+  return (
+    first.targets
+      // Batch mode saves one output per queued file, so a target that produces a bundle of
+      // multiple files (e.g. the multi-res icon pack) isn't offered here — only in the single-file flow.
+      .filter((t) => t.format !== 'multi-res-png')
+      .filter((t) => rest.every((p) => p.targets.some((pt) => pt.format === t.format)))
+  );
 }
 
 /**
@@ -340,10 +766,10 @@ export const ConvertersView: React.FC = () => {
   };
 
   useEffect(() => {
-    const unsub = vscode.onMessage(msg => {
+    const unsub = vscode.onMessage((msg) => {
       if (msg.type === 'CONVERT_FILE_PICKED') {
         const pathsByName: Record<string, string> = {};
-        const files = msg.payload.files.map(f => {
+        const files = msg.payload.files.map((f) => {
           pathsByName[f.fileName] = f.originalPath;
           return base64ToFile(f.dataBase64, f.fileName);
         });
@@ -392,12 +818,16 @@ export const ConvertersView: React.FC = () => {
     setIsConverting(true);
     setErrorMsg(null);
 
-    const baseName = selectedFile.name.substring(0, selectedFile.name.lastIndexOf('.')) || selectedFile.name;
+    const baseName =
+      selectedFile.name.substring(0, selectedFile.name.lastIndexOf('.')) || selectedFile.name;
     const isImageSource = ['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(sourceExt);
 
     try {
       // Client-side image & SVG conversions
-      if (isImageSource && ['png', 'jpg', 'webp', 'ico', 'base64', 'multi-res-png'].includes(targetFormat)) {
+      if (
+        isImageSource &&
+        ['png', 'jpg', 'webp', 'ico', 'base64', 'multi-res-png'].includes(targetFormat)
+      ) {
         const result = await convertImage(
           selectedFile,
           {
@@ -429,9 +859,20 @@ export const ConvertersView: React.FC = () => {
 
       // Extension Host conversion for Documents, PDF Extractor, Slides, Spreadsheets, Data
       const reader = new FileReader();
-      const isTextSource = ['md', 'txt', 'html', 'json', 'yaml', 'yml', 'xml', 'env', 'csv', 'tsv'].includes(sourceExt);
+      const isTextSource = [
+        'md',
+        'txt',
+        'html',
+        'json',
+        'yaml',
+        'yml',
+        'xml',
+        'env',
+        'csv',
+        'tsv',
+      ].includes(sourceExt);
 
-      reader.onload = async e => {
+      reader.onload = async (e) => {
         try {
           let reqPayload;
           if (isTextSource) {
@@ -454,7 +895,7 @@ export const ConvertersView: React.FC = () => {
             };
           }
 
-          const unsub = vscode.onMessage(msg => {
+          const unsub = vscode.onMessage((msg) => {
             if (msg.type === 'CONVERT_FILE_RESULT' && msg.payload.id === reqPayload.id) {
               unsub();
               setIsConverting(false);
@@ -525,7 +966,7 @@ export const ConvertersView: React.FC = () => {
           const reqId = `${Date.now()}-${i}`;
 
           const result = await new Promise<any>((resolve, reject) => {
-            const unsub = vscode.onMessage(msg => {
+            const unsub = vscode.onMessage((msg) => {
               if (msg.type === 'CONVERT_FILE_RESULT' && msg.payload.id === reqId) {
                 unsub();
                 resolve(msg.payload);
@@ -574,12 +1015,21 @@ export const ConvertersView: React.FC = () => {
   // Helper: Read file text or base64
   const readFileAsTextOrBase64 = (file: File): Promise<{ isText: boolean; content: string }> => {
     return new Promise((resolve, reject) => {
-      const isText = ['md', 'txt', 'html', 'json', 'yaml', 'yml', 'xml', 'env', 'csv', 'tsv'].includes(
-        file.name.split('.').pop()?.toLowerCase() || ''
-      );
+      const isText = [
+        'md',
+        'txt',
+        'html',
+        'json',
+        'yaml',
+        'yml',
+        'xml',
+        'env',
+        'csv',
+        'tsv',
+      ].includes(file.name.split('.').pop()?.toLowerCase() || '');
       const reader = new FileReader();
 
-      reader.onload = e => {
+      reader.onload = (e) => {
         if (isText) {
           resolve({ isText: true, content: (e.target?.result as string) || '' });
         } else {
@@ -605,7 +1055,7 @@ export const ConvertersView: React.FC = () => {
         type: 'SAVE_BATCH_ZIP',
         payload: {
           zipFileName: outputFileName,
-          items: multiResFiles.map(f => ({ fileName: f.fileName, outputDataBase64: f.base64 })),
+          items: multiResFiles.map((f) => ({ fileName: f.fileName, outputDataBase64: f.base64 })),
         },
       });
       return;
@@ -624,13 +1074,13 @@ export const ConvertersView: React.FC = () => {
 
   // Save Batch Files to Folder
   const handleSaveBatchToFolder = () => {
-    const completed = batchQueue.filter(i => i.status === 'done');
+    const completed = batchQueue.filter((i) => i.status === 'done');
     if (completed.length === 0) return;
 
     vscode.postMessage({
       type: 'SAVE_BATCH_FILES',
       payload: {
-        items: completed.map(i => ({
+        items: completed.map((i) => ({
           fileName: i.outputFileName || i.name,
           outputDataBase64: i.outputDataBase64,
           outputText: i.outputText,
@@ -641,7 +1091,7 @@ export const ConvertersView: React.FC = () => {
 
   // Save Batch Files as ZIP
   const handleSaveBatchAsZip = () => {
-    const completed = batchQueue.filter(i => i.status === 'done');
+    const completed = batchQueue.filter((i) => i.status === 'done');
     if (completed.length === 0) return;
 
     const defaultZipName = `converted-batch-${Date.now()}.zip`;
@@ -649,7 +1099,7 @@ export const ConvertersView: React.FC = () => {
       type: 'SAVE_BATCH_ZIP',
       payload: {
         zipFileName: defaultZipName,
-        items: completed.map(i => ({
+        items: completed.map((i) => ({
           fileName: i.outputFileName || i.name,
           outputDataBase64: i.outputDataBase64,
           outputText: i.outputText,
@@ -669,7 +1119,7 @@ export const ConvertersView: React.FC = () => {
   };
 
   const preset = sourceExt ? PRESETS[sourceExt] : null;
-  const batchCompletedCount = batchQueue.filter(i => i.status === 'done').length;
+  const batchCompletedCount = batchQueue.filter((i) => i.status === 'done').length;
   const batchTargetOptions = useMemo(() => computeBatchTargetOptions(batchQueue), [batchQueue]);
 
   return (
@@ -704,7 +1154,7 @@ export const ConvertersView: React.FC = () => {
             <button
               type="button"
               className="dropzone-browse-chip"
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 handleBrowseClick();
               }}
@@ -716,7 +1166,7 @@ export const ConvertersView: React.FC = () => {
 
           <div className="discover-label">What can I convert?</div>
           <div className="cat-list">
-            {CATEGORY_CAPABILITIES.map(cat => (
+            {CATEGORY_CAPABILITIES.map((cat) => (
               <div key={cat.id} className={`cat-card ${cat.accentClass}`}>
                 <div className="cat-head">
                   <div className="cat-icon">{cat.icon}</div>
@@ -724,14 +1174,18 @@ export const ConvertersView: React.FC = () => {
                   <span className="cat-count">{cat.fromExts.length} formats</span>
                 </div>
                 <div className="cat-flow">
-                  {cat.fromExts.map(ext => (
-                    <span key={ext} className="fmt-chip from">{ext.toUpperCase()}</span>
+                  {cat.fromExts.map((ext) => (
+                    <span key={ext} className="fmt-chip from">
+                      {ext.toUpperCase()}
+                    </span>
                   ))}
                   <span className="cat-arrow">
                     <ArrowRight size={11} />
                   </span>
-                  {cat.toBadges.map(badge => (
-                    <span key={badge} className="fmt-chip to">{badge}</span>
+                  {cat.toBadges.map((badge) => (
+                    <span key={badge} className="fmt-chip to">
+                      {badge}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -763,10 +1217,10 @@ export const ConvertersView: React.FC = () => {
                 <label>Convert all to:</label>
                 <select
                   value={batchTarget}
-                  onChange={e => setBatchTarget(e.target.value)}
+                  onChange={(e) => setBatchTarget(e.target.value)}
                   className="batch-select-input"
                 >
-                  {batchTargetOptions.map(t => (
+                  {batchTargetOptions.map((t) => (
                     <option key={t.format} value={t.format}>
                       {t.label}
                     </option>
@@ -775,7 +1229,10 @@ export const ConvertersView: React.FC = () => {
               </div>
             ) : (
               <div className="unsupported-format-box">
-                <span>These files don't share a common target format. Remove files of a different type, or convert them separately.</span>
+                <span>
+                  These files don&apos;t share a common target format. Remove files of a different
+                  type, or convert them separately.
+                </span>
               </div>
             )}
 
@@ -801,7 +1258,7 @@ export const ConvertersView: React.FC = () => {
 
           {/* Queue Items List */}
           <div className="batch-items-list">
-            {batchQueue.map(item => (
+            {batchQueue.map((item) => (
               <div key={item.id} className={`batch-item-row ${item.status}`}>
                 <div className="batch-item-info">
                   <span className="batch-item-name" title={item.name}>
@@ -811,8 +1268,12 @@ export const ConvertersView: React.FC = () => {
                 </div>
 
                 <div className="batch-item-status">
-                  {item.status === 'pending' && <span className="status-badge pending">Pending</span>}
-                  {item.status === 'converting' && <RefreshCw size={12} className="spin status-badge converting" />}
+                  {item.status === 'pending' && (
+                    <span className="status-badge pending">Pending</span>
+                  )}
+                  {item.status === 'converting' && (
+                    <RefreshCw size={12} className="spin status-badge converting" />
+                  )}
                   {item.status === 'done' && <Check size={13} color="#10b981" />}
                   {item.status === 'error' && <span className="status-badge error">Failed</span>}
                 </div>
@@ -865,7 +1326,8 @@ export const ConvertersView: React.FC = () => {
                   {selectedFile?.name}
                 </span>
                 <span className="active-filemeta">
-                  {selectedFile ? (selectedFile.size / 1024).toFixed(1) : 0} KB • .{sourceExt.toUpperCase()}
+                  {selectedFile ? (selectedFile.size / 1024).toFixed(1) : 0} KB • .
+                  {sourceExt.toUpperCase()}
                 </span>
               </div>
             </div>
@@ -888,7 +1350,7 @@ export const ConvertersView: React.FC = () => {
               </div>
 
               <div className="fmt-grid">
-                {preset.targets.map(t => {
+                {preset.targets.map((t) => {
                   const isSelected = targetFormat === t.format;
                   return (
                     <button
@@ -925,12 +1387,11 @@ export const ConvertersView: React.FC = () => {
                     max="1.0"
                     step="0.05"
                     value={imageQuality}
-                    onChange={e => setImageQuality(parseFloat(e.target.value))}
+                    onChange={(e) => setImageQuality(parseFloat(e.target.value))}
                     className="quality-range-slider"
                   />
                 </div>
               )}
-
 
               {/* Convert Action CTA */}
               <button
@@ -966,7 +1427,10 @@ export const ConvertersView: React.FC = () => {
           )}
 
           {/* Conversion Result Card */}
-          {(convertedText !== null || convertedImage !== null || convertedDataBase64 !== null || multiResFiles !== null) && (
+          {(convertedText !== null ||
+            convertedImage !== null ||
+            convertedDataBase64 !== null ||
+            multiResFiles !== null) && (
             <div className="conversion-result-card">
               <div className="result-card-header">
                 <div className="result-name-group">
@@ -1006,10 +1470,12 @@ export const ConvertersView: React.FC = () => {
                     <span>Generated {multiResFiles.length} Resolutions</span>
                   </div>
                   <div className="multires-tiles">
-                    {multiResFiles.map(res => (
+                    {multiResFiles.map((res) => (
                       <div key={res.size} className="multires-tile">
                         <img src={res.dataUrl} alt={`${res.size}px`} className="multires-thumb" />
-                        <span className="multires-size-label">{res.size}×{res.size}</span>
+                        <span className="multires-size-label">
+                          {res.size}×{res.size}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -1017,9 +1483,14 @@ export const ConvertersView: React.FC = () => {
               ) : convertedImage ? (
                 <div className="result-content-preview">
                   <div className="image-preview-box">
-                    <img src={convertedImage.dataUrl} alt="Converted Render" className="preview-image-element" />
+                    <img
+                      src={convertedImage.dataUrl}
+                      alt="Converted Render"
+                      className="preview-image-element"
+                    />
                     <div className="preview-meta-tag">
-                      {convertedImage.width}×{convertedImage.height}px • {(convertedImage.sizeBytes / 1024).toFixed(1)} KB
+                      {convertedImage.width}×{convertedImage.height}px •{' '}
+                      {(convertedImage.sizeBytes / 1024).toFixed(1)} KB
                     </div>
                   </div>
                 </div>

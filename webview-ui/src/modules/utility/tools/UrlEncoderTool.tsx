@@ -36,7 +36,7 @@ export const UrlEncoderTool: React.FC = () => {
         rows={4}
         placeholder="Paste URL or parameters..."
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
       />
       <div className="drawer-actions">
         <button type="button" className="btn-action-primary" onClick={handleEncode}>

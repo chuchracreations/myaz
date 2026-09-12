@@ -8,7 +8,7 @@ export class SnippetCommands {
     private readonly context: vscode.ExtensionContext,
     private readonly sidebarProvider: SidebarWebviewProvider,
     private readonly snippetService: SnippetService
-  ) { }
+  ) {}
 
   public registerCommands(): vscode.Disposable[] {
     const disposables: vscode.Disposable[] = [];
@@ -31,25 +31,19 @@ export class SnippetCommands {
         type: 'OPEN_CREATE_SNIPPET_MODAL',
       });
     };
-    disposables.push(
-      vscode.commands.registerCommand('myaz.snippets.create', createSnippetHandler)
-    );
+    disposables.push(vscode.commands.registerCommand('myaz.snippets.create', createSnippetHandler));
 
     // Command: Open workspace storage file on device
     const openStorageHandler = async () => {
       await this.snippetService.openStorageFile();
     };
-    disposables.push(
-      vscode.commands.registerCommand('myaz.openStorageFile', openStorageHandler)
-    );
+    disposables.push(vscode.commands.registerCommand('myaz.openStorageFile', openStorageHandler));
 
     // Command: Export workspace data to single JSON file
     const exportHandler = async () => {
       await this.snippetService.exportToFile();
     };
-    disposables.push(
-      vscode.commands.registerCommand('myaz.exportData', exportHandler)
-    );
+    disposables.push(vscode.commands.registerCommand('myaz.exportData', exportHandler));
 
     // Command: Import workspace data from JSON file
     const importHandler = async () => {
@@ -58,9 +52,7 @@ export class SnippetCommands {
         this.sidebarProvider.syncSnippets();
       }
     };
-    disposables.push(
-      vscode.commands.registerCommand('myaz.importData', importHandler)
-    );
+    disposables.push(vscode.commands.registerCommand('myaz.importData', importHandler));
 
     // Command: Create snippet from current editor selection
     const createSelectionHandler = async () => {

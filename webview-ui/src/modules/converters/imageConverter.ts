@@ -154,7 +154,7 @@ function loadImage(fileOrUrl: File | string): Promise<HTMLImageElement> {
       img.src = fileOrUrl;
     } else {
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         img.src = e.target?.result as string;
       };
       reader.onerror = () => reject(new Error('Failed to read file from disk.'));
@@ -176,7 +176,7 @@ async function generateIco(img: HTMLImageElement, size = 32): Promise<ConvertedI
   ctx.drawImage(img, 0, 0, size, size);
   const pngDataUrl = canvas.toDataURL('image/png');
   const pngBase64 = pngDataUrl.split(',')[1];
-  const pngBinary = Uint8Array.from(atob(pngBase64), c => c.charCodeAt(0));
+  const pngBinary = Uint8Array.from(atob(pngBase64), (c) => c.charCodeAt(0));
 
   const icoBuffer = new Uint8Array(6 + 16 + pngBinary.length);
   const view = new DataView(icoBuffer.buffer);

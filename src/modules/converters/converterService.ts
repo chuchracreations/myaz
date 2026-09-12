@@ -33,7 +33,10 @@ export class ConverterService {
       }
 
       // 3. Documents & PDF conversions
-      if (['docx', 'md', 'txt', 'html', 'pdf'].includes(ext) || ['pdf', 'md', 'html', 'txt', 'slide-deck', 'slides'].includes(target)) {
+      if (
+        ['docx', 'md', 'txt', 'html', 'pdf'].includes(ext) ||
+        ['pdf', 'md', 'html', 'txt', 'slide-deck', 'slides'].includes(target)
+      ) {
         return await this.convertDocument(req, ext, target);
       }
 
@@ -56,9 +59,18 @@ export class ConverterService {
   /**
    * Convert Documents (DOCX, Markdown, Text, HTML, PDF to PDF, MD, HTML, TXT, Slide-Deck)
    */
-  private async convertDocument(req: FileConversionRequest, ext: string, target: string): Promise<FileConversionResult> {
+  private async convertDocument(
+    req: FileConversionRequest,
+    ext: string,
+    target: string
+  ): Promise<FileConversionResult> {
     const baseName = path.basename(req.fileName, path.extname(req.fileName));
-    const targetExt = target === 'markdown' ? 'md' : target === 'slide-deck' || target === 'slides' ? 'html' : target;
+    const targetExt =
+      target === 'markdown'
+        ? 'md'
+        : target === 'slide-deck' || target === 'slides'
+          ? 'html'
+          : target;
     const targetFileName = `${baseName}.${targetExt}`;
 
     // Get input buffer & text
@@ -105,7 +117,9 @@ export class ConverterService {
         };
       }
 
-      throw new Error(`Cannot convert PDF to .${target}. Supported targets: Markdown (.md) or Plain Text (.txt)`);
+      throw new Error(
+        `Cannot convert PDF to .${target}. Supported targets: Markdown (.md) or Plain Text (.txt)`
+      );
     }
 
     // 2. DOCX conversions via Mammoth
@@ -254,7 +268,7 @@ ${parsedBody}
       }
 
       if (target === 'txt') {
-        const stripped = textContent.replace(/[*#_`~\[\]]/g, '');
+        const stripped = textContent.replace(/[*#_`~[\]]/g, '');
         return {
           id: req.id,
           success: true,
@@ -304,7 +318,11 @@ ${parsedBody}
   /**
    * Convert Spreadsheets (XLSX, XLS, CSV, TSV) to JSON, Markdown Table, HTML Table, CSV
    */
-  private async convertSpreadsheet(req: FileConversionRequest, ext: string, target: string): Promise<FileConversionResult> {
+  private async convertSpreadsheet(
+    req: FileConversionRequest,
+    ext: string,
+    target: string
+  ): Promise<FileConversionResult> {
     const baseName = path.basename(req.fileName, path.extname(req.fileName));
     const targetFileName = `${baseName}.${target === 'markdown-table' ? 'md' : target === 'html-table' ? 'html' : target}`;
 
@@ -326,7 +344,7 @@ ${parsedBody}
     }
 
     // Convert to JSON array of rows
-    const rows = (XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown) as unknown[][];
+    const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown as unknown[][];
     if (!rows || rows.length === 0) {
       throw new Error('Spreadsheet is empty.');
     }
@@ -412,7 +430,11 @@ ${parsedBody}
   /**
    * Convert Data & Config Formats (JSON, YAML, XML, .env)
    */
-  private async convertData(req: FileConversionRequest, ext: string, target: string): Promise<FileConversionResult> {
+  private async convertData(
+    req: FileConversionRequest,
+    ext: string,
+    target: string
+  ): Promise<FileConversionResult> {
     const baseName = path.basename(req.fileName, path.extname(req.fileName));
     const targetFileName = `${baseName}.${target === 'env' ? 'env' : target}`;
 
@@ -447,7 +469,11 @@ ${parsedBody}
       mimeType = 'application/x-yaml';
     } else if (target === 'xml') {
       const builder = new XMLBuilder({ format: true, ignoreAttributes: false });
-      const wrapped = Array.isArray(dataObj) ? { root: { item: dataObj } } : (dataObj.root ? dataObj : { root: dataObj });
+      const wrapped = Array.isArray(dataObj)
+        ? { root: { item: dataObj } }
+        : dataObj.root
+          ? dataObj
+          : { root: dataObj };
       outputText = `<?xml version="1.0" encoding="UTF-8"?>\n${builder.build(wrapped)}`;
       mimeType = 'application/xml';
     } else if (target === 'env') {
@@ -486,10 +512,10 @@ ${parsedBody}
     const defaultUri = defaultDirectory
       ? vscode.Uri.file(path.join(defaultDirectory, defaultFileName))
       : originalPath
-      ? vscode.Uri.file(path.join(path.dirname(originalPath), defaultFileName))
-      : vscode.workspace.workspaceFolders?.[0]
-      ? vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, defaultFileName)
-      : vscode.Uri.file(defaultFileName);
+        ? vscode.Uri.file(path.join(path.dirname(originalPath), defaultFileName))
+        : vscode.workspace.workspaceFolders?.[0]
+          ? vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, defaultFileName)
+          : vscode.Uri.file(defaultFileName);
 
     const targetUri = await vscode.window.showSaveDialog({
       defaultUri,
@@ -512,11 +538,13 @@ ${parsedBody}
 
     fs.writeFileSync(targetUri.fsPath, buffer);
 
-    vscode.window.showInformationMessage(`Saved: ${path.basename(targetUri.fsPath)}`, 'Open File').then(action => {
-      if (action === 'Open File') {
-        vscode.commands.executeCommand('vscode.open', targetUri);
-      }
-    });
+    vscode.window
+      .showInformationMessage(`Saved: ${path.basename(targetUri.fsPath)}`, 'Open File')
+      .then((action) => {
+        if (action === 'Open File') {
+          vscode.commands.executeCommand('vscode.open', targetUri);
+        }
+      });
 
     return targetUri.fsPath;
   }
@@ -562,7 +590,9 @@ ${parsedBody}
       }
     }
 
-    vscode.window.showInformationMessage(`Batch complete: Saved ${count} files to ${path.basename(targetDir)}`);
+    vscode.window.showInformationMessage(
+      `Batch complete: Saved ${count} files to ${path.basename(targetDir)}`
+    );
     return { savedCount: count, destinationDir: targetDir };
   }
 
@@ -654,7 +684,7 @@ ${parsedBody}
     // Split markdown by slide separators: '---' or '___'
     const rawSlides = markdown
       .split(/\n---\n|\n___\n/)
-      .map(s => s.trim())
+      .map((s) => s.trim())
       .filter(Boolean);
 
     const slideContents: string[] = [];
@@ -835,16 +865,17 @@ ${parsedBody}
   private rowsToMarkdownTable(rows: unknown[][]): string {
     if (rows.length === 0) return '';
 
-    const headers = (rows[0] || []).map(cell => String(cell ?? '').trim());
+    const headers = (rows[0] || []).map((cell) => String(cell ?? '').trim());
     const separator = headers.map(() => '---');
 
-    const mdRows = [
-      `| ${headers.join(' | ')} |`,
-      `| ${separator.join(' | ')} |`,
-    ];
+    const mdRows = [`| ${headers.join(' | ')} |`, `| ${separator.join(' | ')} |`];
 
     for (let i = 1; i < rows.length; i++) {
-      const rowCells = (rows[i] || []).map(cell => String(cell ?? '').replace(/\|/g, '\\|').trim());
+      const rowCells = (rows[i] || []).map((cell) =>
+        String(cell ?? '')
+          .replace(/\|/g, '\\|')
+          .trim()
+      );
       while (rowCells.length < headers.length) {
         rowCells.push('');
       }
@@ -868,7 +899,7 @@ ${parsedBody}
       .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/gi, '```\n$1\n```\n\n')
       .replace(/<a href="(.*?)">(.*?)<\/a>/gi, '[$2]($1)')
       .replace(/<li>(.*?)<\/li>/gi, '- $1\n')
-      .replace(/<br\s*[\/]?>/gi, '\n')
+      .replace(/<br\s*[/]?>/gi, '\n')
       .replace(/<[^>]+>/g, '')
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
@@ -889,7 +920,10 @@ ${parsedBody}
       if (eqIndex > 0) {
         const key = trimmed.slice(0, eqIndex).trim();
         let val = trimmed.slice(eqIndex + 1).trim();
-        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        if (
+          (val.startsWith('"') && val.endsWith('"')) ||
+          (val.startsWith("'") && val.endsWith("'"))
+        ) {
           val = val.slice(1, -1);
         }
         result[key] = val;
@@ -935,7 +969,9 @@ ${parsedBody}
         decompressed = zlib.inflateSync(Buffer.from(streamContent, 'binary')).toString('latin1');
       } catch {
         try {
-          decompressed = zlib.inflateRawSync(Buffer.from(streamContent, 'binary')).toString('latin1');
+          decompressed = zlib
+            .inflateRawSync(Buffer.from(streamContent, 'binary'))
+            .toString('latin1');
         } catch {
           decompressed = streamContent;
         }
@@ -954,7 +990,9 @@ ${parsedBody}
       let tjaMatch: RegExpExecArray | null;
       while ((tjaMatch = tjArrayRegex.exec(decompressed)) !== null) {
         const inner = tjaMatch[1];
-        const strParts = [...inner.matchAll(/\(([\s\S]*?)\)/g)].map(m => this.cleanPdfString(m[1]));
+        const strParts = [...inner.matchAll(/\(([\s\S]*?)\)/g)].map((m) =>
+          this.cleanPdfString(m[1])
+        );
         const combined = strParts.join('').trim();
         if (combined) extractedLines.push(combined);
       }
@@ -974,7 +1012,7 @@ ${parsedBody}
 
     const pageMatches = binaryStr.match(/\/Type\s*\/Page\b/g);
     const totalPages = pageMatches ? pageMatches.length : 1;
-    const cleanedLines = extractedLines.filter(l => l.trim().length > 0);
+    const cleanedLines = extractedLines.filter((l) => l.trim().length > 0);
 
     return {
       totalPages,

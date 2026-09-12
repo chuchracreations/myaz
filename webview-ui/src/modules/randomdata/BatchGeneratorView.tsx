@@ -15,7 +15,7 @@ export const BatchGeneratorView: React.FC = () => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const toggleField = (id: FieldId) => {
-    setSelected(prev => {
+    setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -24,20 +24,22 @@ export const BatchGeneratorView: React.FC = () => {
     setRecords(null);
   };
 
-  const selectedFields = FIELDS.filter(f => selected.has(f.id));
+  const selectedFields = FIELDS.filter((f) => selected.has(f.id));
 
   const handleCountChange = (raw: string) => {
     const parsed = Number(raw);
-    const clamped = Number.isFinite(parsed) ? Math.max(1, Math.min(MAX_RECORDS, Math.round(parsed))) : 1;
+    const clamped = Number.isFinite(parsed)
+      ? Math.max(1, Math.min(MAX_RECORDS, Math.round(parsed)))
+      : 1;
     setCount(clamped);
   };
 
   const handleGenerate = () => {
     if (selectedFields.length === 0) return;
-    const phoneFormat = PHONE_FORMATS.find(p => p.code === phoneCountry) || PHONE_FORMATS[0];
+    const phoneFormat = PHONE_FORMATS.find((p) => p.code === phoneCountry) || PHONE_FORMATS[0];
     const rows = Array.from({ length: count }, () => {
       const row: Record<string, string> = {};
-      selectedFields.forEach(f => {
+      selectedFields.forEach((f) => {
         row[f.id] = f.id === 'phone' ? phoneFormat.generate() : f.generate();
       });
       return row;
@@ -62,9 +64,13 @@ export const BatchGeneratorView: React.FC = () => {
     <div className="batch-gen-tool">
       <span className="field-label">Choose fields</span>
       <div className="batch-field-grid">
-        {FIELDS.map(f => (
+        {FIELDS.map((f) => (
           <label key={f.id} className={`batch-field-chip ${selected.has(f.id) ? 'is-active' : ''}`}>
-            <input type="checkbox" checked={selected.has(f.id)} onChange={() => toggleField(f.id)} />
+            <input
+              type="checkbox"
+              checked={selected.has(f.id)}
+              onChange={() => toggleField(f.id)}
+            />
             {f.title}
           </label>
         ))}
@@ -73,8 +79,12 @@ export const BatchGeneratorView: React.FC = () => {
       {selected.has('phone') && (
         <div className="field-row">
           <span className="field-label">Phone country</span>
-          <select className="tz-select" value={phoneCountry} onChange={e => setPhoneCountry(e.target.value)}>
-            {PHONE_FORMATS.map(f => (
+          <select
+            className="tz-select"
+            value={phoneCountry}
+            onChange={(e) => setPhoneCountry(e.target.value)}
+          >
+            {PHONE_FORMATS.map((f) => (
               <option key={f.code} value={f.code}>
                 {f.label} ({f.dial})
               </option>
@@ -91,7 +101,7 @@ export const BatchGeneratorView: React.FC = () => {
           min={1}
           max={MAX_RECORDS}
           value={count}
-          onChange={e => handleCountChange(e.target.value)}
+          onChange={(e) => handleCountChange(e.target.value)}
         />
       </div>
 
@@ -125,11 +135,14 @@ export const BatchGeneratorView: React.FC = () => {
                     {copiedIndex === i ? 'Copied' : 'Copy'}
                   </button>
                 </div>
-                {selectedFields.map(f => (
+                {selectedFields.map((f) => (
                   <div key={f.id} className="batch-record-field">
                     <span className="batch-record-label">{f.title}</span>
                     {f.id === 'color' && (
-                      <span className="color-swatch color-swatch--inline" style={{ backgroundColor: row[f.id] }} />
+                      <span
+                        className="color-swatch color-swatch--inline"
+                        style={{ backgroundColor: row[f.id] }}
+                      />
                     )}
                     <span className="batch-record-value">{row[f.id]}</span>
                   </div>

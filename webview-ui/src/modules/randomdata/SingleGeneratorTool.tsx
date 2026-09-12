@@ -24,7 +24,9 @@ export const SingleGeneratorTool: React.FC<Props> = ({ field }) => {
   return (
     <div className="tool-drawer-card">
       <div className="drawer-output-box">
-        {field.id === 'color' && <span className="color-swatch" style={{ backgroundColor: value }} />}
+        {field.id === 'color' && (
+          <span className="color-swatch" style={{ backgroundColor: value }} />
+        )}
         <pre className="drawer-output-text">{value}</pre>
       </div>
       <div className="drawer-actions">

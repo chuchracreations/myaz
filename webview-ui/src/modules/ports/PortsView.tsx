@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Info,
-  Cpu,
   Layers,
   ShieldCheck,
   Skull,
@@ -25,7 +24,10 @@ export const PortsView: React.FC = () => {
   const [killingPid, setKillingPid] = useState<number | null>(null);
   const [isKillingAll, setIsKillingAll] = useState(false);
   const [startingPort, setStartingPort] = useState<number | null>(null);
-  const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    text: string;
+    type: 'success' | 'error' | 'info';
+  } | null>(null);
   const [customPortInput, setCustomPortInput] = useState('');
   const [filterQuery, setFilterQuery] = useState('');
 
@@ -70,7 +72,10 @@ export const PortsView: React.FC = () => {
         }
       } else if (msg.type === 'PORT_START_RESULT') {
         setStartingPort(null);
-        setStatusMessage({ text: msg.payload.message, type: msg.payload.success ? 'success' : 'info' });
+        setStatusMessage({
+          text: msg.payload.message,
+          type: msg.payload.success ? 'success' : 'info',
+        });
         setTimeout(() => setStatusMessage(null), 4000);
       }
     });
@@ -119,7 +124,7 @@ export const PortsView: React.FC = () => {
     if (!filterQuery.trim()) return ports;
     const q = filterQuery.toLowerCase();
     return ports.filter(
-      p =>
+      (p) =>
         p.port.toString().includes(q) ||
         p.command.toLowerCase().includes(q) ||
         p.fullCommand.toLowerCase().includes(q) ||
@@ -128,14 +133,14 @@ export const PortsView: React.FC = () => {
   }, [ports, filterQuery]);
 
   const workspacePorts = useMemo(() => {
-    return filteredPorts.filter(p => p.isCurrentProject);
+    return filteredPorts.filter((p) => p.isCurrentProject);
   }, [filteredPorts]);
 
   const handleKillAll = () => {
     setIsKillingAll(true);
     vscode.postMessage({
       type: 'KILL_ALL_PORTS',
-      payload: { pids: workspacePorts.map(p => p.pid) },
+      payload: { pids: workspacePorts.map((p) => p.pid) },
     });
   };
 
@@ -143,7 +148,7 @@ export const PortsView: React.FC = () => {
   const customInspectedPort = useMemo(() => {
     const pNum = parseInt(customPortInput.trim(), 10);
     if (isNaN(pNum)) return null;
-    return filteredPorts.find(p => p.port === pNum && !p.isCurrentProject) || null;
+    return filteredPorts.find((p) => p.port === pNum && !p.isCurrentProject) || null;
   }, [filteredPorts, customPortInput]);
 
   return (
@@ -189,8 +194,8 @@ export const PortsView: React.FC = () => {
             Configured:
           </span>
           <div className="ports-detected-pills">
-            {detectedProjectPorts.map(p => {
-              const isLive = ports.some(item => item.port === p);
+            {detectedProjectPorts.map((p) => {
+              const isLive = ports.some((item) => item.port === p);
               return (
                 <button
                   key={p}
@@ -206,8 +211,8 @@ export const PortsView: React.FC = () => {
                   disabled={startingPort === p}
                   title={isLive ? `Inspect port :${p}` : `Start port :${p}`}
                 >
-                  {isLive ? <span className="live-dot" /> : <Play size={9} fill="currentColor" />}
-                  :{p}
+                  {isLive ? <span className="live-dot" /> : <Play size={9} fill="currentColor" />}:
+                  {p}
                 </button>
               );
             })}
@@ -224,7 +229,7 @@ export const PortsView: React.FC = () => {
             className="ports-search-input"
             placeholder="Inspect any port (e.g. 3000, 5173, 8080)..."
             value={filterQuery || customPortInput}
-            onChange={e => {
+            onChange={(e) => {
               setFilterQuery(e.target.value);
               setCustomPortInput(e.target.value);
             }}
@@ -262,7 +267,9 @@ export const PortsView: React.FC = () => {
                 <span className="port-number-tag other-tag">:{customInspectedPort.port}</span>
                 <span className="port-command-tag">{customInspectedPort.command}</span>
                 <span className="port-pid-tag">PID {customInspectedPort.pid}</span>
-                {customInspectedPort.user && <span className="port-user-tag">{customInspectedPort.user}</span>}
+                {customInspectedPort.user && (
+                  <span className="port-user-tag">{customInspectedPort.user}</span>
+                )}
               </div>
 
               <button
@@ -271,16 +278,19 @@ export const PortsView: React.FC = () => {
                 disabled={killingPid === customInspectedPort.pid}
               >
                 <Zap size={13} />
-                <span>{killingPid === customInspectedPort.pid ? 'Killing...' : 'Kill Process'}</span>
+                <span>
+                  {killingPid === customInspectedPort.pid ? 'Killing...' : 'Kill Process'}
+                </span>
               </button>
             </div>
 
-            {customInspectedPort.fullCommand && customInspectedPort.fullCommand !== customInspectedPort.command && (
-              <div className="port-command-preview" title={customInspectedPort.fullCommand}>
-                <Terminal size={12} className="port-cmd-icon" />
-                <code>{customInspectedPort.fullCommand}</code>
-              </div>
-            )}
+            {customInspectedPort.fullCommand &&
+              customInspectedPort.fullCommand !== customInspectedPort.command && (
+                <div className="port-command-preview" title={customInspectedPort.fullCommand}>
+                  <Terminal size={12} className="port-cmd-icon" />
+                  <code>{customInspectedPort.fullCommand}</code>
+                </div>
+              )}
           </div>
         </div>
       )}
@@ -290,7 +300,7 @@ export const PortsView: React.FC = () => {
         <div className="ports-section-header">
           <div className="ports-section-title-wrap">
             <span className="ports-indicator-dot project-dot" />
-            <h3 className="ports-section-title">This Workspace's Processes</h3>
+            <h3 className="ports-section-title">This Workspace&apos;s Processes</h3>
           </div>
           <div className="ports-section-actions">
             {workspacePorts.length > 1 && (
@@ -304,22 +314,23 @@ export const PortsView: React.FC = () => {
                 <span>{isKillingAll ? 'Killing...' : 'Kill All'}</span>
               </button>
             )}
-            <span className="ports-badge project-badge">
-              {workspacePorts.length} Active
-            </span>
+            <span className="ports-badge project-badge">{workspacePorts.length} Active</span>
           </div>
         </div>
 
         {workspacePorts.length > 0 ? (
           <div className="ports-list">
-            {workspacePorts.map(item => (
+            {workspacePorts.map((item) => (
               <div key={`${item.port}-${item.pid}`} className="port-card workspace-card">
                 <div className="port-card-top">
                   <div className="port-identity">
                     <span className="port-number-tag">:{item.port}</span>
                     <span className="port-command-tag">{item.command}</span>
                     {item.relativeCwd && item.relativeCwd !== '.' && (
-                      <span className="port-service-tag" title={`Microservice folder: ${item.relativeCwd}`}>
+                      <span
+                        className="port-service-tag"
+                        title={`Microservice folder: ${item.relativeCwd}`}
+                      >
                         <Folder size={11} />
                         {item.relativeCwd}
                       </span>

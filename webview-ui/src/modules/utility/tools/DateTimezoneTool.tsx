@@ -60,7 +60,10 @@ function parseFlexibleDate(raw: string): ParsedDate | null {
     const isMs = Math.abs(num) >= 1e11;
     const date = new Date(isMs ? num : num * 1000);
     if (isNaN(date.getTime())) return null;
-    return { date, detected: `${wasEncoded ? 'URL-encoded ' : ''}Unix timestamp (${isMs ? 'ms' : 'seconds'})` };
+    return {
+      date,
+      detected: `${wasEncoded ? 'URL-encoded ' : ''}Unix timestamp (${isMs ? 'ms' : 'seconds'})`,
+    };
   }
 
   const date = new Date(candidate);
@@ -89,8 +92,11 @@ function formatInZone(date: Date, timeZone: string) {
 
   let offset = '';
   try {
-    const parts = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'shortOffset' }).formatToParts(date);
-    offset = (parts.find(p => p.type === 'timeZoneName')?.value || '').replace('GMT', 'UTC');
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      timeZoneName: 'shortOffset',
+    }).formatToParts(date);
+    offset = (parts.find((p) => p.type === 'timeZoneName')?.value || '').replace('GMT', 'UTC');
   } catch {
     offset = '';
   }
@@ -115,9 +121,12 @@ export const DateTimezoneTool: React.FC = () => {
   // Make sure the visitor's own timezone is always selectable, even if it isn't
   // one of the curated common ones below.
   const fromOptions = useMemo(() => {
-    return TIMEZONES.some(tz => tz.id === fromTz)
+    return TIMEZONES.some((tz) => tz.id === fromTz)
       ? TIMEZONES
-      : [{ id: fromTz, label: fromTz.split('/').pop()?.replace(/_/g, ' ') || fromTz }, ...TIMEZONES];
+      : [
+          { id: fromTz, label: fromTz.split('/').pop()?.replace(/_/g, ' ') || fromTz },
+          ...TIMEZONES,
+        ];
   }, [fromTz]);
 
   const local = useMemo(() => formatInZone(now, LOCAL_TZ), [now]);
@@ -127,7 +136,7 @@ export const DateTimezoneTool: React.FC = () => {
   const result = useMemo(() => (parsed ? formatInZone(parsed.date, toTz) : null), [parsed, toTz]);
 
   const worldClocks = useMemo(
-    () => WORLD_CLOCK_ZONES.map(zone => ({ ...zone, ...formatInZone(now, zone.id) })),
+    () => WORLD_CLOCK_ZONES.map((zone) => ({ ...zone, ...formatInZone(now, zone.id) })),
     [now]
   );
 
@@ -153,7 +162,9 @@ export const DateTimezoneTool: React.FC = () => {
         <div className="now-card">
           <span className="now-label">Local</span>
           <span className="now-time">{local.time}</span>
-          <span className="now-date">{local.dateStr} · {local.offset}</span>
+          <span className="now-date">
+            {local.dateStr} · {local.offset}
+          </span>
         </div>
         <div className="now-card">
           <span className="now-label">UTC</span>
@@ -174,7 +185,7 @@ export const DateTimezoneTool: React.FC = () => {
           <input
             className="field-input"
             value={rawInput}
-            onChange={e => setRawInput(e.target.value)}
+            onChange={(e) => setRawInput(e.target.value)}
             placeholder="ISO 8601, Unix timestamp, or URL-encoded..."
             spellCheck={false}
           />
@@ -184,13 +195,13 @@ export const DateTimezoneTool: React.FC = () => {
               Detected: {parsed.detected}
             </span>
           ) : (
-            <span className="detect-chip is-error">Couldn't parse this value</span>
+            <span className="detect-chip is-error">Couldn&apos;t parse this value</span>
           )}
         </div>
 
         <div className="tz-pair">
-          <select className="tz-select" value={fromTz} onChange={e => setFromTz(e.target.value)}>
-            {fromOptions.map(tz => (
+          <select className="tz-select" value={fromTz} onChange={(e) => setFromTz(e.target.value)}>
+            {fromOptions.map((tz) => (
               <option key={tz.id} value={tz.id} title={tz.id}>
                 {tz.label}
               </option>
@@ -199,8 +210,8 @@ export const DateTimezoneTool: React.FC = () => {
           <button type="button" className="tz-swap" onClick={handleSwap} title="Swap timezones">
             <ArrowLeftRight size={13} />
           </button>
-          <select className="tz-select" value={toTz} onChange={e => setToTz(e.target.value)}>
-            {TIMEZONES.map(tz => (
+          <select className="tz-select" value={toTz} onChange={(e) => setToTz(e.target.value)}>
+            {TIMEZONES.map((tz) => (
               <option key={tz.id} value={tz.id} title={tz.id}>
                 {tz.label}
               </option>
@@ -212,7 +223,9 @@ export const DateTimezoneTool: React.FC = () => {
           <div className="result-box">
             <span className="result-time">{result.time}</span>
             <div className="result-meta-row">
-              <span className="result-meta">{result.dateStr} · {result.offset}</span>
+              <span className="result-meta">
+                {result.dateStr} · {result.offset}
+              </span>
               <button type="button" className="copy-chip" onClick={handleCopy}>
                 {copied ? <Check size={10} /> : <Copy size={10} />}
                 {copied ? 'Copied' : 'Copy'}
@@ -225,10 +238,11 @@ export const DateTimezoneTool: React.FC = () => {
 
       <span className="section-label">World Clock</span>
       <div className="world-clocks">
-        {worldClocks.map(clock => (
+        {worldClocks.map((clock) => (
           <div key={clock.id} className="clock-row">
             <div>
-              <span className="clock-city">{clock.label}</span> <span className="clock-offset">{clock.offset}</span>
+              <span className="clock-city">{clock.label}</span>{' '}
+              <span className="clock-offset">{clock.offset}</span>
             </div>
             <span className="clock-time">{clock.time}</span>
           </div>

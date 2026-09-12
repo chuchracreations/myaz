@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Snippet } from '../../../../src/common/types';
-import { X, Code, Tag, Info } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface SnippetModalProps {
   isOpen: boolean;
@@ -77,7 +77,7 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
 
     const tags = tagsInput
       .split(',')
-      .map(t => t.trim().toLowerCase())
+      .map((t) => t.trim().toLowerCase())
       .filter(Boolean);
 
     onSave({
@@ -96,11 +96,9 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-dialog" onClick={e => e.stopPropagation()}>
+      <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">
-            {initialData?.id ? 'Edit Snippet' : 'New Snippet'}
-          </h2>
+          <h2 className="modal-title">{initialData?.id ? 'Edit Snippet' : 'New Snippet'}</h2>
           <button className="btn-icon" onClick={onClose} aria-label="Close">
             <X size={16} />
           </button>
@@ -130,7 +128,7 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
                 type="text"
                 placeholder="e.g. React Hook with Cleanup"
                 value={title}
-                onChange={e => setTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 autoFocus
               />
             </div>
@@ -143,7 +141,7 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
                   type="text"
                   placeholder="e.g. use-clean"
                   value={prefix}
-                  onChange={e => setPrefix(e.target.value)}
+                  onChange={(e) => setPrefix(e.target.value)}
                 />
               </div>
 
@@ -152,9 +150,9 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
                 <select
                   className="form-select"
                   value={language}
-                  onChange={e => setLanguage(e.target.value)}
+                  onChange={(e) => setLanguage(e.target.value)}
                 >
-                  {COMMON_LANGUAGES.map(lang => (
+                  {COMMON_LANGUAGES.map((lang) => (
                     <option key={lang} value={lang}>
                       {lang}
                     </option>
@@ -170,7 +168,7 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
                 type="text"
                 placeholder="Brief summary of what this code does"
                 value={description}
-                onChange={e => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
 
@@ -181,12 +179,14 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
                 type="text"
                 placeholder="react, hooks, async"
                 value={tagsInput}
-                onChange={e => setTagsInput(e.target.value)}
+                onChange={(e) => setTagsInput(e.target.value)}
               />
             </div>
 
             <div className="form-group">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
                 <label className="form-label">Code Body *</label>
                 <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
                   Tip: Supports $1, $2 and $0 tab-stops
@@ -197,7 +197,7 @@ export const SnippetModal: React.FC<SnippetModalProps> = ({
                 rows={7}
                 placeholder={`function \${1:myFunction}(\${2:arg}) {\n  \${0}\n}`}
                 value={body}
-                onChange={e => setBody(e.target.value)}
+                onChange={(e) => setBody(e.target.value)}
               />
             </div>
           </div>

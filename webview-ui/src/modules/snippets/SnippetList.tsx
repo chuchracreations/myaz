@@ -32,7 +32,8 @@ export const SnippetList: React.FC<SnippetListProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isTyping = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+      const isTyping =
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
       if (e.key === '/' && !isTyping) {
         e.preventDefault();
         searchInputRef.current?.focus();
@@ -45,7 +46,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
   // Extract all unique languages available in snippets
   const availableLanguages = useMemo(() => {
     const langs = new Set<string>();
-    snippets.forEach(s => {
+    snippets.forEach((s) => {
       if (s.language) langs.add(s.language);
     });
     return Array.from(langs);
@@ -55,7 +56,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
   const filteredSnippets = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    return snippets.filter(snippet => {
+    return snippets.filter((snippet) => {
       // 1. Filter by category pill
       if (selectedFilter === 'favorites' && !snippet.isFavorite) {
         return false;
@@ -93,7 +94,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
           type="text"
           placeholder="Search snippets by name, tag, code..."
           value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
         {searchQuery ? (
           <button
@@ -141,7 +142,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
           </button>
         )}
 
-        {availableLanguages.map(lang => {
+        {availableLanguages.map((lang) => {
           if (lang === activeEditorLanguage) return null; // already shown as auto
           return (
             <button
@@ -158,7 +159,7 @@ export const SnippetList: React.FC<SnippetListProps> = ({
       {/* Snippet Cards List */}
       {filteredSnippets.length > 0 ? (
         <div className="snippets-grid">
-          {filteredSnippets.map(snippet => (
+          {filteredSnippets.map((snippet) => (
             <SnippetCard
               key={snippet.id}
               snippet={snippet}
@@ -174,7 +175,9 @@ export const SnippetList: React.FC<SnippetListProps> = ({
         <div className="empty-state">
           <FileCode size={32} className="empty-icon" />
           <h4 className="empty-title">
-            {searchQuery || selectedFilter !== 'all' ? 'No snippets match your filter' : 'No snippets saved yet'}
+            {searchQuery || selectedFilter !== 'all'
+              ? 'No snippets match your filter'
+              : 'No snippets saved yet'}
           </h4>
           <p className="empty-desc">
             {searchQuery || selectedFilter !== 'all'

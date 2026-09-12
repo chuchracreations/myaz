@@ -1,7 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Snippet } from '../../../../src/common/types';
 import { highlightSnippetCode } from '../../utils/syntaxHighlight';
-import { getLanguageAccent, getLanguageShortLabel, formatRelativeTime } from '../../utils/snippetDisplay';
+import {
+  getLanguageAccent,
+  getLanguageShortLabel,
+  formatRelativeTime,
+} from '../../utils/snippetDisplay';
 import { Play, Copy, Check, Star, Edit3, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface SnippetCardProps {

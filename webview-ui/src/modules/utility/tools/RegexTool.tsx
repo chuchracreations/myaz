@@ -15,14 +15,21 @@ const FLAG_OPTIONS: { flag: string; label: string }[] = [
   { flag: 's', label: 'Dot all — . also matches newlines' },
 ];
 
-function computeMatches(pattern: string, flags: string, testString: string): { matches: MatchInfo[]; error: string | null } {
+function computeMatches(
+  pattern: string,
+  flags: string,
+  testString: string
+): { matches: MatchInfo[]; error: string | null } {
   if (!pattern || !testString) return { matches: [], error: null };
 
   let re: RegExp;
   try {
     re = new RegExp(pattern, flags);
   } catch (err) {
-    return { matches: [], error: err instanceof Error ? err.message : 'Invalid regular expression' };
+    return {
+      matches: [],
+      error: err instanceof Error ? err.message : 'Invalid regular expression',
+    };
   }
 
   const matches: MatchInfo[] = [];
@@ -49,7 +56,11 @@ function computeMatches(pattern: string, flags: string, testString: string): { m
  * backreferences aren't supported by the underlying generator — we surface that plainly rather
  * than showing a wrong or misleading example.
  */
-function generateExamples(pattern: string, flags: string, count: number): { examples: string[]; error: string | null } {
+function generateExamples(
+  pattern: string,
+  flags: string,
+  count: number
+): { examples: string[]; error: string | null } {
   if (!pattern) return { examples: [], error: null };
 
   try {
@@ -63,11 +74,18 @@ function generateExamples(pattern: string, flags: string, count: number): { exam
 
     return { examples: Array.from(examples), error: null };
   } catch {
-    return { examples: [], error: "Couldn't generate examples for this pattern — it may use a feature like lookaheads or backreferences that isn't supported." };
+    return {
+      examples: [],
+      error:
+        "Couldn't generate examples for this pattern — it may use a feature like lookaheads or backreferences that isn't supported.",
+    };
   }
 }
 
-function buildHighlightSegments(testString: string, matches: MatchInfo[]): { text: string; isMatch: boolean }[] {
+function buildHighlightSegments(
+  testString: string,
+  matches: MatchInfo[]
+): { text: string; isMatch: boolean }[] {
   if (matches.length === 0) return [{ text: testString, isMatch: false }];
 
   const segments: { text: string; isMatch: boolean }[] = [];
@@ -75,7 +93,8 @@ function buildHighlightSegments(testString: string, matches: MatchInfo[]): { tex
 
   for (const m of matches) {
     if (m.index < cursor) continue; // overlapping zero-length match guard
-    if (m.index > cursor) segments.push({ text: testString.slice(cursor, m.index), isMatch: false });
+    if (m.index > cursor)
+      segments.push({ text: testString.slice(cursor, m.index), isMatch: false });
     segments.push({ text: m.match, isMatch: true });
     cursor = m.index + m.match.length;
   }
@@ -93,7 +112,7 @@ export const RegexTool: React.FC = () => {
   const [exampleSeed, setExampleSeed] = useState(0);
 
   const toggleFlag = (flag: string) => {
-    setFlags(prev => (prev.includes(flag) ? prev.replace(flag, '') : prev + flag));
+    setFlags((prev) => (prev.includes(flag) ? prev.replace(flag, '') : prev + flag));
   };
 
   const { matches, error } = useMemo(
@@ -101,12 +120,16 @@ export const RegexTool: React.FC = () => {
     [pattern, flags, testString]
   );
 
-  const segments = useMemo(() => buildHighlightSegments(testString, matches), [testString, matches]);
+  const segments = useMemo(
+    () => buildHighlightSegments(testString, matches),
+    [testString, matches]
+  );
 
   // exampleSeed isn't read inside generateExamples — it's only in the dependency
   // array so the Shuffle button can force a fresh set of random examples.
   const { examples, error: exampleError } = useMemo(
     () => generateExamples(pattern, flags, 2),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pattern, flags, exampleSeed]
   );
 
@@ -117,13 +140,13 @@ export const RegexTool: React.FC = () => {
         <input
           className="regex-pattern-input"
           value={pattern}
-          onChange={e => setPattern(e.target.value)}
+          onChange={(e) => setPattern(e.target.value)}
           placeholder="pattern"
           spellCheck={false}
         />
         <span className="regex-slash">/</span>
         <div className="regex-flags-row">
-          {FLAG_OPTIONS.map(opt => (
+          {FLAG_OPTIONS.map((opt) => (
             <button
               key={opt.flag}
               type="button"
@@ -146,7 +169,7 @@ export const RegexTool: React.FC = () => {
             <button
               type="button"
               className="regex-shuffle-btn"
-              onClick={() => setExampleSeed(s => s + 1)}
+              onClick={() => setExampleSeed((s) => s + 1)}
               title="Generate new examples"
             >
               <Shuffle size={11} />
@@ -179,7 +202,7 @@ export const RegexTool: React.FC = () => {
         className="drawer-input"
         rows={5}
         value={testString}
-        onChange={e => setTestString(e.target.value)}
+        onChange={(e) => setTestString(e.target.value)}
         placeholder="Paste text to test your pattern against..."
         spellCheck={false}
       />

@@ -13,7 +13,7 @@ export const HashTool: React.FC = () => {
       const data = encoder.encode(input);
       const hashBuffer = await crypto.subtle.digest('SHA-256', data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      setOutput(hashArray.map(b => b.toString(16).padStart(2, '0')).join(''));
+      setOutput(hashArray.map((b) => b.toString(16).padStart(2, '0')).join(''));
     } catch {
       setOutput('Error generating SHA-256 hash');
     }
@@ -33,7 +33,7 @@ export const HashTool: React.FC = () => {
         rows={4}
         placeholder="Enter string to compute SHA-256 hash..."
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
       />
       <div className="drawer-actions">
         <button type="button" className="btn-action-primary" onClick={handleComputeHash}>

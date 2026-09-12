@@ -48,7 +48,12 @@ export const RandomDataView: React.FC = () => {
         </div>
       </div>
 
-      <button type="button" className="launch-card" style={BATCH_ACCENT_STYLE} onClick={() => setBatchOpen(true)}>
+      <button
+        type="button"
+        className="launch-card"
+        style={BATCH_ACCENT_STYLE}
+        onClick={() => setBatchOpen(true)}
+      >
         <div className="launch-icon-tile">
           <Layers size={16} />
         </div>
@@ -61,9 +66,12 @@ export const RandomDataView: React.FC = () => {
 
       <span className="discover-label">Individual Generators</span>
       <div className="launch-list">
-        {FIELDS.map(f => {
+        {FIELDS.map((f) => {
           const isOpen = expandedField === f.id;
-          const accentStyle = { '--card-accent': f.accent, '--card-accent-soft': f.accentSoft } as React.CSSProperties;
+          const accentStyle = {
+            '--card-accent': f.accent,
+            '--card-accent-soft': f.accentSoft,
+          } as React.CSSProperties;
           return (
             <div key={f.id} className="accordion-item" style={accentStyle}>
               <button
@@ -81,7 +89,11 @@ export const RandomDataView: React.FC = () => {
               </button>
               {isOpen && (
                 <div className="accordion-body">
-                  {f.id === 'phone' ? <PhoneGeneratorTool /> : <SingleGeneratorTool key={f.id} field={f} />}
+                  {f.id === 'phone' ? (
+                    <PhoneGeneratorTool />
+                  ) : (
+                    <SingleGeneratorTool key={f.id} field={f} />
+                  )}
                 </div>
               )}
             </div>

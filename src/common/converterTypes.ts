@@ -1,8 +1,10 @@
 export type ConverterCategory = 'documents' | 'images' | 'spreadsheets' | 'data';
 
 export type DocumentFormat = 'docx' | 'md' | 'txt' | 'html' | 'pdf' | 'slide-deck';
-export type ImageFormat = 'png' | 'jpg' | 'jpeg' | 'webp' | 'svg' | 'ico' | 'bmp' | 'base64' | 'multi-res-png';
-export type SpreadsheetFormat = 'xlsx' | 'xls' | 'csv' | 'tsv' | 'json' | 'markdown-table' | 'html-table';
+export type ImageFormat =
+  'png' | 'jpg' | 'jpeg' | 'webp' | 'svg' | 'ico' | 'bmp' | 'base64' | 'multi-res-png';
+export type SpreadsheetFormat =
+  'xlsx' | 'xls' | 'csv' | 'tsv' | 'json' | 'markdown-table' | 'html-table';
 export type DataFormat = 'json' | 'yaml' | 'yml' | 'xml' | 'toml' | 'env';
 
 export interface ConversionOptionConfig {

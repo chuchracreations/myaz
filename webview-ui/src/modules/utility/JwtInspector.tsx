@@ -29,7 +29,7 @@ function decodeBase64Url(base64Url: string): { text: string; json: any; error?: 
     const decodedStr = decodeURIComponent(
       atob(base64)
         .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
         .join('')
     );
     const json = JSON.parse(decodedStr);
@@ -58,7 +58,9 @@ function formatRelativeTime(secondsDiff: number): string {
   return `${days}d ${hours % 24}h`;
 }
 
-function formatEpochDate(epochSec?: number): { full: string; relative: string; isPast: boolean } | null {
+function formatEpochDate(
+  epochSec?: number
+): { full: string; relative: string; isPast: boolean } | null {
   if (typeof epochSec !== 'number' || isNaN(epochSec)) return null;
   const nowSec = Math.floor(Date.now() / 1000);
   const diff = epochSec - nowSec;
@@ -231,10 +233,7 @@ export const JwtInspector: React.FC = () => {
     };
 
     const b64Url = (obj: any) =>
-      btoa(JSON.stringify(obj))
-        .replace(/=/g, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_');
+      btoa(JSON.stringify(obj)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
     const h = b64Url(sampleHeader);
     const p = b64Url(samplePayload);
@@ -290,7 +289,7 @@ export const JwtInspector: React.FC = () => {
           rows={4}
           placeholder="Paste JWT here (e.g. eyJhbGciOi... or Bearer eyJhbGciOi...)"
           value={tokenInput}
-          onChange={e => setTokenInput(e.target.value)}
+          onChange={(e) => setTokenInput(e.target.value)}
           spellCheck={false}
         />
 
@@ -340,8 +339,8 @@ export const JwtInspector: React.FC = () => {
             expInfo.isExpired === true
               ? 'is-expired'
               : expInfo.isExpired === false
-              ? 'is-active'
-              : 'is-neutral'
+                ? 'is-active'
+                : 'is-neutral'
           }`}
         >
           <div className="jwt-status-left">
@@ -535,17 +534,16 @@ export const JwtInspector: React.FC = () => {
               </span>
             </div>
             <div className="jwt-sig-content">
-              <code className="jwt-sig-raw">
-                {parsedJwt.parts?.signatureRaw || '(None)'}
-              </code>
+              <code className="jwt-sig-raw">{parsedJwt.parts?.signatureRaw || '(None)'}</code>
               <p className="jwt-sig-note">
-                Encrypted with <strong>{parsedJwt.header?.alg || 'unknown'}</strong>. 100% of header and payload decoding was performed locally in your IDE memory without sending any secrets over the network.
+                Encrypted with <strong>{parsedJwt.header?.alg || 'unknown'}</strong>. 100% of header
+                and payload decoding was performed locally in your IDE memory without sending any
+                secrets over the network.
               </p>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };

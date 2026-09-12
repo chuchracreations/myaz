@@ -126,7 +126,9 @@ export class SnippetService {
       }
 
       if (rawSnippets.length === 0) {
-        vscode.window.showWarningMessage('No valid snippets or workspace data found in the selected file.');
+        vscode.window.showWarningMessage(
+          'No valid snippets or workspace data found in the selected file.'
+        );
         return 0;
       }
 
@@ -136,13 +138,17 @@ export class SnippetService {
           const s = item as Record<string, unknown>;
           if (s.title && s.body) {
             validSnippets.push({
-              id: String(s.id || `snippet-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`),
+              id: String(
+                s.id || `snippet-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
+              ),
               title: String(s.title).trim(),
               prefix: s.prefix ? String(s.prefix).trim() : '',
               description: s.description ? String(s.description).trim() : undefined,
               body: String(s.body),
               language: s.language ? String(s.language).trim() : 'plaintext',
-              tags: Array.isArray(s.tags) ? s.tags.map((t: unknown) => String(t).trim().toLowerCase()) : [],
+              tags: Array.isArray(s.tags)
+                ? s.tags.map((t: unknown) => String(t).trim().toLowerCase())
+                : [],
               isFavorite: Boolean(s.isFavorite),
               createdAt: typeof s.createdAt === 'number' ? s.createdAt : Date.now(),
               updatedAt: typeof s.updatedAt === 'number' ? s.updatedAt : Date.now(),
@@ -181,8 +187,8 @@ export class SnippetService {
         updatedList = validSnippets;
       } else {
         const current = this.getAll();
-        const existingIds = new Set(current.map(s => s.id));
-        const newItems = validSnippets.map(s => {
+        const existingIds = new Set(current.map((s) => s.id));
+        const newItems = validSnippets.map((s) => {
           if (existingIds.has(s.id)) {
             return {
               ...s,
@@ -219,7 +225,7 @@ export class SnippetService {
         try {
           const content = fs.readFileSync(legacyFile, 'utf-8');
           const parsed = JSON.parse(content);
-          const snippets = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
+          const snippets = Array.isArray(parsed) ? parsed : parsed.snippets || [];
           if (snippets.length > 0) {
             this.context.globalState.update(STORAGE_KEY, snippets);
             this.persistToFile(snippets);
@@ -233,7 +239,7 @@ export class SnippetService {
       if (fs.existsSync(this.storageFilePath)) {
         const content = fs.readFileSync(this.storageFilePath, 'utf-8');
         const parsed = JSON.parse(content);
-        const list = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
+        const list = Array.isArray(parsed) ? parsed : parsed.snippets || [];
         if (Array.isArray(list)) {
           const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
           const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
@@ -246,7 +252,9 @@ export class SnippetService {
       }
 
       // Check globalState fallback (including the legacy pre-rename key for migration)
-      const existing = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
+      const existing =
+        this.context.globalState.get<Snippet[]>(STORAGE_KEY) ||
+        this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
       if (existing && existing.length > 0) {
         const userOnly = existing.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
         const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
@@ -286,7 +294,7 @@ export class SnippetService {
       if (fs.existsSync(this.storageFilePath)) {
         const content = fs.readFileSync(this.storageFilePath, 'utf-8');
         const parsed = JSON.parse(content);
-        const list = Array.isArray(parsed) ? parsed : (parsed.snippets || []);
+        const list = Array.isArray(parsed) ? parsed : parsed.snippets || [];
         if (Array.isArray(list) && list.length > 0) {
           const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
           const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
@@ -298,11 +306,13 @@ export class SnippetService {
           });
         }
       }
-    } catch (e) {
+    } catch {
       // fallback to globalState
     }
 
-    const list = this.context.globalState.get<Snippet[]>(STORAGE_KEY) || this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
+    const list =
+      this.context.globalState.get<Snippet[]>(STORAGE_KEY) ||
+      this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
     if (list && list.length > 0) {
       const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
       if (userOnly.length > 0) {
@@ -318,7 +328,7 @@ export class SnippetService {
 
     if (data.id) {
       // Update existing
-      const index = list.findIndex(s => s.id === data.id);
+      const index = list.findIndex((s) => s.id === data.id);
       if (index !== -1) {
         const updated: Snippet = {
           ...list[index],
@@ -355,7 +365,7 @@ export class SnippetService {
 
   public delete(id: string): boolean {
     const list = this.getAll();
-    const filtered = list.filter(s => s.id !== id);
+    const filtered = list.filter((s) => s.id !== id);
     if (filtered.length !== list.length) {
       this.context.globalState.update(STORAGE_KEY, filtered);
       this.persistToFile(filtered);
@@ -366,7 +376,7 @@ export class SnippetService {
 
   public toggleFavorite(id: string): Snippet | null {
     const list = this.getAll();
-    const target = list.find(s => s.id === id);
+    const target = list.find((s) => s.id === id);
     if (target) {
       target.isFavorite = !target.isFavorite;
       target.updatedAt = Date.now();
@@ -377,4 +387,3 @@ export class SnippetService {
     return null;
   }
 }
-

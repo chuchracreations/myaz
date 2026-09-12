@@ -1,5 +1,20 @@
 import React from 'react';
-import { Mail, Phone, User, Lock, MapPin, AtSign, Building2, Calendar, Briefcase, Network, Cpu, Monitor, Palette, AlignLeft } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  User,
+  Lock,
+  MapPin,
+  AtSign,
+  Building2,
+  Calendar,
+  Briefcase,
+  Network,
+  Cpu,
+  Monitor,
+  Palette,
+  AlignLeft,
+} from 'lucide-react';
 import { PHONE_FORMATS } from './phoneFormats';
 
 export type FieldId =
@@ -43,38 +58,135 @@ function randHex(length: number): string {
 }
 
 const FIRST_NAMES = [
-  'James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda',
-  'David', 'Elizabeth', 'William', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica',
-  'Thomas', 'Sarah', 'Charles', 'Karen', 'Daniel', 'Nancy', 'Matthew', 'Lisa',
+  'James',
+  'Mary',
+  'Robert',
+  'Patricia',
+  'John',
+  'Jennifer',
+  'Michael',
+  'Linda',
+  'David',
+  'Elizabeth',
+  'William',
+  'Barbara',
+  'Richard',
+  'Susan',
+  'Joseph',
+  'Jessica',
+  'Thomas',
+  'Sarah',
+  'Charles',
+  'Karen',
+  'Daniel',
+  'Nancy',
+  'Matthew',
+  'Lisa',
 ];
 
 const LAST_NAMES = [
-  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis',
-  'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
-  'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White',
+  'Smith',
+  'Johnson',
+  'Williams',
+  'Brown',
+  'Jones',
+  'Garcia',
+  'Miller',
+  'Davis',
+  'Rodriguez',
+  'Martinez',
+  'Hernandez',
+  'Lopez',
+  'Gonzalez',
+  'Wilson',
+  'Anderson',
+  'Thomas',
+  'Taylor',
+  'Moore',
+  'Jackson',
+  'Martin',
+  'Lee',
+  'Perez',
+  'Thompson',
+  'White',
 ];
 
 const STREET_NAMES = [
-  'Maple', 'Oak', 'Cedar', 'Elm', 'Pine', 'Washington', 'Lincoln', 'Sunset',
-  'Highland', 'Park', 'Main', 'River', 'Lake', 'Hill', 'Willow',
+  'Maple',
+  'Oak',
+  'Cedar',
+  'Elm',
+  'Pine',
+  'Washington',
+  'Lincoln',
+  'Sunset',
+  'Highland',
+  'Park',
+  'Main',
+  'River',
+  'Lake',
+  'Hill',
+  'Willow',
 ];
 
 const STREET_SUFFIXES = ['St', 'Ave', 'Blvd', 'Rd', 'Ln', 'Dr', 'Ct', 'Way'];
 
 const CITIES_STATES: [string, string][] = [
-  ['Austin', 'TX'], ['Denver', 'CO'], ['Seattle', 'WA'], ['Portland', 'OR'],
-  ['Nashville', 'TN'], ['Phoenix', 'AZ'], ['Columbus', 'OH'], ['Charlotte', 'NC'],
-  ['Raleigh', 'NC'], ['Sacramento', 'CA'], ['Orlando', 'FL'], ['Boise', 'ID'],
+  ['Austin', 'TX'],
+  ['Denver', 'CO'],
+  ['Seattle', 'WA'],
+  ['Portland', 'OR'],
+  ['Nashville', 'TN'],
+  ['Phoenix', 'AZ'],
+  ['Columbus', 'OH'],
+  ['Charlotte', 'NC'],
+  ['Raleigh', 'NC'],
+  ['Sacramento', 'CA'],
+  ['Orlando', 'FL'],
+  ['Boise', 'ID'],
 ];
 
-const COMPANY_PREFIX = ['Nova', 'Bright', 'Quantum', 'Summit', 'Bold', 'Clear', 'Silver', 'Apex', 'Vertex', 'Northwind'];
-const COMPANY_CORE = ['Peak', 'Wave', 'Forge', 'Path', 'Grid', 'Labs', 'Works', 'Dynamics', 'Systems', 'Studio'];
+const COMPANY_PREFIX = [
+  'Nova',
+  'Bright',
+  'Quantum',
+  'Summit',
+  'Bold',
+  'Clear',
+  'Silver',
+  'Apex',
+  'Vertex',
+  'Northwind',
+];
+const COMPANY_CORE = [
+  'Peak',
+  'Wave',
+  'Forge',
+  'Path',
+  'Grid',
+  'Labs',
+  'Works',
+  'Dynamics',
+  'Systems',
+  'Studio',
+];
 const COMPANY_SUFFIX = ['Inc', 'LLC', 'Co', 'Group', 'Partners'];
 
 const JOB_TITLES = [
-  'Software Engineer', 'Product Manager', 'UX Designer', 'Data Analyst', 'DevOps Engineer',
-  'Marketing Lead', 'Sales Executive', 'HR Coordinator', 'QA Engineer', 'Technical Writer',
-  'Solutions Architect', 'Customer Success Manager', 'Finance Analyst', 'Operations Manager',
+  'Software Engineer',
+  'Product Manager',
+  'UX Designer',
+  'Data Analyst',
+  'DevOps Engineer',
+  'Marketing Lead',
+  'Sales Executive',
+  'HR Coordinator',
+  'QA Engineer',
+  'Technical Writer',
+  'Solutions Architect',
+  'Customer Success Manager',
+  'Finance Analyst',
+  'Operations Manager',
 ];
 
 // Real, public example UA strings — not tied to any individual.
@@ -86,10 +198,46 @@ const USER_AGENTS = [
 ];
 
 const LOREM_WORDS = [
-  'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do',
-  'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'enim',
-  'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip',
-  'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
+  'lorem',
+  'ipsum',
+  'dolor',
+  'sit',
+  'amet',
+  'consectetur',
+  'adipiscing',
+  'elit',
+  'sed',
+  'do',
+  'eiusmod',
+  'tempor',
+  'incididunt',
+  'ut',
+  'labore',
+  'et',
+  'dolore',
+  'magna',
+  'aliqua',
+  'enim',
+  'ad',
+  'minim',
+  'veniam',
+  'quis',
+  'nostrud',
+  'exercitation',
+  'ullamco',
+  'laboris',
+  'nisi',
+  'aliquip',
+  'ex',
+  'ea',
+  'commodo',
+  'consequat',
+  'duis',
+  'aute',
+  'irure',
+  'in',
+  'reprehenderit',
+  'voluptate',
 ];
 
 function generateName(): string {
@@ -116,7 +264,7 @@ function generatePassword(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_+=';
   const bytes = new Uint32Array(16);
   crypto.getRandomValues(bytes);
-  return Array.from(bytes, b => chars[b % chars.length]).join('');
+  return Array.from(bytes, (b) => chars[b % chars.length]).join('');
 }
 
 function generateAddress(): string {
@@ -130,7 +278,11 @@ function generateAddress(): string {
 function generateUsername(): string {
   const first = pick(FIRST_NAMES).toLowerCase();
   const last = pick(LAST_NAMES).toLowerCase();
-  return pick([`${first}${last}${randInt(1, 99)}`, `${first}_${last}`, `${first[0]}${last}${randInt(10, 99)}`]);
+  return pick([
+    `${first}${last}${randInt(1, 99)}`,
+    `${first}_${last}`,
+    `${first[0]}${last}${randInt(10, 99)}`,
+  ]);
 }
 
 function generateCompany(): string {
@@ -155,8 +307,15 @@ function generateMac(): string {
   // Setting the locally-administered bit (and clearing multicast) guarantees this can never
   // collide with a real vendor-assigned OUI — the correct way to generate a "fake" MAC.
   const firstByte = (randInt(0, 255) & 0xfe) | 0x02;
-  const bytes = [firstByte, randInt(0, 255), randInt(0, 255), randInt(0, 255), randInt(0, 255), randInt(0, 255)];
-  return bytes.map(b => b.toString(16).padStart(2, '0')).join(':');
+  const bytes = [
+    firstByte,
+    randInt(0, 255),
+    randInt(0, 255),
+    randInt(0, 255),
+    randInt(0, 255),
+    randInt(0, 255),
+  ];
+  return bytes.map((b) => b.toString(16).padStart(2, '0')).join(':');
 }
 
 function generateColor(): string {
@@ -181,18 +340,116 @@ const ACCENTS = [
 ];
 
 export const FIELDS: FieldDef[] = [
-  { id: 'email', title: 'Email Address', desc: 'A realistic sample email', icon: React.createElement(Mail, { size: 16 }), generate: generateEmail, ...ACCENTS[0] },
-  { id: 'phone', title: 'Phone Number', desc: 'Pick a country for local formatting', icon: React.createElement(Phone, { size: 16 }), generate: generatePhone, ...ACCENTS[1] },
-  { id: 'name', title: 'Full Name', desc: 'A random first + last name', icon: React.createElement(User, { size: 16 }), generate: generateName, ...ACCENTS[2] },
-  { id: 'password', title: 'Password', desc: '16-character secure random password', icon: React.createElement(Lock, { size: 16 }), generate: generatePassword, ...ACCENTS[3] },
-  { id: 'address', title: 'Street Address', desc: 'A fictional US-style address', icon: React.createElement(MapPin, { size: 16 }), generate: generateAddress, ...ACCENTS[4] },
-  { id: 'username', title: 'Username', desc: 'A handle built from a random name', icon: React.createElement(AtSign, { size: 16 }), generate: generateUsername, ...ACCENTS[5] },
-  { id: 'company', title: 'Company Name', desc: 'An invented company name', icon: React.createElement(Building2, { size: 16 }), generate: generateCompany, ...ACCENTS[6] },
-  { id: 'dob', title: 'Date of Birth', desc: 'A random adult birth date', icon: React.createElement(Calendar, { size: 16 }), generate: generateDob, ...ACCENTS[0] },
-  { id: 'jobtitle', title: 'Job Title', desc: 'A common professional title', icon: React.createElement(Briefcase, { size: 16 }), generate: () => pick(JOB_TITLES), ...ACCENTS[1] },
-  { id: 'ip', title: 'IP Address', desc: 'Safe RFC 5737 documentation range', icon: React.createElement(Network, { size: 16 }), generate: generateIp, ...ACCENTS[2] },
-  { id: 'mac', title: 'MAC Address', desc: 'Locally administered, never a real OUI', icon: React.createElement(Cpu, { size: 16 }), generate: generateMac, ...ACCENTS[3] },
-  { id: 'useragent', title: 'User Agent', desc: 'A realistic browser UA string', icon: React.createElement(Monitor, { size: 16 }), generate: () => pick(USER_AGENTS), ...ACCENTS[4] },
-  { id: 'color', title: 'Hex Color', desc: 'A random 6-digit hex color', icon: React.createElement(Palette, { size: 16 }), generate: generateColor, ...ACCENTS[5] },
-  { id: 'lorem', title: 'Lorem Ipsum', desc: 'A placeholder paragraph', icon: React.createElement(AlignLeft, { size: 16 }), generate: generateLorem, ...ACCENTS[6] },
+  {
+    id: 'email',
+    title: 'Email Address',
+    desc: 'A realistic sample email',
+    icon: React.createElement(Mail, { size: 16 }),
+    generate: generateEmail,
+    ...ACCENTS[0],
+  },
+  {
+    id: 'phone',
+    title: 'Phone Number',
+    desc: 'Pick a country for local formatting',
+    icon: React.createElement(Phone, { size: 16 }),
+    generate: generatePhone,
+    ...ACCENTS[1],
+  },
+  {
+    id: 'name',
+    title: 'Full Name',
+    desc: 'A random first + last name',
+    icon: React.createElement(User, { size: 16 }),
+    generate: generateName,
+    ...ACCENTS[2],
+  },
+  {
+    id: 'password',
+    title: 'Password',
+    desc: '16-character secure random password',
+    icon: React.createElement(Lock, { size: 16 }),
+    generate: generatePassword,
+    ...ACCENTS[3],
+  },
+  {
+    id: 'address',
+    title: 'Street Address',
+    desc: 'A fictional US-style address',
+    icon: React.createElement(MapPin, { size: 16 }),
+    generate: generateAddress,
+    ...ACCENTS[4],
+  },
+  {
+    id: 'username',
+    title: 'Username',
+    desc: 'A handle built from a random name',
+    icon: React.createElement(AtSign, { size: 16 }),
+    generate: generateUsername,
+    ...ACCENTS[5],
+  },
+  {
+    id: 'company',
+    title: 'Company Name',
+    desc: 'An invented company name',
+    icon: React.createElement(Building2, { size: 16 }),
+    generate: generateCompany,
+    ...ACCENTS[6],
+  },
+  {
+    id: 'dob',
+    title: 'Date of Birth',
+    desc: 'A random adult birth date',
+    icon: React.createElement(Calendar, { size: 16 }),
+    generate: generateDob,
+    ...ACCENTS[0],
+  },
+  {
+    id: 'jobtitle',
+    title: 'Job Title',
+    desc: 'A common professional title',
+    icon: React.createElement(Briefcase, { size: 16 }),
+    generate: () => pick(JOB_TITLES),
+    ...ACCENTS[1],
+  },
+  {
+    id: 'ip',
+    title: 'IP Address',
+    desc: 'Safe RFC 5737 documentation range',
+    icon: React.createElement(Network, { size: 16 }),
+    generate: generateIp,
+    ...ACCENTS[2],
+  },
+  {
+    id: 'mac',
+    title: 'MAC Address',
+    desc: 'Locally administered, never a real OUI',
+    icon: React.createElement(Cpu, { size: 16 }),
+    generate: generateMac,
+    ...ACCENTS[3],
+  },
+  {
+    id: 'useragent',
+    title: 'User Agent',
+    desc: 'A realistic browser UA string',
+    icon: React.createElement(Monitor, { size: 16 }),
+    generate: () => pick(USER_AGENTS),
+    ...ACCENTS[4],
+  },
+  {
+    id: 'color',
+    title: 'Hex Color',
+    desc: 'A random 6-digit hex color',
+    icon: React.createElement(Palette, { size: 16 }),
+    generate: generateColor,
+    ...ACCENTS[5],
+  },
+  {
+    id: 'lorem',
+    title: 'Lorem Ipsum',
+    desc: 'A placeholder paragraph',
+    icon: React.createElement(AlignLeft, { size: 16 }),
+    generate: generateLorem,
+    ...ACCENTS[6],
+  },
 ];

@@ -13,7 +13,6 @@ import { CheckCircle2 } from 'lucide-react';
 export const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('home');
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  const [storagePath, setStoragePath] = useState<string>('');
   const [activeEditorLanguage, setActiveEditorLanguage] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<Partial<Snippet> | null>(null);
@@ -26,13 +25,10 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     // Listen to messages from extension host
-    const unsubscribe = vscode.onMessage(msg => {
+    const unsubscribe = vscode.onMessage((msg) => {
       switch (msg.type) {
         case 'SYNC_SNIPPETS':
           setSnippets(msg.payload.snippets);
-          if (msg.payload.storagePath) {
-            setStoragePath(msg.payload.storagePath);
-          }
           break;
 
         case 'ACTIVE_EDITOR_LANGUAGE':
@@ -82,7 +78,9 @@ export const App: React.FC = () => {
     showToast(`Copied to clipboard`);
   };
 
-  const handleSaveSnippet = (data: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
+  const handleSaveSnippet = (
+    data: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }
+  ) => {
     vscode.postMessage({
       type: 'SAVE_SNIPPET',
       payload: data,
@@ -121,7 +119,7 @@ export const App: React.FC = () => {
               activeEditorLanguage={activeEditorLanguage}
               onInsert={handleInsert}
               onCopy={handleCopy}
-              onEdit={s => handleOpenCreateModal(s)}
+              onEdit={(s) => handleOpenCreateModal(s)}
               onDelete={handleDeleteSnippet}
               onToggleFavorite={handleToggleFavorite}
               onOpenCreateModal={() => handleOpenCreateModal()}

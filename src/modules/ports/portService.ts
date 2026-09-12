@@ -69,7 +69,9 @@ export class PortService {
       for (const entry of entries) {
         if (entry.isDirectory()) {
           if (!IGNORED.has(entry.name) && !entry.name.startsWith('.')) {
-            results.push(...this.findProjectConfigFiles(path.join(dir, entry.name), maxDepth, currentDepth + 1));
+            results.push(
+              ...this.findProjectConfigFiles(path.join(dir, entry.name), maxDepth, currentDepth + 1)
+            );
           }
         } else if (entry.isFile()) {
           const name = entry.name.toLowerCase();
@@ -133,7 +135,9 @@ export class PortService {
           const content = fs.readFileSync(filePath, 'utf-8');
           const lines = content.split('\n');
           for (const line of lines) {
-            const m = line.match(/^(?:PORT|VITE_PORT|APP_PORT|SERVER_PORT|DEV_PORT|API_PORT|CLIENT_PORT|WEB_PORT)\s*=\s*(\d{2,5})/i);
+            const m = line.match(
+              /^(?:PORT|VITE_PORT|APP_PORT|SERVER_PORT|DEV_PORT|API_PORT|CLIENT_PORT|WEB_PORT)\s*=\s*(\d{2,5})/i
+            );
             if (m) {
               const p = parseInt(m[1], 10);
               if (p > 0 && p <= 65535) detected.add(p);
@@ -192,9 +196,14 @@ export class PortService {
    * Find which package.json + npm script would start a given port, and which
    * package manager should run it. Returns null when nothing usable is found.
    */
-  private async resolveStartTarget(port: number, workspaceRoot: string): Promise<StartTarget | null> {
+  private async resolveStartTarget(
+    port: number,
+    workspaceRoot: string
+  ): Promise<StartTarget | null> {
     const configFiles = this.findProjectConfigFiles(workspaceRoot);
-    const packageJsonFiles = configFiles.filter(f => path.basename(f).toLowerCase() === 'package.json');
+    const packageJsonFiles = configFiles.filter(
+      (f) => path.basename(f).toLowerCase() === 'package.json'
+    );
 
     const portBoundary = new RegExp(`\\b${port}\\b`);
     let heuristicFallback: StartTarget | null = null;
@@ -213,7 +222,11 @@ export class PortService {
       // 1. Prefer a script that literally references this port number
       for (const [name, command] of Object.entries(scripts)) {
         if (portBoundary.test(command)) {
-          return { folder, script: name, packageManager: this.detectPackageManager(folder, workspaceRoot) };
+          return {
+            folder,
+            script: name,
+            packageManager: this.detectPackageManager(folder, workspaceRoot),
+          };
         }
       }
 
@@ -221,13 +234,13 @@ export class PortService {
       if (!heuristicFallback) {
         const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
         const matchedDep = Object.keys(DEV_DEPENDENCY_DEFAULT_PORTS).find(
-          dep => allDeps[dep] && DEV_DEPENDENCY_DEFAULT_PORTS[dep] === port
+          (dep) => allDeps[dep] && DEV_DEPENDENCY_DEFAULT_PORTS[dep] === port
         );
 
         if (matchedDep) {
           const scriptNames = Object.keys(scripts);
-          const preferred = PREFERRED_SCRIPT_NAMES.find(name => scriptNames.includes(name));
-          const mentionsTool = scriptNames.find(name => scripts[name].includes(matchedDep));
+          const preferred = PREFERRED_SCRIPT_NAMES.find((name) => scriptNames.includes(name));
+          const mentionsTool = scriptNames.find((name) => scripts[name].includes(matchedDep));
           const scriptName = preferred || mentionsTool || scriptNames[0];
 
           if (scriptName) {
@@ -288,7 +301,9 @@ export class PortService {
       if (isWindows) {
         const { stdout } = await execAsync('netstat -ano -p tcp');
         const portSuffix = new RegExp(`:${port}\\s`);
-        return stdout.split('\r\n').some(line => line.includes('LISTENING') && portSuffix.test(line));
+        return stdout
+          .split('\r\n')
+          .some((line) => line.includes('LISTENING') && portSuffix.test(line));
       }
 
       const { stdout } = await execAsync(`lsof -iTCP:${port} -sTCP:LISTEN -P -n`);
@@ -305,7 +320,9 @@ export class PortService {
   /**
    * Scan active listening ports on the operating system
    */
-  public async scanPorts(customPort?: number): Promise<{ ports: PortProcessInfo[]; detectedProjectPorts: number[] }> {
+  public async scanPorts(
+    customPort?: number
+  ): Promise<{ ports: PortProcessInfo[]; detectedProjectPorts: number[] }> {
     const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     const detectedProjectPorts = await this.detectProjectPorts(workspaceRoot);
     const isWindows = process.platform === 'win32';
@@ -345,7 +362,7 @@ export class PortService {
         }
 
         // Wait 250ms and force kill if still alive
-        await new Promise(r => setTimeout(r, 250));
+        await new Promise((r) => setTimeout(r, 250));
         try {
           process.kill(pid, 0); // Check if process is still alive
           // Still alive, force kill
@@ -368,7 +385,7 @@ export class PortService {
 
   private async scanUnixPorts(
     workspaceRoot?: string,
-    detectedProjectPorts: number[] = [],
+    _detectedProjectPorts: number[] = [],
     customPort?: number
   ): Promise<PortProcessInfo[]> {
     const cmd = customPort
@@ -424,7 +441,7 @@ export class PortService {
 
     // Enrich processes with cwd and full command
     await Promise.all(
-      items.map(async item => {
+      items.map(async (item) => {
         try {
           // Get cwd
           const cwdRes = await execAsync(`lsof -a -p ${item.pid} -d cwd -Fn 2>/dev/null`);
@@ -517,7 +534,7 @@ export class PortService {
 
     // Enrich process name on Windows via tasklist
     await Promise.all(
-      items.map(async item => {
+      items.map(async (item) => {
         try {
           const taskRes = await execAsync(`tasklist /fi "pid eq ${item.pid}" /fo csv /nh`);
           // "node.exe","12345","Console","1","50,000 K"

@@ -4,13 +4,13 @@ import { PHONE_FORMATS } from './phoneFormats';
 
 export const PhoneGeneratorTool: React.FC = () => {
   const [countryCode, setCountryCode] = useState(PHONE_FORMATS[0].code);
-  const format = PHONE_FORMATS.find(f => f.code === countryCode) || PHONE_FORMATS[0];
+  const format = PHONE_FORMATS.find((f) => f.code === countryCode) || PHONE_FORMATS[0];
   const [value, setValue] = useState(() => format.generate());
   const [copied, setCopied] = useState(false);
 
   const handleCountryChange = (code: string) => {
     setCountryCode(code);
-    const next = PHONE_FORMATS.find(f => f.code === code) || PHONE_FORMATS[0];
+    const next = PHONE_FORMATS.find((f) => f.code === code) || PHONE_FORMATS[0];
     setValue(next.generate());
     setCopied(false);
   };
@@ -30,8 +30,12 @@ export const PhoneGeneratorTool: React.FC = () => {
     <div className="tool-drawer-card">
       <div className="field-row">
         <span className="field-label">Country</span>
-        <select className="tz-select" value={countryCode} onChange={e => handleCountryChange(e.target.value)}>
-          {PHONE_FORMATS.map(f => (
+        <select
+          className="tz-select"
+          value={countryCode}
+          onChange={(e) => handleCountryChange(e.target.value)}
+        >
+          {PHONE_FORMATS.map((f) => (
             <option key={f.code} value={f.code}>
               {f.label} ({f.dial})
             </option>

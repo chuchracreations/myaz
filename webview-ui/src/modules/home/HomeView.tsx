@@ -93,10 +93,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
 
   return (
     <div className="home-view">
-      <div className="welcome-greeting">{getGreeting()}, {funTitle}<span className="accent-dot" /></div>
+      <div className="welcome-greeting">
+        {getGreeting()}, {funTitle}
+        <span className="accent-dot" />
+      </div>
 
       <div className="launch-list">
-        {cards.map(card => (
+        {cards.map((card) => (
           <button
             key={card.id}
             type="button"
@@ -122,7 +125,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
             <ShieldCheck size={11} />
             <span>100% Offline</span>
           </span>
-          {process.env.APP_VERSION && <span className="version-tag">v{process.env.APP_VERSION}</span>}
+          {process.env.APP_VERSION && (
+            <span className="version-tag">v{process.env.APP_VERSION}</span>
+          )}
         </div>
       </div>
     </div>

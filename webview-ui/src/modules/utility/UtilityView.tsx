@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { ShieldCheck, KeyRound, Wrench, Hash, Binary, Globe, Clock, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ShieldCheck,
+  KeyRound,
+  Wrench,
+  Hash,
+  Binary,
+  Globe,
+  Clock,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import { JwtInspector } from './JwtInspector';
 import { UuidTool } from './tools/UuidTool';
 import { Base64Tool } from './tools/Base64Tool';
@@ -77,7 +88,7 @@ export const UtilityView: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolId | null>(null);
 
   if (activeTool) {
-    const meta = TOOLS.find(t => t.id === activeTool)!;
+    const meta = TOOLS.find((t) => t.id === activeTool)!;
     return (
       <div className="utility-tool-view">
         <div className="tool-back-header">
@@ -117,7 +128,7 @@ export const UtilityView: React.FC = () => {
       </div>
 
       <div className="launch-list">
-        {TOOLS.map(tool => (
+        {TOOLS.map((tool) => (
           <button
             key={tool.id}
             type="button"

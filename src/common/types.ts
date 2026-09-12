@@ -1,4 +1,5 @@
-export type ModuleId = 'snippets' | 'converters' | 'ports' | 'utility' | 'prompts' | 'templates' | 'notes';
+export type ModuleId =
+  'snippets' | 'converters' | 'ports' | 'utility' | 'prompts' | 'templates' | 'notes';
 
 export type Screen = 'home' | 'snippets' | 'converters' | 'ports' | 'utility' | 'randomdata';
 
@@ -37,7 +38,10 @@ export interface PortProcessInfo {
 export type WebviewToHostMessage =
   | { type: 'READY' }
   | { type: 'GET_SNIPPETS' }
-  | { type: 'SAVE_SNIPPET'; payload: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string } }
+  | {
+      type: 'SAVE_SNIPPET';
+      payload: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string };
+    }
   | { type: 'DELETE_SNIPPET'; payload: { id: string } }
   | { type: 'TOGGLE_FAVORITE'; payload: { id: string } }
   | { type: 'INSERT_SNIPPET'; payload: { snippet: Snippet } }
@@ -66,8 +70,20 @@ export type HostToWebviewMessage =
   | { type: 'NAVIGATE_HOME' }
   | { type: 'CONVERT_FILE_RESULT'; payload: any }
   | { type: 'CONVERT_TEXT_RESULT'; payload: any }
-  | { type: 'CONVERT_FILE_PICKED'; payload: { files: { fileName: string; dataBase64: string; originalPath: string }[] } }
-  | { type: 'PORT_SCAN_RESULTS'; payload: { ports: PortProcessInfo[]; detectedProjectPorts: number[] } }
-  | { type: 'PORT_KILLED_RESULT'; payload: { success: boolean; pid: number; port: number; error?: string } }
-  | { type: 'PORT_KILL_ALL_RESULT'; payload: { killedCount: number; failedCount: number; cancelled?: boolean } }
+  | {
+      type: 'CONVERT_FILE_PICKED';
+      payload: { files: { fileName: string; dataBase64: string; originalPath: string }[] };
+    }
+  | {
+      type: 'PORT_SCAN_RESULTS';
+      payload: { ports: PortProcessInfo[]; detectedProjectPorts: number[] };
+    }
+  | {
+      type: 'PORT_KILLED_RESULT';
+      payload: { success: boolean; pid: number; port: number; error?: string };
+    }
+  | {
+      type: 'PORT_KILL_ALL_RESULT';
+      payload: { killedCount: number; failedCount: number; cancelled?: boolean };
+    }
   | { type: 'PORT_START_RESULT'; payload: { port: number; success: boolean; message: string } };

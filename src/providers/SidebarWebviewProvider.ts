@@ -52,7 +52,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     });
 
     // Notify webview of active editor language changes
-    const editorChangeSub = vscode.window.onDidChangeActiveTextEditor(editor => {
+    const editorChangeSub = vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor && this._view) {
         this.postMessage({
           type: 'ACTIVE_EDITOR_LANGUAGE',
@@ -159,7 +159,10 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
       case 'COPY_SNIPPET': {
         await vscode.env.clipboard.writeText(message.payload.snippet.body);
-        vscode.window.setStatusBarMessage(`Copied "${message.payload.snippet.title}" to clipboard`, 2500);
+        vscode.window.setStatusBarMessage(
+          `Copied "${message.payload.snippet.title}" to clipboard`,
+          2500
+        );
         break;
       }
 
@@ -199,7 +202,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
 
         if (uris && uris.length > 0) {
           const files = await Promise.all(
-            uris.map(async uri => {
+            uris.map(async (uri) => {
               const bytes = await vscode.workspace.fs.readFile(uri);
               return {
                 fileName: path.basename(uri.fsPath),
@@ -238,7 +241,13 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       case 'SAVE_CONVERTED_FILE': {
         if (this.converterService) {
           const { fileName, outputDataBase64, outputText, originalPath } = (message as any).payload;
-          await this.converterService.saveConvertedFile(fileName, outputDataBase64, outputText, undefined, originalPath);
+          await this.converterService.saveConvertedFile(
+            fileName,
+            outputDataBase64,
+            outputText,
+            undefined,
+            originalPath
+          );
         }
         break;
       }
@@ -314,8 +323,8 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
             break;
           }
 
-          const results = await Promise.all(pids.map(pid => this.portService!.killProcess(pid)));
-          const killedCount = results.filter(r => r.success).length;
+          const results = await Promise.all(pids.map((pid) => this.portService!.killProcess(pid)));
+          const killedCount = results.filter((r) => r.success).length;
           const failedCount = results.length - killedCount;
 
           this.postMessage({
