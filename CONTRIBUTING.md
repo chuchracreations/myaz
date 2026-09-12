@@ -5,8 +5,8 @@ Thanks for your interest in improving myaz! This guide covers how to get the pro
 ## Getting started
 
 ```bash
-git clone https://github.com/himanshuchuchra/myaz-extension.git
-cd myaz-extension
+git clone https://github.com/chuchracreations/myaz.git
+cd myaz
 npm install
 npm run watch
 ```

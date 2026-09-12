@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://raw.githubusercontent.com/himanshuchuchra/myaz-extension/main/media/logo.png" alt="myaz Logo" width="220" style="max-width: 100%; height: auto;" />
+  <img src="https://res.cloudinary.com/dquzactsh/image/upload/v1789235525/logo_stxkje.png" alt="myaz Logo" width="220" style="max-width: 100%; height: auto;" />
 
 # myaz
 
@@ -23,7 +23,7 @@
 &nbsp;|&nbsp;
 <a href="https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension"><b>View on Marketplace</b></a>
 &nbsp;|&nbsp;
-<a href="https://github.com/himanshuchuchra/myaz-extension"><b>Star on GitHub ⭐</b></a>
+<a href="https://github.com/chuchracreations/myaz"><b>Star on GitHub ⭐</b></a>
 
 </div>
 
@@ -240,7 +240,7 @@ Press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) to access co
 
 ## 🤝 Contributing & Feedback
 
-- **Report Issues & Feature Requests**: Reach out or file an issue on [GitHub](https://github.com/himanshuchuchra/myaz-extension).
+- **Report Issues & Feature Requests**: Reach out or file an issue on [GitHub](https://github.com/chuchracreations/myaz).
 - **Enjoying myaz?**: Please consider leaving a ⭐ review on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)!
 
 ---
