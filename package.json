@@ -2,7 +2,7 @@
   "name": "myaz-extension",
   "displayName": "myaz",
   "description": "All-in-One Developer Hub: Smart Snippet Manager, 100% Offline File Converter (Word to PDF, Markdown Slides, SVG to PNG, Excel to JSON, WebP), and Port Killer (kill EADDRINUSE ghost processes in 1 click).",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "himanshuchuchra",
   "icon": "media/icon.png",
   "license": "MIT",

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-12
+
 ### Added
 
 - **Developer Utilities** module: JWT Inspector, UUID Generator, Base64 Converter, SHA-256 Hasher, URL Encoder, Date & Timezone converter, and Regex Tester.
@@ -18,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Rebranded the extension from _Coders Canvas_ to **myaz**, including a new logo and activity bar icon.
 - Refined the Converters UI with clearer per-format conversion targets and improved file handling.
 - Snippet cards now show language-based accent colors and support live search.
+- Redesigned the Home screen footer with the myaz logo mark and wordmark, removing the old greeting text and "100% Offline" badge.
 
 ## [0.3.0] - 2026-09-04
 
