@@ -4,6 +4,7 @@ import { SnippetCommands } from './modules/snippets/snippetCommands';
 import { ConverterService } from './modules/converters/converterService';
 import { ConverterCommands } from './modules/converters/converterCommands';
 import { PortService } from './modules/ports/portService';
+import { PortCommands } from './modules/ports/portCommands';
 import { SidebarWebviewProvider } from './providers/SidebarWebviewProvider';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -24,24 +25,22 @@ export function activate(context: vscode.ExtensionContext) {
   sidebarProvider.setSnippetCommands(snippetCommands);
 
   const converterCommands = new ConverterCommands(converterService);
+  const portCommands = new PortCommands(sidebarProvider);
 
   // Register Webview View Provider
   context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      SidebarWebviewProvider.viewType,
-      sidebarProvider,
-      {
-        webviewOptions: {
-          retainContextWhenHidden: true,
-        },
-      }
-    )
+    vscode.window.registerWebviewViewProvider(SidebarWebviewProvider.viewType, sidebarProvider, {
+      webviewOptions: {
+        retainContextWhenHidden: true,
+      },
+    })
   );
 
   // Register all extension commands
   context.subscriptions.push(
     ...snippetCommands.registerCommands(),
-    ...converterCommands.register(context)
+    ...converterCommands.register(),
+    ...portCommands.register()
   );
 
   // Command: Refresh Sidebar View
@@ -51,14 +50,6 @@ export function activate(context: vscode.ExtensionContext) {
   };
   context.subscriptions.push(
     vscode.commands.registerCommand('myaz.refresh', refreshHandler),
-    vscode.commands.registerCommand('myaz.scanPorts', async () => {
-      await vscode.commands.executeCommand('myaz.sidebarView.focus');
-      sidebarProvider.postMessage({
-        type: 'ACTIVE_MODULE_CHANGED',
-        payload: { moduleId: 'ports' },
-      });
-      sidebarProvider.postMessage({ type: 'SCAN_PORTS' } as any);
-    }),
     vscode.commands.registerCommand('myaz.goHome', () => {
       sidebarProvider.postMessage({ type: 'NAVIGATE_HOME' });
     })

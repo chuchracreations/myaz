@@ -6,7 +6,7 @@ import { ConverterService } from './converterService';
 export class ConverterCommands {
   constructor(private readonly converterService: ConverterService) {}
 
-  public register(context: vscode.ExtensionContext): vscode.Disposable[] {
+  public register(): vscode.Disposable[] {
     const disposables: vscode.Disposable[] = [];
 
     // Right-click in explorer: Convert file
@@ -40,7 +40,7 @@ export class ConverterCommands {
 
     // Show QuickPick
     const selected = await vscode.window.showQuickPick(
-      targets.map(t => ({
+      targets.map((t) => ({
         label: t.label,
         description: `➔ .${t.ext}`,
         targetFormat: t.format,
@@ -62,7 +62,18 @@ export class ConverterCommands {
       async () => {
         try {
           const fileBuffer = fs.readFileSync(filePath);
-          const isText = ['md', 'txt', 'html', 'json', 'yaml', 'yml', 'xml', 'env', 'csv', 'tsv'].includes(ext);
+          const isText = [
+            'md',
+            'txt',
+            'html',
+            'json',
+            'yaml',
+            'yml',
+            'xml',
+            'env',
+            'csv',
+            'tsv',
+          ].includes(ext);
 
           const result = await this.converterService.convert({
             id: String(Date.now()),
@@ -107,7 +118,9 @@ export class ConverterCommands {
     );
   }
 
-  private getAvailableTargets(ext: string): { format: string; label: string; ext: string }[] | null {
+  private getAvailableTargets(
+    ext: string
+  ): { format: string; label: string; ext: string }[] | null {
     switch (ext) {
       case 'docx':
         return [
