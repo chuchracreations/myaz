@@ -1,25 +1,12 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Screen } from '../../../../src/common/types';
-import { Code2, RefreshCw, Radio, Wrench, Dices, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Code2, RefreshCw, Radio, Wrench, Dices, ChevronRight } from 'lucide-react';
 
-const FUN_TITLES = [
-  'Developer',
-  'Bug Finder',
-  'Vibe Coder',
-  'Code Wizard',
-  'Terminal Ninja',
-  'Semicolon Hunter',
-  'Merge Conflict Survivor',
-  'Stack Overflow Regular',
-  'Pixel Perfectionist',
-  'Snippet Collector',
-  'Port Killer',
-  'Late Night Committer',
-  'Console.log Detective',
-  'Rubber Duck Whisperer',
-  'Dark Mode Loyalist',
-  'Ctrl+S Enthusiast',
-];
+declare global {
+  interface Window {
+    __LOGO_URI__?: string;
+  }
+}
 
 type HomeModule = Exclude<Screen, 'home'>;
 
@@ -37,17 +24,7 @@ interface HomeViewProps {
   onNavigate: (moduleId: HomeModule) => void;
 }
 
-function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 5) return 'Working late';
-  if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
-  return 'Good evening';
-}
-
 export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) => {
-  const funTitle = useMemo(() => FUN_TITLES[Math.floor(Math.random() * FUN_TITLES.length)], []);
-
   const cards: LaunchCard[] = [
     {
       id: 'snippets',
@@ -93,11 +70,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
 
   return (
     <div className="home-view">
-      <div className="welcome-greeting">
-        {getGreeting()}, {funTitle}
-        <span className="accent-dot" />
-      </div>
-
       <div className="launch-list">
         {cards.map((card) => (
           <button
@@ -120,11 +92,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       </div>
 
       <div className="home-footer">
-        <div className="privacy-row">
-          <span className="privacy-badge" title="No network requests. Zero telemetry. 100% local.">
-            <ShieldCheck size={11} />
-            <span>100% Offline</span>
-          </span>
+        <div className="footer-row">
+          <div className="footer-brand">
+            {window.__LOGO_URI__ && (
+              <img src={window.__LOGO_URI__} alt="" className="footer-logo-mark" />
+            )}
+            <span className="footer-brand-text">myaz</span>
+          </div>
           {process.env.APP_VERSION && (
             <span className="version-tag">v{process.env.APP_VERSION}</span>
           )}

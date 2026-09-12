@@ -397,7 +397,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this.extensionUri, 'dist', 'webview.css')
     );
     const logoUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, 'media', 'logo.png')
+      vscode.Uri.joinPath(this.extensionUri, 'media', 'icon-activitybar.png')
     );
 
     const nonce = getNonce();
