@@ -1,10 +1,15 @@
 .vscode/**
 src/**
 webview-ui/**
+docs/**
 build.mjs
 tsconfig.json
 tsconfig.webview.json
 node_modules/**
 .gitignore
+.gitattributes
+.prettierignore
+.prettierrc.json
+eslint.config.mjs
 *.vsix
 media/source/**
