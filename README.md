@@ -101,7 +101,7 @@ Getting productive with myaz takes three steps:
 </tr>
 <tr>
 <td><b>🎲 Random Data</b></td>
-<td>14 fake-data generators for names, emails, addresses, passwords, and more — plus a batch mode.</td>
+<td>20 fake-data generators for names, emails, addresses, passwords, and more — plus a batch mode.</td>
 </tr>
 </table>
 
@@ -177,11 +177,11 @@ Seven everyday tools that usually mean opening a new browser tab — now built i
 
 ## 🎲 Random Data Generator
 
-Need realistic fake data for a demo, a seed script, or a UI mockup? Generate it locally — nothing is ever sent over the network.
+Need realistic fake data for a demo, a seed script, or a UI mockup? Generate it locally — the only exception is the Image field, which loads a placeholder photo from picsum.photos.
 
-- **Batch Generator**: Pick any combination of fields and generate many records at once, ready to copy or export.
-- **14 Individual Generators**: Email Address, Phone Number (country-aware formatting), Full Name, Password, Street Address, Username, Company Name, Date of Birth, Job Title, IP Address, MAC Address, User Agent, Hex Color, Lorem Ipsum.
-- **Safe by Design**: IPs use the RFC 5737 documentation range, MAC addresses are locally administered — nothing resembles real-world identifiers.
+- **Batch Generator**: Pick any combination of fields — plus your own custom-named fields with a chosen data type — and generate many records at once, ready to copy or export.
+- **20 Individual Generators**: Email Address, Phone Number (country-aware formatting), Full Name, Password, Street Address, Username, Company Name, Date (multiple formats), Job Title, IP Address, MAC Address, User Agent, Hex Color, Lorem Ipsum, Image, UUID, Credit Card Number, URL, Timestamp, Latitude/Longitude.
+- **Safe by Design**: IPs use the RFC 5737 documentation range, MAC addresses are locally administered, credit card numbers are Luhn-valid test numbers (not real card data), and URLs/emails use the RFC 2606 reserved `example.com`/`.org`/`.net` domains — nothing resembles real-world identifiers.
 
 ---
 
@@ -196,8 +196,8 @@ Need realistic fake data for a demo, a seed script, or a UI mockup? Generate it 
 
 ## 🔒 100% Offline, Private & Local
 
-- **Zero Telemetry**: All five core modules — Snippets, Converters, Ports, Utilities, and Random Data — make zero network requests, have zero tracking, and send zero data to external servers.
-- **The one exception**: the optional **Feedback** button on the Home screen (_"Please provide me Feedback"_) loads a Google Form. It only makes a network request when you open it, and only sends data if you submit the form yourself — nothing runs automatically or in the background.
+- **Zero Telemetry**: All five core modules — Snippets, Converters, Ports, Utilities, and Random Data — have zero tracking and send zero data to external servers.
+- **The two exceptions**: the optional **Feedback** button on the Home screen (_"Please provide me Feedback"_) loads a Google Form, and the **Image** field in Random Data loads a placeholder photo from picsum.photos. Both only make a network request when you actively use that specific feature — nothing runs automatically or in the background, and no data is sent to those services.
 - **Local Storage**: All snippets are stored locally on your machine in human-readable JSON:
 
 | Operating System | Default Storage Path                                                                                  |
@@ -255,7 +255,7 @@ Looking for specific tools? **myaz** provides a 100% local, offline solution:
 - **Port & Process Management**: `kill port`, `port killer`, `kill-port`, `eaddrinuse`, `address already in use`, `free port 3000`, `kill zombie process`, `find process by port`, `monorepo port manager`, `microservice port scanner`, `lsof port killer`, `terminate node process`.
 - **Snippet Management**: `vs code snippet manager`, `code snippet organizer`, `interactive snippets`, `tab-stops snippet placeholders`, `insert snippet at cursor`, `snippet search`.
 - **Dev Utilities**: `jwt decoder`, `jwt inspector`, `uuid generator`, `base64 encode decode`, `sha256 hash generator`, `url encoder decoder`, `regex tester`, `timezone converter`.
-- **Fake / Test Data**: `fake data generator`, `random data generator`, `mock data generator`, `faker alternative`, `random email generator`, `random address generator`, `random password generator`.
+- **Fake / Test Data**: `fake data generator`, `random data generator`, `mock data generator`, `faker alternative`, `random email generator`, `random address generator`, `random password generator`, `random uuid generator`, `fake credit card number generator`, `random image generator`, `random url generator`, `random timestamp generator`, `random latitude longitude generator`.
 
 ---
 

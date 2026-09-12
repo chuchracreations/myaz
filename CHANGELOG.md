@@ -4,6 +4,18 @@ All notable changes to the **myaz** extension are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.0] - 2026-09-13
+
+### Added
+
+- **Random Data**: 6 new individual generators — Image (via picsum.photos), UUID, Credit Card Number (Luhn-valid test numbers), URL, Timestamp, and Latitude/Longitude — bringing the module to 20 generators.
+- **Random Data**: a Date format picker (multiple formats, mirroring the existing Phone country picker).
+- **Batch Generator**: custom fields — add your own key name and pick a data type from a dropdown, included alongside the standard fields when generating.
+
+### Changed
+
+- Reworded the Random Data "100% local" claim: the new Image generator loads a placeholder photo from picsum.photos, the one network exception in that module.
+
 ## [0.5.0] - 2026-09-13
 
 ### Added
