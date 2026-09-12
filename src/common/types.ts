@@ -53,6 +53,8 @@ export type WebviewToHostMessage =
   | { type: 'SAVE_BATCH_ZIP'; payload: any }
   | { type: 'SCAN_PORTS'; payload?: { customPort?: number } }
   | { type: 'KILL_PORT_PROCESS'; payload: { pid: number; port: number } }
+  | { type: 'KILL_ALL_PORTS'; payload: { pids: number[] } }
+  | { type: 'START_PORT'; payload: { port: number } }
   | { type: 'SCREEN_CHANGED'; payload: { screen: Screen } };
 
 export type HostToWebviewMessage =
@@ -64,4 +66,6 @@ export type HostToWebviewMessage =
   | { type: 'CONVERT_FILE_RESULT'; payload: any }
   | { type: 'CONVERT_TEXT_RESULT'; payload: any }
   | { type: 'PORT_SCAN_RESULTS'; payload: { ports: PortProcessInfo[]; detectedProjectPorts: number[] } }
-  | { type: 'PORT_KILLED_RESULT'; payload: { success: boolean; pid: number; port: number; error?: string } };
+  | { type: 'PORT_KILLED_RESULT'; payload: { success: boolean; pid: number; port: number; error?: string } }
+  | { type: 'PORT_KILL_ALL_RESULT'; payload: { killedCount: number; failedCount: number; cancelled?: boolean } }
+  | { type: 'PORT_START_RESULT'; payload: { port: number; success: boolean; message: string } };

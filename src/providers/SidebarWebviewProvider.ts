@@ -265,9 +265,87 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
         break;
       }
 
+      case 'KILL_ALL_PORTS': {
+        if (this.portService) {
+          const { pids } = message.payload;
+          const confirmed = await vscode.window.showWarningMessage(
+            `Kill ${pids.length} process${pids.length === 1 ? '' : 'es'} and free their ports?`,
+            { modal: true },
+            'Kill All'
+          );
+
+          if (confirmed !== 'Kill All') {
+            this.postMessage({
+              type: 'PORT_KILL_ALL_RESULT',
+              payload: { killedCount: 0, failedCount: 0, cancelled: true },
+            });
+            break;
+          }
+
+          const results = await Promise.all(pids.map(pid => this.portService!.killProcess(pid)));
+          const killedCount = results.filter(r => r.success).length;
+          const failedCount = results.length - killedCount;
+
+          this.postMessage({
+            type: 'PORT_KILL_ALL_RESULT',
+            payload: { killedCount, failedCount },
+          });
+
+          const { ports, detectedProjectPorts } = await this.portService.scanPorts();
+          this.postMessage({
+            type: 'PORT_SCAN_RESULTS',
+            payload: { ports, detectedProjectPorts },
+          });
+        }
+        break;
+      }
+
+      case 'START_PORT': {
+        if (this.portService) {
+          const { port } = message.payload;
+          const res = await this.portService.startPort(port);
+          this.postMessage({
+            type: 'PORT_START_RESULT',
+            payload: { port, success: res.success, message: res.message },
+          });
+
+          if (res.success) {
+            this.pollForPortReady(port);
+          }
+        }
+        break;
+      }
+
       default:
         break;
     }
+  }
+
+  /**
+   * After launching a dev server, its port isn't live immediately — poll for
+   * it in the background and push a fresh scan to the webview once it comes
+   * up, so the list updates without the user having to hit Scan manually.
+   */
+  private pollForPortReady(port: number, attempt = 0): void {
+    const maxAttempts = 20; // ~20s at 1s intervals
+
+    setTimeout(async () => {
+      if (!this.portService) return;
+
+      const isLive = await this.portService.isPortListening(port);
+      if (isLive) {
+        const { ports, detectedProjectPorts } = await this.portService.scanPorts();
+        this.postMessage({
+          type: 'PORT_SCAN_RESULTS',
+          payload: { ports, detectedProjectPorts },
+        });
+        return;
+      }
+
+      if (attempt + 1 < maxAttempts) {
+        this.pollForPortReady(port, attempt + 1);
+      }
+    }, 1000);
   }
 
   private getHtmlForWebview(webview: vscode.Webview): string {

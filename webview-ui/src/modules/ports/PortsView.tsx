@@ -2,15 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import {
   Radio,
   Zap,
+  Play,
   RefreshCw,
   Search,
   Terminal,
   Folder,
   CheckCircle2,
   AlertCircle,
+  Info,
   Cpu,
   Layers,
   ShieldCheck,
+  Skull,
 } from 'lucide-react';
 import { vscode } from '../../vscodeApi';
 import { HostToWebviewMessage, PortProcessInfo } from '../../../../src/common/types';
@@ -20,6 +23,8 @@ export const PortsView: React.FC = () => {
   const [detectedProjectPorts, setDetectedProjectPorts] = useState<number[]>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [killingPid, setKillingPid] = useState<number | null>(null);
+  const [isKillingAll, setIsKillingAll] = useState(false);
+  const [startingPort, setStartingPort] = useState<number | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
   const [customPortInput, setCustomPortInput] = useState('');
   const [filterQuery, setFilterQuery] = useState('');
@@ -49,6 +54,23 @@ export const PortsView: React.FC = () => {
         }
 
         // Clear status alert after 4 seconds
+        setTimeout(() => setStatusMessage(null), 4000);
+      } else if (msg.type === 'PORT_KILL_ALL_RESULT') {
+        setIsKillingAll(false);
+        const { killedCount, failedCount, cancelled } = msg.payload;
+        if (!cancelled) {
+          setStatusMessage({
+            text:
+              failedCount === 0
+                ? `${killedCount} process${killedCount === 1 ? '' : 'es'} terminated and freed!`
+                : `${killedCount} terminated, ${failedCount} failed to stop.`,
+            type: failedCount === 0 ? 'success' : 'error',
+          });
+          setTimeout(() => setStatusMessage(null), 4000);
+        }
+      } else if (msg.type === 'PORT_START_RESULT') {
+        setStartingPort(null);
+        setStatusMessage({ text: msg.payload.message, type: msg.payload.success ? 'success' : 'info' });
         setTimeout(() => setStatusMessage(null), 4000);
       }
     });
@@ -83,6 +105,15 @@ export const PortsView: React.FC = () => {
     });
   };
 
+  const handleStartPort = (port: number) => {
+    setStartingPort(port);
+    setStatusMessage(null);
+    vscode.postMessage({
+      type: 'START_PORT',
+      payload: { port },
+    });
+  };
+
   // Split into Workspace vs Other Dev Ports
   const filteredPorts = useMemo(() => {
     if (!filterQuery.trim()) return ports;
@@ -99,6 +130,14 @@ export const PortsView: React.FC = () => {
   const workspacePorts = useMemo(() => {
     return filteredPorts.filter(p => p.isCurrentProject);
   }, [filteredPorts]);
+
+  const handleKillAll = () => {
+    setIsKillingAll(true);
+    vscode.postMessage({
+      type: 'KILL_ALL_PORTS',
+      payload: { pids: workspacePorts.map(p => p.pid) },
+    });
+  };
 
   // If user searched for a specific port number, show that custom inspected port
   const customInspectedPort = useMemo(() => {
@@ -135,11 +174,9 @@ export const PortsView: React.FC = () => {
       {/* Status Feedback Alert */}
       {statusMessage && (
         <div className={`ports-alert ports-alert-${statusMessage.type}`}>
-          {statusMessage.type === 'success' ? (
-            <CheckCircle2 size={16} />
-          ) : (
-            <AlertCircle size={16} />
-          )}
+          {statusMessage.type === 'success' && <CheckCircle2 size={16} />}
+          {statusMessage.type === 'error' && <AlertCircle size={16} />}
+          {statusMessage.type === 'info' && <Info size={16} />}
           <span>{statusMessage.text}</span>
         </div>
       )}
@@ -149,22 +186,31 @@ export const PortsView: React.FC = () => {
         <div className="ports-detected-bar">
           <span className="ports-detected-label">
             <Layers size={13} />
-            Project Configured Ports:
+            Configured:
           </span>
           <div className="ports-detected-pills">
-            {detectedProjectPorts.map(p => (
-              <button
-                key={p}
-                className="ports-detected-pill"
-                onClick={() => {
-                  setCustomPortInput(p.toString());
-                  handleRefresh(p);
-                }}
-                title={`Inspect port :${p}`}
-              >
-                :{p}
-              </button>
-            ))}
+            {detectedProjectPorts.map(p => {
+              const isLive = ports.some(item => item.port === p);
+              return (
+                <button
+                  key={p}
+                  className={`ports-detected-pill ${isLive ? 'is-live' : 'is-startable'}`}
+                  onClick={() => {
+                    if (isLive) {
+                      setCustomPortInput(p.toString());
+                      handleRefresh(p);
+                    } else {
+                      handleStartPort(p);
+                    }
+                  }}
+                  disabled={startingPort === p}
+                  title={isLive ? `Inspect port :${p}` : `Start port :${p}`}
+                >
+                  {isLive ? <span className="live-dot" /> : <Play size={9} fill="currentColor" />}
+                  :{p}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -246,9 +292,22 @@ export const PortsView: React.FC = () => {
             <span className="ports-indicator-dot project-dot" />
             <h3 className="ports-section-title">This Workspace's Processes</h3>
           </div>
-          <span className="ports-badge project-badge">
-            {workspacePorts.length} Active
-          </span>
+          <div className="ports-section-actions">
+            {workspacePorts.length > 1 && (
+              <button
+                className="kill-all-btn"
+                onClick={handleKillAll}
+                disabled={isKillingAll}
+                title="Kill every process running from this workspace"
+              >
+                <Skull size={11} />
+                <span>{isKillingAll ? 'Killing...' : 'Kill All'}</span>
+              </button>
+            )}
+            <span className="ports-badge project-badge">
+              {workspacePorts.length} Active
+            </span>
+          </div>
         </div>
 
         {workspacePorts.length > 0 ? (
@@ -271,7 +330,7 @@ export const PortsView: React.FC = () => {
                   <button
                     className="port-kill-btn primary-kill"
                     onClick={() => handleKill(item.pid, item.port)}
-                    disabled={killingPid === item.pid}
+                    disabled={killingPid === item.pid || isKillingAll}
                   >
                     <Zap size={13} />
                     <span>{killingPid === item.pid ? 'Killing...' : 'Kill Process'}</span>

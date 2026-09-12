@@ -7,7 +7,33 @@ import { PortProcessInfo } from '../../common/types';
 
 const execAsync = promisify(exec);
 
+const DEV_DEPENDENCY_DEFAULT_PORTS: Record<string, number> = {
+  vite: 5173,
+  next: 3000,
+  '@angular/core': 4200,
+  nuxt: 3000,
+  gatsby: 8000,
+  remix: 3000,
+};
+
+const PREFERRED_SCRIPT_NAMES = ['dev', 'start', 'serve', 'develop'];
+
+const LOCKFILE_PACKAGE_MANAGERS: { file: string; packageManager: string }[] = [
+  { file: 'bun.lockb', packageManager: 'bun' },
+  { file: 'pnpm-lock.yaml', packageManager: 'pnpm' },
+  { file: 'yarn.lock', packageManager: 'yarn' },
+  { file: 'package-lock.json', packageManager: 'npm' },
+];
+
+interface StartTarget {
+  folder: string;
+  script: string;
+  packageManager: string;
+}
+
 export class PortService {
+  private terminal: vscode.Terminal | undefined;
+
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   /**
@@ -137,6 +163,143 @@ export class PortService {
     }
 
     return Array.from(detected).sort((a, b) => a - b);
+  }
+
+  /**
+   * Detect which package manager governs a folder by walking up to the workspace
+   * root looking for a lockfile. Defaults to npm when no lockfile is found.
+   */
+  private detectPackageManager(startDir: string, workspaceRoot: string): string {
+    const resolvedRoot = path.resolve(workspaceRoot);
+    let dir = path.resolve(startDir);
+
+    while (true) {
+      for (const { file, packageManager } of LOCKFILE_PACKAGE_MANAGERS) {
+        if (fs.existsSync(path.join(dir, file))) {
+          return packageManager;
+        }
+      }
+      if (dir === resolvedRoot || !dir.startsWith(resolvedRoot)) break;
+      const parent = path.dirname(dir);
+      if (parent === dir) break;
+      dir = parent;
+    }
+
+    return 'npm';
+  }
+
+  /**
+   * Find which package.json + npm script would start a given port, and which
+   * package manager should run it. Returns null when nothing usable is found.
+   */
+  private async resolveStartTarget(port: number, workspaceRoot: string): Promise<StartTarget | null> {
+    const configFiles = this.findProjectConfigFiles(workspaceRoot);
+    const packageJsonFiles = configFiles.filter(f => path.basename(f).toLowerCase() === 'package.json');
+
+    const portBoundary = new RegExp(`\\b${port}\\b`);
+    let heuristicFallback: StartTarget | null = null;
+
+    for (const pkgPath of packageJsonFiles) {
+      let pkg: any;
+      try {
+        pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      } catch {
+        continue;
+      }
+
+      const scripts: Record<string, string> = pkg.scripts || {};
+      const folder = path.dirname(pkgPath);
+
+      // 1. Prefer a script that literally references this port number
+      for (const [name, command] of Object.entries(scripts)) {
+        if (portBoundary.test(command)) {
+          return { folder, script: name, packageManager: this.detectPackageManager(folder, workspaceRoot) };
+        }
+      }
+
+      // 2. Fall back to a dependency's conventional default port (e.g. vite -> 5173)
+      if (!heuristicFallback) {
+        const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+        const matchedDep = Object.keys(DEV_DEPENDENCY_DEFAULT_PORTS).find(
+          dep => allDeps[dep] && DEV_DEPENDENCY_DEFAULT_PORTS[dep] === port
+        );
+
+        if (matchedDep) {
+          const scriptNames = Object.keys(scripts);
+          const preferred = PREFERRED_SCRIPT_NAMES.find(name => scriptNames.includes(name));
+          const mentionsTool = scriptNames.find(name => scripts[name].includes(matchedDep));
+          const scriptName = preferred || mentionsTool || scriptNames[0];
+
+          if (scriptName) {
+            heuristicFallback = {
+              folder,
+              script: scriptName,
+              packageManager: this.detectPackageManager(folder, workspaceRoot),
+            };
+          }
+        }
+      }
+    }
+
+    return heuristicFallback;
+  }
+
+  /**
+   * Start whatever dev server is configured to run on the given port, using
+   * the project's own package manager (npm / yarn / pnpm / bun).
+   */
+  public async startPort(port: number): Promise<{ success: boolean; message: string }> {
+    const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    if (!workspaceRoot) {
+      return { success: false, message: 'No workspace folder is open.' };
+    }
+
+    const target = await this.resolveStartTarget(port, workspaceRoot);
+    if (!target) {
+      return {
+        success: false,
+        message: `Couldn't find a script that starts port ${port} — try running it manually.`,
+      };
+    }
+
+    const { folder, script, packageManager } = target;
+    const command = `${packageManager} run ${script}`;
+    const relFolder = path.relative(workspaceRoot, folder) || '.';
+
+    this.terminal = vscode.window.createTerminal({ name: `myaz: :${port}`, cwd: folder });
+    this.terminal.sendText(command);
+    this.terminal.show();
+
+    return {
+      success: true,
+      message: `Running "${command}" in ${relFolder}`,
+    };
+  }
+
+  /**
+   * Lightweight check for whether something is now listening on a port —
+   * used to poll after starting a dev server, without the cost of a full
+   * enriched scan (cwd + full command lookups) on every attempt.
+   */
+  public async isPortListening(port: number): Promise<boolean> {
+    const isWindows = process.platform === 'win32';
+
+    try {
+      if (isWindows) {
+        const { stdout } = await execAsync('netstat -ano -p tcp');
+        const portSuffix = new RegExp(`:${port}\\s`);
+        return stdout.split('\r\n').some(line => line.includes('LISTENING') && portSuffix.test(line));
+      }
+
+      const { stdout } = await execAsync(`lsof -iTCP:${port} -sTCP:LISTEN -P -n`);
+      return stdout.trim().split('\n').length > 1;
+    } catch (err: any) {
+      // lsof exits with code 1 (and no stdout) when nothing matches
+      if (err?.stdout) {
+        return err.stdout.trim().split('\n').length > 1;
+      }
+      return false;
+    }
   }
 
   /**
