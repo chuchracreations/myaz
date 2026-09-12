@@ -4,6 +4,16 @@ All notable changes to the **myaz** extension are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] - 2026-09-13
+
+### Added
+
+- **In-editor Feedback**: a "Please provide me Feedback" button on the Home screen opens an embedded Google Form directly in the sidebar — no browser redirect required.
+
+### Changed
+
+- Reworded the "Zero Telemetry" / offline claims in the README and landing page to scope them to the five core modules, since the new optional Feedback form is the one screen that talks to the network (only when opened).
+
 ## [0.4.0] - 2026-09-12
 
 ### Added
