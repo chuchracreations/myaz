@@ -2,4 +2,22 @@ node_modules
 dist
 out
 *.vsix
+
+# Logs
+*.log
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Env files
+.env
+.env.local
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Editors
+.idea
+.vscode-test
