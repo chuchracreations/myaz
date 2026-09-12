@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { ModuleId } from '../../../../src/common/types';
-import { Code2, RefreshCw, Radio, Wrench, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Screen } from '../../../../src/common/types';
+import { Code2, RefreshCw, Radio, Wrench, Dices, ChevronRight, ShieldCheck } from 'lucide-react';
 
 const FUN_TITLES = [
   'Developer',
@@ -21,7 +21,7 @@ const FUN_TITLES = [
   'Ctrl+S Enthusiast',
 ];
 
-type HomeModule = Extract<ModuleId, 'snippets' | 'converters' | 'ports' | 'utility'>;
+type HomeModule = Exclude<Screen, 'home'>;
 
 interface LaunchCard {
   id: HomeModule;
@@ -77,9 +77,17 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       id: 'utility',
       title: 'Utilities',
       description: 'JWT inspector, UUID, Base64 & hash tools',
-      badge: '5 tools',
+      badge: '7 tools',
       icon: <Wrench size={18} />,
       accentClass: 'launch-card--utility',
+    },
+    {
+      id: 'randomdata',
+      title: 'Random Data',
+      description: 'Generate fake emails, names, addresses & more',
+      badge: '14 types',
+      icon: <Dices size={18} />,
+      accentClass: 'launch-card--randomdata',
     },
   ];
 

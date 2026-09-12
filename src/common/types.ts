@@ -1,6 +1,6 @@
 export type ModuleId = 'snippets' | 'converters' | 'ports' | 'utility' | 'prompts' | 'templates' | 'notes';
 
-export type Screen = 'home' | 'snippets' | 'converters' | 'ports' | 'utility';
+export type Screen = 'home' | 'snippets' | 'converters' | 'ports' | 'utility' | 'randomdata';
 
 export interface ModuleDefinition {
   id: ModuleId;

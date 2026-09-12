@@ -7,6 +7,7 @@ import { SnippetModal } from './modules/snippets/SnippetModal';
 import { ConvertersView } from './modules/converters/ConvertersView';
 import { PortsView } from './modules/ports/PortsView';
 import { UtilityView } from './modules/utility/UtilityView';
+import { RandomDataView } from './modules/randomdata/RandomDataView';
 import { CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -129,6 +130,7 @@ export const App: React.FC = () => {
           {screen === 'converters' && <ConvertersView />}
           {screen === 'ports' && <PortsView />}
           {screen === 'utility' && <UtilityView />}
+          {screen === 'randomdata' && <RandomDataView />}
         </main>
       )}
 

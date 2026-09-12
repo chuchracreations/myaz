@@ -215,6 +215,59 @@ code {
 .launch-card--converters { --card-accent: #c586f0; --card-accent-soft: rgba(197, 134, 240, 0.12); }
 .launch-card--ports { --card-accent: #38bdf8; --card-accent-soft: rgba(56, 189, 248, 0.12); }
 .launch-card--utility { --card-accent: #f2b93d; --card-accent-soft: rgba(242, 185, 61, 0.12); }
+.launch-card--randomdata { --card-accent: #2dd4bf; --card-accent-soft: rgba(45, 212, 191, 0.12); }
+
+/* Accordion (Random Data's individual generators expand inline instead of navigating away) */
+.accordion-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion-trigger.is-open {
+  border-color: var(--card-accent);
+  background: var(--card-accent-soft);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border-bottom-color: transparent;
+}
+
+.accordion-trigger.is-open:hover {
+  transform: none;
+}
+
+.accordion-trigger.is-open::before {
+  opacity: 1;
+}
+
+.accordion-chevron {
+  color: var(--text-muted);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.accordion-trigger:hover .accordion-chevron {
+  color: var(--card-accent);
+}
+
+.accordion-chevron.is-open {
+  transform: rotate(180deg);
+  color: var(--card-accent);
+}
+
+.accordion-body {
+  border: 1px solid var(--card-accent);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: rgba(0, 0, 0, 0.15);
+  padding: 10px 11px 11px;
+  animation: slideUp 0.15s ease-out;
+}
+
+.accordion-body .tool-drawer-card {
+  background: transparent;
+  border: none;
+  padding: 0;
+  animation: none;
+}
 
 .launch-icon-tile {
   width: 36px;
@@ -2420,6 +2473,23 @@ code {
   margin: 0;
 }
 
+.color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.color-swatch--inline {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  margin-top: 0;
+}
+
 /* ==========================================================================
    Utilities Landing (Home-style launch list)
    ========================================================================== */
@@ -3022,6 +3092,153 @@ code {
   font-size: 10px;
   color: var(--text-muted);
   line-height: 1.4;
+}
+
+/* ==========================================================================
+   Random Data — Batch Generator
+   ========================================================================== */
+
+.batch-gen-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.batch-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.batch-field-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.batch-field-chip input[type='checkbox'] {
+  accent-color: #2dd4bf;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.batch-field-chip.is-active {
+  border-color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.1);
+  color: var(--text-highlight);
+}
+
+.batch-count-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.batch-count-input {
+  width: 64px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-highlight);
+  background: var(--bg-input);
+  border: 1px solid var(--vscode-input-border, rgba(255, 255, 255, 0.12));
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.batch-count-input:focus {
+  border-color: var(--focus-border);
+  outline: none;
+}
+
+.batch-generate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 9px;
+  border-radius: var(--radius-sm);
+  background: #2dd4bf;
+  color: #0c0c0d;
+  font-size: 12px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+}
+
+.batch-generate-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.batch-generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.batch-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.batch-records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.batch-record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 9px;
+}
+
+.batch-record-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.batch-record-index {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #2dd4bf;
+}
+
+.batch-record-field {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 10.5px;
+}
+
+.batch-record-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+.batch-record-value {
+  font-family: var(--font-mono);
+  color: var(--text-highlight);
+  word-break: break-word;
 }
 
 /* JWT Inspector */
