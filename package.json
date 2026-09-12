@@ -10,6 +10,10 @@
     "type": "git",
     "url": "https://github.com/chuchracreations/myaz"
   },
+  "homepage": "https://chuchracreations.github.io/myaz/",
+  "bugs": {
+    "url": "https://github.com/chuchracreations/myaz/issues"
+  },
   "keywords": [
     "snippets",
     "snippet manager",

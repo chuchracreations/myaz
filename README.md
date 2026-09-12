@@ -21,6 +21,8 @@
 &nbsp;|&nbsp;
 <a href="https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension"><b>View on Marketplace</b></a>
 &nbsp;|&nbsp;
+<a href="https://chuchracreations.github.io/myaz/"><b>Website</b></a>
+&nbsp;|&nbsp;
 <a href="https://github.com/chuchracreations/myaz"><b>Star on GitHub ⭐</b></a>
 
 </div>
@@ -259,6 +261,6 @@ Looking for specific tools? **myaz** provides a 100% local, offline solution:
 
 Crafted with care for developers who value speed, craft, and great tooling.
 
-**myaz** © 2026
+[chuchracreations.github.io/myaz](https://chuchracreations.github.io/myaz/) · **myaz** © 2026
 
 </div>
