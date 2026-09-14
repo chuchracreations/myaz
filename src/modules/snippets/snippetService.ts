@@ -219,14 +219,20 @@ export class SnippetService {
         fs.mkdirSync(dir, { recursive: true });
       }
 
-      // Check legacy snippets.json migration if workspace.json does not exist
+      // Already initialized — the file is the source of truth from here on,
+      // even if the user has deleted every snippet from it.
+      if (fs.existsSync(this.storageFilePath)) {
+        return;
+      }
+
+      // Legacy snippets.json migration, for installs from before workspace.json existed.
       const legacyFile = path.join(dir, 'snippets.json');
-      if (!fs.existsSync(this.storageFilePath) && fs.existsSync(legacyFile)) {
+      if (fs.existsSync(legacyFile)) {
         try {
           const content = fs.readFileSync(legacyFile, 'utf-8');
           const parsed = JSON.parse(content);
           const snippets = Array.isArray(parsed) ? parsed : parsed.snippets || [];
-          if (snippets.length > 0) {
+          if (Array.isArray(snippets)) {
             this.context.globalState.update(STORAGE_KEY, snippets);
             this.persistToFile(snippets);
             return;
@@ -236,34 +242,20 @@ export class SnippetService {
         }
       }
 
-      if (fs.existsSync(this.storageFilePath)) {
-        const content = fs.readFileSync(this.storageFilePath, 'utf-8');
-        const parsed = JSON.parse(content);
-        const list = Array.isArray(parsed) ? parsed : parsed.snippets || [];
-        if (Array.isArray(list)) {
-          const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-          const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
-          this.context.globalState.update(STORAGE_KEY, finalList);
-          if (finalList.length !== list.length) {
-            this.persistToFile(finalList);
-          }
-          return;
-        }
-      }
-
-      // Check globalState fallback (including the legacy pre-rename key for migration)
+      // Legacy globalState migration, for installs from before the on-disk file existed.
       const existing =
         this.context.globalState.get<Snippet[]>(STORAGE_KEY) ||
         this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
-      if (existing && existing.length > 0) {
-        const userOnly = existing.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-        const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
-        this.context.globalState.update(STORAGE_KEY, finalList);
-        this.persistToFile(finalList);
-      } else {
-        this.context.globalState.update(STORAGE_KEY, DEFAULT_SNIPPETS);
-        this.persistToFile(DEFAULT_SNIPPETS);
+      if (existing) {
+        this.context.globalState.update(STORAGE_KEY, existing);
+        this.persistToFile(existing);
+        return;
       }
+
+      // True first run: seed the welcome snippet once. From here on it's a
+      // normal, fully deletable snippet — nothing re-injects it after this.
+      this.context.globalState.update(STORAGE_KEY, DEFAULT_SNIPPETS);
+      this.persistToFile(DEFAULT_SNIPPETS);
     } catch (err) {
       console.error('Failed to initialize workspace file storage:', err);
     }
@@ -295,10 +287,8 @@ export class SnippetService {
         const content = fs.readFileSync(this.storageFilePath, 'utf-8');
         const parsed = JSON.parse(content);
         const list = Array.isArray(parsed) ? parsed : parsed.snippets || [];
-        if (Array.isArray(list) && list.length > 0) {
-          const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-          const finalList = userOnly.length > 0 ? userOnly : DEFAULT_SNIPPETS;
-          return finalList.sort((a, b) => {
+        if (Array.isArray(list)) {
+          return [...list].sort((a, b) => {
             if (a.isFavorite !== b.isFavorite) {
               return a.isFavorite ? -1 : 1;
             }
@@ -310,16 +300,11 @@ export class SnippetService {
       // fallback to globalState
     }
 
-    const list =
+    return (
       this.context.globalState.get<Snippet[]>(STORAGE_KEY) ||
-      this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY);
-    if (list && list.length > 0) {
-      const userOnly = list.filter((s: Snippet) => s && s.id && !s.id.startsWith('seed-'));
-      if (userOnly.length > 0) {
-        return userOnly;
-      }
-    }
-    return DEFAULT_SNIPPETS;
+      this.context.globalState.get<Snippet[]>(LEGACY_STORAGE_KEY) ||
+      []
+    );
   }
 
   public save(data: Omit<Snippet, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }): Snippet {
