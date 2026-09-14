@@ -226,6 +226,18 @@ code {
   --card-accent: #2dd4bf;
   --card-accent-soft: rgba(45, 212, 191, 0.12);
 }
+.launch-card--vimguide {
+  --card-accent: #4ade80;
+  --card-accent-soft: rgba(74, 222, 128, 0.12);
+}
+.launch-card--gitguide {
+  --card-accent: #f97316;
+  --card-accent-soft: rgba(249, 115, 22, 0.12);
+}
+.launch-card--jsonformatter {
+  --card-accent: #818cf8;
+  --card-accent-soft: rgba(129, 140, 248, 0.12);
+}
 
 /* Accordion (Random Data's individual generators expand inline instead of navigating away) */
 .accordion-item {
@@ -2561,6 +2573,14 @@ code {
   background: var(--bg-card-hover);
 }
 
+.btn-action-primary:disabled,
+.btn-action-secondary:disabled,
+.btn-mini:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .drawer-output-box {
   display: flex;
   align-items: flex-start;
@@ -2597,6 +2617,21 @@ code {
   height: 12px;
   border-radius: 4px;
   margin-top: 0;
+}
+
+.image-swatch {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.image-swatch--inline {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
 }
 
 /* ==========================================================================
@@ -2694,6 +2729,14 @@ code {
 .launch-card--regex {
   --card-accent: #2dd4bf;
   --card-accent-soft: rgba(45, 212, 191, 0.14);
+}
+.launch-card--cron {
+  --card-accent: #fb923c;
+  --card-accent-soft: rgba(251, 146, 60, 0.14);
+}
+.launch-card--case {
+  --card-accent: #e879f9;
+  --card-accent-soft: rgba(232, 121, 249, 0.14);
 }
 
 .utility-privacy-line {
@@ -2891,6 +2934,23 @@ code {
   font-size: 9.5px;
   font-weight: 600;
   color: var(--text-muted);
+}
+
+.checkbox-field-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-field-row input[type='checkbox'] {
+  accent-color: #60a5fa;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .now-btn-chip {
@@ -3280,6 +3340,438 @@ code {
 }
 
 /* ==========================================================================
+   Utilities — Cron Builder
+   ========================================================================== */
+
+.cron-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cron-expr-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cron-expr-input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fb923c;
+  background: var(--bg-input);
+  border: 1.5px solid var(--vscode-input-border, rgba(255, 255, 255, 0.12));
+  border-radius: var(--radius-sm);
+  padding: 7px 9px;
+  outline: none;
+}
+
+.cron-expr-input:focus {
+  border-color: var(--focus-border);
+}
+
+.cron-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.cron-field-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cron-field-cell-label {
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.cron-field-cell-input {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-highlight);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 5px 2px;
+  outline: none;
+}
+
+.cron-field-cell-input:focus {
+  border-color: var(--focus-border);
+}
+
+.cron-explain-box {
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.28);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-highlight);
+}
+
+.cron-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cron-preset-chip {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 9px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.cron-preset-chip:hover {
+  border-color: #fb923c;
+  color: #fb923c;
+}
+
+.cron-next-runs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.cron-next-run-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 9px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 10.5px;
+}
+
+.cron-next-run-index {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.cron-next-run-time {
+  font-family: var(--font-mono);
+  color: #fdba74;
+}
+
+/* ==========================================================================
+   Utilities — Case Converter
+   ========================================================================== */
+
+.case-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.case-result-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 9px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.case-result-row:hover {
+  border-color: #e879f9;
+  background: rgba(232, 121, 249, 0.08);
+}
+
+.case-result-row:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.case-result-label {
+  flex-shrink: 0;
+  width: 92px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.case-result-value {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-highlight);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.case-result-copy-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.case-result-copy-icon.is-copied {
+  color: #e879f9;
+}
+
+/* ==========================================================================
+   Cheat Sheet Guides (Vim, Git) — shared layout, per-guide accent color
+   ========================================================================== */
+
+.vim-guide-body {
+  --cheat-accent: #4ade80;
+  --cheat-accent-soft: rgba(74, 222, 128, 0.08);
+  --cheat-accent-soft-2: rgba(74, 222, 128, 0.12);
+  --cheat-accent-soft-3: rgba(74, 222, 128, 0.28);
+}
+
+.git-guide-body {
+  --cheat-accent: #f97316;
+  --cheat-accent-soft: rgba(249, 115, 22, 0.08);
+  --cheat-accent-soft-2: rgba(249, 115, 22, 0.12);
+  --cheat-accent-soft-3: rgba(249, 115, 22, 0.28);
+}
+
+.cheat-guide-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cheat-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cheat-command-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Stacked (keys above description) rather than side-by-side — command text
+   varies a lot in length (a vim keystroke vs. a full git flag string) and
+   the sidebar is narrow, so a horizontal row would overflow or clip. */
+.cheat-command-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 9px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.cheat-command-row:hover {
+  border-color: var(--cheat-accent);
+  background: var(--cheat-accent-soft);
+}
+
+.cheat-command-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.cheat-command-keys {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--cheat-accent);
+  background: var(--cheat-accent-soft-2);
+  border: 1px solid var(--cheat-accent-soft-3);
+  border-radius: 4px;
+  padding: 3px 7px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.cheat-command-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding-left: 1px;
+}
+
+.cheat-command-copy-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.cheat-command-copy-icon.is-copied {
+  color: var(--cheat-accent);
+}
+
+/* ==========================================================================
+   JSON Formatter
+   ========================================================================== */
+
+.json-input-area {
+  min-height: 150px;
+}
+
+.json-char-count {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+.json-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.json-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.json-stats-dot {
+  opacity: 0.5;
+}
+
+.json-tree-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.json-tree-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.json-node-row {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.json-toggle-row {
+  background: none;
+  border: none;
+  padding: 0 3px;
+  margin-left: -3px;
+  width: calc(100% + 3px);
+  cursor: pointer;
+  border-radius: 3px;
+  text-align: left;
+}
+
+.json-toggle-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.json-toggle-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.12s ease;
+}
+
+.json-toggle-icon.is-open {
+  transform: rotate(90deg);
+}
+
+.json-node-children {
+  margin-left: 13px;
+  padding-left: 7px;
+  border-left: 1px dashed var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.json-key {
+  color: #7dd3fc;
+}
+
+.json-colon {
+  color: var(--text-muted);
+}
+
+.json-bracket {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.json-bracket-close {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.json-collapsed-summary {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 2px;
+}
+
+.json-value--string {
+  color: #86efac;
+}
+
+.json-value--number {
+  color: #fbbf24;
+}
+
+.json-value--boolean {
+  color: #f472b6;
+}
+
+.json-value--null {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ==========================================================================
    Random Data — Batch Generator
    ========================================================================== */
 
@@ -3424,6 +3916,41 @@ code {
   font-family: var(--font-mono);
   color: var(--text-highlight);
   word-break: break-word;
+}
+
+.batch-custom-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.batch-custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.batch-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.batch-custom-key-input {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.batch-custom-type-select {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.batch-custom-remove {
+  flex-shrink: 0;
+  padding: 5px 6px;
 }
 
 /* JWT Inspector */

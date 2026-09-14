@@ -8,6 +8,8 @@ import {
   Globe,
   Clock,
   Search,
+  Timer,
+  CaseSensitive,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -18,8 +20,19 @@ import { HashTool } from './tools/HashTool';
 import { UrlEncoderTool } from './tools/UrlEncoderTool';
 import { DateTimezoneTool } from './tools/DateTimezoneTool';
 import { RegexTool } from './tools/RegexTool';
+import { CronTool } from './tools/CronTool';
+import { CaseConverterTool } from './tools/CaseConverterTool';
 
-type ToolId = 'jwt' | 'uuid' | 'base64' | 'hash' | 'url' | 'datetime' | 'regex';
+type ToolId =
+  | 'jwt'
+  | 'uuid'
+  | 'base64'
+  | 'hash'
+  | 'url'
+  | 'datetime'
+  | 'regex'
+  | 'cron'
+  | 'case';
 
 interface ToolMeta {
   id: ToolId;
@@ -82,6 +95,22 @@ const TOOLS: ToolMeta[] = [
     accentClass: 'launch-card--regex',
     tag: 'new',
   },
+  {
+    id: 'cron',
+    title: 'Cron Builder',
+    desc: 'Build & explain cron expressions in plain English',
+    icon: <Timer size={16} />,
+    accentClass: 'launch-card--cron',
+    tag: 'new',
+  },
+  {
+    id: 'case',
+    title: 'Case Converter',
+    desc: 'camelCase, snake_case, kebab-case & more, at once',
+    icon: <CaseSensitive size={16} />,
+    accentClass: 'launch-card--case',
+    tag: 'new',
+  },
 ];
 
 export const UtilityView: React.FC = () => {
@@ -111,6 +140,8 @@ export const UtilityView: React.FC = () => {
         {activeTool === 'url' && <UrlEncoderTool />}
         {activeTool === 'datetime' && <DateTimezoneTool />}
         {activeTool === 'regex' && <RegexTool />}
+        {activeTool === 'cron' && <CronTool />}
+        {activeTool === 'case' && <CaseConverterTool />}
       </div>
     );
   }

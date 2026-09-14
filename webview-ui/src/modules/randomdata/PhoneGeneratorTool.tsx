@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import { RefreshCw, Copy, Check } from 'lucide-react';
-import { PHONE_FORMATS } from './phoneFormats';
+import { PHONE_FORMATS, generatePhoneNumber } from './phoneFormats';
 
 export const PhoneGeneratorTool: React.FC = () => {
   const [countryCode, setCountryCode] = useState(PHONE_FORMATS[0].code);
+  const [includeCountryCode, setIncludeCountryCode] = useState(true);
   const format = PHONE_FORMATS.find((f) => f.code === countryCode) || PHONE_FORMATS[0];
-  const [value, setValue] = useState(() => format.generate());
+  const [value, setValue] = useState(() => generatePhoneNumber(format, includeCountryCode));
   const [copied, setCopied] = useState(false);
 
   const handleCountryChange = (code: string) => {
     setCountryCode(code);
     const next = PHONE_FORMATS.find((f) => f.code === code) || PHONE_FORMATS[0];
-    setValue(next.generate());
+    setValue(generatePhoneNumber(next, includeCountryCode));
+    setCopied(false);
+  };
+
+  const handleIncludeCountryCodeChange = (checked: boolean) => {
+    setIncludeCountryCode(checked);
+    setValue(generatePhoneNumber(format, checked));
     setCopied(false);
   };
 
   const handleRegenerate = () => {
-    setValue(format.generate());
+    setValue(generatePhoneNumber(format, includeCountryCode));
     setCopied(false);
   };
 
@@ -42,6 +49,15 @@ export const PhoneGeneratorTool: React.FC = () => {
           ))}
         </select>
       </div>
+
+      <label className="checkbox-field-row">
+        <input
+          type="checkbox"
+          checked={includeCountryCode}
+          onChange={(e) => handleIncludeCountryCodeChange(e.target.checked)}
+        />
+        Include country code
+      </label>
 
       <div className="drawer-output-box">
         <pre className="drawer-output-text">{value}</pre>

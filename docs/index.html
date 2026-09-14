@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>myaz</title>
-<meta name="description" content="Snippets, file converters, a port killer, dev utilities and a fake-data generator — five tools in one VS Code sidebar, offline by default." />
+<meta name="description" content="Snippets, file converters, a port killer, dev utilities, a fake-data generator, Vim &amp; Git cheat sheets, and a JSON formatter — eight modules in one VS Code sidebar, offline by default." />
 <meta property="og:title" content="myaz — offline developer toolkit for VS Code" />
-<meta property="og:description" content="Five tools you open ten times a day. One offline sidebar. Zero network requests, across all five." />
+<meta property="og:description" content="The dev tools you open ten times a day. One offline sidebar. Zero network requests, across all eight." />
 <meta property="og:image" content="https://res.cloudinary.com/dquzactsh/image/upload/v1789235525/logo_stxkje.png" />
 <meta name="theme-color" content="#0a0c14" />
 <link rel="icon" href="assets/logo-mark.png" />
@@ -42,6 +42,9 @@
     --mod-ports: #38bdf8;
     --mod-utility: #f2b93d;
     --mod-random: #2dd4bf;
+    --mod-vim: #4ade80;
+    --mod-git: #f97316;
+    --mod-json: #818cf8;
 
     --good: #3ecf8e;
     --bad: #f0725a;
@@ -152,9 +155,18 @@
     border: 1px solid var(--line);
     border-radius: 0 0 8px 8px;
     overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* old Edge/IE */
     position: sticky;
     top: 0;
     z-index: 10;
+  }
+
+  /* Keep the horizontal-scroll safety net for narrow viewports, but hide the
+     scrollbar itself — on Windows its visible track/arrow buttons make the
+     tab-strip nav look broken even when there's nothing to scroll. */
+  nav.tabstrip::-webkit-scrollbar {
+    display: none;
   }
 
   .tabstrip .brand {
@@ -749,7 +761,7 @@
     <section class="hero">
       <div>
         <p class="eyebrow">VS Code extension · MIT licensed</p>
-        <h1>Five tools you open ten times a day. One offline sidebar.</h1>
+        <h1>The dev tools you open ten times a day. One offline sidebar.</h1>
         <p class="lede">myaz replaces the snippet notes, the web converters, the <code>kill&nbsp;-9</code> googling, and the browser tabs full of dev utilities — all local, all inside VS Code.</p>
         <div class="ctas">
           <a class="btn btn-primary" href="https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension">
@@ -765,7 +777,7 @@
         </div>
       </div>
 
-      <div class="editor-frame" role="img" aria-label="The myaz sidebar open in VS Code, showing the five module cards">
+      <div class="editor-frame" role="img" aria-label="The myaz sidebar open in VS Code, showing the module cards">
         <div class="ef-activitybar">
           <span class="ab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3h6v6M10 21H4v-6M20 3l-8 8M4 21l8-8"/></svg></span>
           <span class="ab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
@@ -792,17 +804,32 @@
           <div class="sb-card" style="--accent: var(--mod-utility)">
             <span class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.8 2.8-2-2 2.8-2.8z"/></svg></span>
             <span class="sb-text"><span class="sb-title">Utilities</span><span class="sb-desc">JWT, UUID, Base64 &amp; hash tools</span></span>
-            <span class="sb-badge">7 tools</span>
+            <span class="sb-badge">9 tools</span>
           </div>
           <div class="sb-card" style="--accent: var(--mod-random)">
             <span class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></span>
             <span class="sb-text"><span class="sb-title">Random Data</span><span class="sb-desc">Fake emails, names, addresses &amp; more</span></span>
-            <span class="sb-badge">14 types</span>
+            <span class="sb-badge">20 types</span>
+          </div>
+          <div class="sb-card" style="--accent: var(--mod-vim)">
+            <span class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/></svg></span>
+            <span class="sb-text"><span class="sb-title">Vim Guide</span><span class="sb-desc">Searchable cheat sheet, click to copy</span></span>
+            <span class="sb-badge">128 commands</span>
+          </div>
+          <div class="sb-card" style="--accent: var(--mod-git)">
+            <span class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg></span>
+            <span class="sb-text"><span class="sb-title">Git Cheat Sheet</span><span class="sb-desc">Everyday git commands, click to copy</span></span>
+            <span class="sb-badge">74 commands</span>
+          </div>
+          <div class="sb-card" style="--accent: var(--mod-json)">
+            <span class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3a3 3 0 00-3 3v3a2 2 0 01-2 2 2 2 0 012 2v3a3 3 0 003 3M16 3a3 3 0 013 3v3a2 2 0 002 2 2 2 0 00-2 2v3a3 3 0 01-3 3"/></svg></span>
+            <span class="sb-text"><span class="sb-title">JSON Formatter</span><span class="sb-desc">Format, validate &amp; explore as a tree</span></span>
+            <span class="sb-badge">Local</span>
           </div>
 
           <div class="sb-footer">
             <span class="fb"><img src="assets/logo-mark.png" alt="" /><span class="fbt">myaz</span></span>
-            <span class="fv">v0.5.0</span>
+            <span class="fv">v0.6.0</span>
           </div>
         </div>
 
@@ -822,17 +849,17 @@
 
     <div class="stat-strip">
       <div class="stat"><span class="num">0</span><span class="lbl">network requests*</span></div>
-      <div class="stat"><span class="num">5</span><span class="lbl">modules</span></div>
-      <div class="stat"><span class="num">21</span><span class="lbl">built-in tools &amp; generators</span></div>
+      <div class="stat"><span class="num">8</span><span class="lbl">modules</span></div>
+      <div class="stat"><span class="num">29</span><span class="lbl">built-in tools &amp; generators</span></div>
       <div class="stat"><span class="num">MIT</span><span class="lbl">licensed</span></div>
     </div>
-    <p class="stat-note">*Across all five core modules. The optional in-editor Feedback form is the one exception — it loads only when you open it.</p>
+    <p class="stat-note">*Across all eight core modules. The optional in-editor Feedback form is the one exception — it loads only when you open it.</p>
 
     <section id="modules">
       <div class="section-head">
         <div class="palette"><span class="chevron">&gt;</span><span class="query">myaz</span></div>
         <h2>Everything below lives one command away</h2>
-        <p>Five modules, each doing one job well — reachable from the sidebar or the Command Palette (<kbd>⌘⇧P</kbd> / <kbd>Ctrl⇧P</kbd>).</p>
+        <p>Eight modules, each doing one job well — reachable from the sidebar or the Command Palette (<kbd>⌘⇧P</kbd> / <kbd>Ctrl⇧P</kbd>).</p>
       </div>
 
       <div class="modules">
@@ -875,21 +902,55 @@
         <article class="module" style="--accent: var(--mod-utility)">
           <span class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.8 2.8-2-2 2.8-2.8z"/></svg></span>
           <h3>Utilities</h3>
-          <p class="m-desc">Seven tabs you'd normally have open, built in.</p>
+          <p class="m-desc">Nine tabs you'd normally have open, built in.</p>
           <div class="chips">
             <span class="chip">JWT</span><span class="chip">UUID</span><span class="chip">Base64</span>
             <span class="chip">SHA-256</span><span class="chip">URL</span><span class="chip">Date/TZ</span><span class="chip">Regex</span>
+            <span class="chip">Cron</span><span class="chip">Case</span>
           </div>
         </article>
 
         <article class="module" style="--accent: var(--mod-random)">
           <span class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></span>
           <h3>Random Data</h3>
-          <p class="m-desc">14 fake-data generators plus a batch mode, for demos and seed scripts.</p>
+          <p class="m-desc">20 fake-data generators plus a batch mode, for demos and seed scripts.</p>
           <ul>
             <li>Names, emails, addresses, passwords &amp; more</li>
             <li>IPs use the safe RFC 5737 range</li>
             <li>Nothing generated ever resembles a real record</li>
+          </ul>
+        </article>
+
+        <article class="module" style="--accent: var(--mod-vim)">
+          <span class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/></svg></span>
+          <h3>Vim Guide</h3>
+          <p class="m-desc">128 Vim commands, searchable and organized into 13 categories.</p>
+          <ul>
+            <li>Modes, movement, editing, registers, macros &amp; more</li>
+            <li>Search or filter by category</li>
+            <li>Click any command to copy it</li>
+          </ul>
+        </article>
+
+        <article class="module" style="--accent: var(--mod-git)">
+          <span class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg></span>
+          <h3>Git Cheat Sheet</h3>
+          <p class="m-desc">74 everyday git commands, from staging to rebasing to stashing.</p>
+          <ul>
+            <li>Branching, remotes, undoing changes, tags &amp; more</li>
+            <li>Search or filter by category</li>
+            <li>Click any command to copy it</li>
+          </ul>
+        </article>
+
+        <article class="module" style="--accent: var(--mod-json)">
+          <span class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3a3 3 0 00-3 3v3a2 2 0 01-2 2 2 2 0 012 2v3a3 3 0 003 3M16 3a3 3 0 013 3v3a2 2 0 002 2 2 2 0 00-2 2v3a3 3 0 01-3 3"/></svg></span>
+          <h3>JSON Formatter</h3>
+          <p class="m-desc">Format, minify, validate, and explore JSON as a collapsible tree.</p>
+          <ul>
+            <li>Errors point to the exact line &amp; column</li>
+            <li>Expand/collapse-all tree controls</li>
+            <li>Live key count, depth &amp; size stats</li>
           </ul>
         </article>
       </div>
@@ -899,7 +960,7 @@
       <div class="section-head">
         <p class="eyebrow">Why local matters</p>
         <h2>Your code never leaves the editor</h2>
-        <p>Every one of myaz's five modules runs as plain JavaScript in the extension host — there is no server, no API key, and no network call to fail, log, or leak.</p>
+        <p>Every one of myaz's eight modules runs as plain JavaScript in the extension host — there is no server, no API key, and no network call to fail, log, or leak.</p>
       </div>
 
       <div class="compare">
@@ -913,7 +974,7 @@
         <div class="row with">Click <strong>Kill All</strong> in the Ports panel.</div>
 
         <div class="row without">A tab for jwt.io, another for uuidgenerator.net, another for regex101.</div>
-        <div class="row with">One sidebar, seven tools, zero tabs.</div>
+        <div class="row with">One sidebar, nine tools, zero tabs.</div>
       </div>
     </section>
 
@@ -983,7 +1044,7 @@
       <span>MIT License</span>
       <a href="https://github.com/chuchracreations/myaz">chuchracreations/myaz</a>
       <span class="spacer">
-        <span>v0.5.0</span>
+        <span>v0.6.0</span>
         <span>offline by default</span>
         <a href="https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension">Marketplace</a>
       </span>
