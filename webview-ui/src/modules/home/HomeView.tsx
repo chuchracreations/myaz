@@ -7,6 +7,8 @@ import {
   Wrench,
   Dices,
   Keyboard,
+  GitBranch,
+  FileJson,
   ChevronRight,
   MessageSquareHeart,
 } from 'lucide-react';
@@ -63,7 +65,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       id: 'utility',
       title: 'Utilities',
       description: 'JWT inspector, UUID, Base64 & hash tools',
-      badge: '8 tools',
+      badge: '9 tools',
       icon: <Wrench size={18} />,
       accentClass: 'launch-card--utility',
     },
@@ -82,6 +84,22 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       badge: '128 commands',
       icon: <Keyboard size={18} />,
       accentClass: 'launch-card--vimguide',
+    },
+    {
+      id: 'gitguide',
+      title: 'Git Cheat Sheet',
+      description: 'A searchable reference for everyday git commands',
+      badge: '74 commands',
+      icon: <GitBranch size={18} />,
+      accentClass: 'launch-card--gitguide',
+    },
+    {
+      id: 'jsonformatter',
+      title: 'JSON Formatter',
+      description: 'Format, validate & explore JSON as a collapsible tree',
+      badge: 'Local',
+      icon: <FileJson size={18} />,
+      accentClass: 'launch-card--jsonformatter',
     },
   ];
 

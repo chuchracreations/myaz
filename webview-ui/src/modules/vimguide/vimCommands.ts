@@ -1,15 +1,6 @@
-export interface VimCommand {
-  keys: string;
-  desc: string;
-}
+import { CheatCategory } from '../shared/CheatSheetView';
 
-export interface VimCategory {
-  id: string;
-  title: string;
-  commands: VimCommand[];
-}
-
-export const VIM_CATEGORIES: VimCategory[] = [
+export const VIM_CATEGORIES: CheatCategory[] = [
   {
     id: 'modes',
     title: 'Modes & Basics',

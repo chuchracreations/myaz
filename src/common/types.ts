@@ -9,6 +9,8 @@ export type Screen =
   | 'utility'
   | 'randomdata'
   | 'vimguide'
+  | 'gitguide'
+  | 'jsonformatter'
   | 'feedback';
 
 export interface ModuleDefinition {

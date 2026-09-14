@@ -9,6 +9,8 @@ import { PortsView } from './modules/ports/PortsView';
 import { UtilityView } from './modules/utility/UtilityView';
 import { RandomDataView } from './modules/randomdata/RandomDataView';
 import { VimGuideView } from './modules/vimguide/VimGuideView';
+import { GitGuideView } from './modules/gitguide/GitGuideView';
+import { JsonFormatterView } from './modules/jsonformatter/JsonFormatterView';
 import { FeedbackView } from './modules/feedback/FeedbackView';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -132,6 +134,8 @@ export const App: React.FC = () => {
           {screen === 'utility' && <UtilityView />}
           {screen === 'randomdata' && <RandomDataView />}
           {screen === 'vimguide' && <VimGuideView />}
+          {screen === 'gitguide' && <GitGuideView />}
+          {screen === 'jsonformatter' && <JsonFormatterView />}
           {screen === 'feedback' && <FeedbackView />}
         </main>
       )}

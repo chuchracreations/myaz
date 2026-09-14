@@ -230,6 +230,14 @@ code {
   --card-accent: #4ade80;
   --card-accent-soft: rgba(74, 222, 128, 0.12);
 }
+.launch-card--gitguide {
+  --card-accent: #f97316;
+  --card-accent-soft: rgba(249, 115, 22, 0.12);
+}
+.launch-card--jsonformatter {
+  --card-accent: #818cf8;
+  --card-accent-soft: rgba(129, 140, 248, 0.12);
+}
 
 /* Accordion (Random Data's individual generators expand inline instead of navigating away) */
 .accordion-item {
@@ -2565,6 +2573,14 @@ code {
   background: var(--bg-card-hover);
 }
 
+.btn-action-primary:disabled,
+.btn-action-secondary:disabled,
+.btn-mini:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .drawer-output-box {
   display: flex;
   align-items: flex-start;
@@ -2717,6 +2733,10 @@ code {
 .launch-card--cron {
   --card-accent: #fb923c;
   --card-accent-soft: rgba(251, 146, 60, 0.14);
+}
+.launch-card--case {
+  --card-accent: #e879f9;
+  --card-accent-soft: rgba(232, 121, 249, 0.14);
 }
 
 .utility-privacy-line {
@@ -3457,31 +3477,19 @@ code {
 }
 
 /* ==========================================================================
-   Vim Guide
+   Utilities — Case Converter
    ========================================================================== */
 
-.vim-guide-body {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.vim-category-block {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.vim-command-list {
+.case-results-list {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.vim-command-row {
+.case-result-row {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   width: 100%;
   padding: 7px 9px;
   background: var(--bg-surface);
@@ -3495,38 +3503,272 @@ code {
     background var(--transition-fast);
 }
 
-.vim-command-row:hover {
-  border-color: #4ade80;
-  background: rgba(74, 222, 128, 0.08);
+.case-result-row:hover {
+  border-color: #e879f9;
+  background: rgba(232, 121, 249, 0.08);
 }
 
-.vim-command-keys {
+.case-result-row:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.case-result-label {
   flex-shrink: 0;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
+  width: 92px;
+  font-size: 9.5px;
   font-weight: 700;
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.12);
-  border: 1px solid rgba(74, 222, 128, 0.28);
-  border-radius: 4px;
-  padding: 3px 7px;
+  color: var(--text-muted);
+}
+
+.case-result-value {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-highlight);
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.vim-command-desc {
-  flex: 1;
-  min-width: 0;
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-.vim-command-copy-icon {
+.case-result-copy-icon {
   flex-shrink: 0;
   color: var(--text-muted);
 }
 
-.vim-command-copy-icon.is-copied {
-  color: #4ade80;
+.case-result-copy-icon.is-copied {
+  color: #e879f9;
+}
+
+/* ==========================================================================
+   Cheat Sheet Guides (Vim, Git) — shared layout, per-guide accent color
+   ========================================================================== */
+
+.vim-guide-body {
+  --cheat-accent: #4ade80;
+  --cheat-accent-soft: rgba(74, 222, 128, 0.08);
+  --cheat-accent-soft-2: rgba(74, 222, 128, 0.12);
+  --cheat-accent-soft-3: rgba(74, 222, 128, 0.28);
+}
+
+.git-guide-body {
+  --cheat-accent: #f97316;
+  --cheat-accent-soft: rgba(249, 115, 22, 0.08);
+  --cheat-accent-soft-2: rgba(249, 115, 22, 0.12);
+  --cheat-accent-soft-3: rgba(249, 115, 22, 0.28);
+}
+
+.cheat-guide-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cheat-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cheat-command-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Stacked (keys above description) rather than side-by-side — command text
+   varies a lot in length (a vim keystroke vs. a full git flag string) and
+   the sidebar is narrow, so a horizontal row would overflow or clip. */
+.cheat-command-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 9px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.cheat-command-row:hover {
+  border-color: var(--cheat-accent);
+  background: var(--cheat-accent-soft);
+}
+
+.cheat-command-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.cheat-command-keys {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--cheat-accent);
+  background: var(--cheat-accent-soft-2);
+  border: 1px solid var(--cheat-accent-soft-3);
+  border-radius: 4px;
+  padding: 3px 7px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.cheat-command-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding-left: 1px;
+}
+
+.cheat-command-copy-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.cheat-command-copy-icon.is-copied {
+  color: var(--cheat-accent);
+}
+
+/* ==========================================================================
+   JSON Formatter
+   ========================================================================== */
+
+.json-input-area {
+  min-height: 150px;
+}
+
+.json-char-count {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+.json-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.json-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.json-stats-dot {
+  opacity: 0.5;
+}
+
+.json-tree-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.json-tree-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.json-node-row {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.json-toggle-row {
+  background: none;
+  border: none;
+  padding: 0 3px;
+  margin-left: -3px;
+  width: calc(100% + 3px);
+  cursor: pointer;
+  border-radius: 3px;
+  text-align: left;
+}
+
+.json-toggle-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.json-toggle-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.12s ease;
+}
+
+.json-toggle-icon.is-open {
+  transform: rotate(90deg);
+}
+
+.json-node-children {
+  margin-left: 13px;
+  padding-left: 7px;
+  border-left: 1px dashed var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.json-key {
+  color: #7dd3fc;
+}
+
+.json-colon {
+  color: var(--text-muted);
+}
+
+.json-bracket {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.json-bracket-close {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.json-collapsed-summary {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 2px;
+}
+
+.json-value--string {
+  color: #86efac;
+}
+
+.json-value--number {
+  color: #fbbf24;
+}
+
+.json-value--boolean {
+  color: #f472b6;
+}
+
+.json-value--null {
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 /* ==========================================================================
