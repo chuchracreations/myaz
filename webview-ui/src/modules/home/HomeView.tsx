@@ -73,7 +73,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       id: 'randomdata',
       title: 'Random Data',
       description: 'Generate fake emails, names, addresses & more',
-      badge: '14 types',
+      badge: '20 types',
       icon: <Dices size={18} />,
       accentClass: 'launch-card--randomdata',
     },

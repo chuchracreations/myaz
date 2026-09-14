@@ -4,7 +4,7 @@
 
 ### _The All-in-One Offline Developer Toolkit for VS Code_
 
-**Snippets · File Converters · Port Killer · Dev Utilities · Fake Data Generator — in one sidebar, offline by default.**
+**Snippets · File Converters · Port Killer · Dev Utilities · Fake Data Generator · Vim & Git Cheat Sheets · JSON Formatter — in one sidebar, offline by default.**
 
 [![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/himanshuchuchra.myaz-extension?style=for-the-badge&logo=visual-studio-code&label=Marketplace&color=blue)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
 [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/himanshuchuchra.myaz-extension?style=for-the-badge&label=Installs&color=success)](https://marketplace.visualstudio.com/items?itemName=himanshuchuchra.myaz-extension)
@@ -14,7 +14,7 @@
 
   <p align="center">
     <b>Stop re-writing boilerplate, stop uploading sensitive files to random web converters, and stop Googling <code>kill port 3000</code> for the hundredth time.</b><br/>
-    <sub>Five tools. One sidebar. Everything runs locally on your machine.</sub>
+    <sub>Eight modules. One sidebar. Everything runs locally on your machine.</sub>
   </p>
 
 <a href="vscode:extension/himanshuchuchra.myaz-extension"><b>➜ Install in VS Code</b></a>
@@ -37,6 +37,9 @@
 - [Port Janitor](#-port-janitor)
 - [Developer Utilities](#-developer-utilities)
 - [Random Data Generator](#-random-data-generator)
+- [Vim Guide](#-vim-guide)
+- [Git Cheat Sheet](#-git-cheat-sheet)
+- [JSON Formatter](#-json-formatter)
 - [Workspace Portability](#-workspace-portability)
 - [100% Offline, Private & Local](#-100-offline-private--local)
 - [Command Palette Shortcuts](#-command-palette-shortcuts)
@@ -48,15 +51,18 @@
 
 ## ✨ Overview
 
-**myaz** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and a clean, modern UI, myaz replaces a whole tab-full of web tools with five offline modules:
+**myaz** is a high-performance, modular productivity suite built directly into your VS Code sidebar. Engineered with **React 18**, **TypeScript**, and a clean, modern UI, myaz replaces a whole tab-full of web tools with eight offline modules:
 
-|  #  | Module             | What it replaces                                      |
-| :-: | :----------------- | :---------------------------------------------------- |
-|  1  | ⚡ **Snippets**    | Your scattered `notes.txt` / Notion snippet dump      |
-|  2  | 🔄 **Converters**  | Random online file-converter websites                 |
-|  3  | 🛑 **Ports**       | `lsof -i :3000` + `kill -9` in the terminal           |
-|  4  | 🧰 **Utilities**   | jwt.io, uuidgenerator.net, regex101, base64decode.org |
-|  5  | 🎲 **Random Data** | Mockaroo / Faker.js scripts for quick test data       |
+|  #  | Module                  | What it replaces                                      |
+| :-: | :----------------------- | :---------------------------------------------------- |
+|  1  | ⚡ **Snippets**         | Your scattered `notes.txt` / Notion snippet dump      |
+|  2  | 🔄 **Converters**       | Random online file-converter websites                 |
+|  3  | 🛑 **Ports**            | `lsof -i :3000` + `kill -9` in the terminal           |
+|  4  | 🧰 **Utilities**        | jwt.io, uuidgenerator.net, regex101, crontab.guru     |
+|  5  | 🎲 **Random Data**      | Mockaroo / Faker.js scripts for quick test data       |
+|  6  | ⌨️ **Vim Guide**         | Googling "vim delete line" for the hundredth time     |
+|  7  | 🌿 **Git Cheat Sheet**  | Googling "git undo last commit" for the hundredth time |
+|  8  | 🧾 **JSON Formatter**   | jsonformatter.org, jsonviewer.stack.hu                |
 
 No accounts, no config files, no telemetry — install it and it's ready to use in seconds.
 
@@ -76,7 +82,7 @@ Getting productive with myaz takes three steps:
 
 2. **Open** — click the **myaz** icon (the blue-violet "M") in your Activity Bar.
 
-3. **Pick a module** — Snippets, Converters, Ports, Utilities, or Random Data — and start working. Everything is local; there's nothing to sign in to.
+3. **Pick a module** — Snippets, Converters, Ports, Utilities, Random Data, Vim Guide, Git Cheat Sheet, or JSON Formatter — and start working. Everything is local; there's nothing to sign in to.
 
 ---
 
@@ -97,11 +103,23 @@ Getting productive with myaz takes three steps:
 </tr>
 <tr>
 <td><b>🧰 Utilities</b></td>
-<td>7 everyday dev tools: JWT inspector, UUID generator, Base64, SHA-256, URL encoder, date/timezone, regex tester.</td>
+<td>9 everyday dev tools: JWT inspector, UUID generator, Base64, SHA-256, URL encoder, date/timezone, regex tester, cron builder, case converter.</td>
 </tr>
 <tr>
 <td><b>🎲 Random Data</b></td>
-<td>20 fake-data generators for names, emails, addresses, passwords, and more — plus a batch mode.</td>
+<td>20 fake-data generators for names, emails, addresses, passwords, and more — plus a searchable list and a batch mode.</td>
+</tr>
+<tr>
+<td><b>⌨️ Vim Guide</b></td>
+<td>A searchable cheat sheet for 128 Vim commands across 13 categories — click any one to copy it.</td>
+</tr>
+<tr>
+<td><b>🌿 Git Cheat Sheet</b></td>
+<td>A searchable reference for 74 everyday git commands across 10 categories — click any one to copy it.</td>
+</tr>
+<tr>
+<td><b>🧾 JSON Formatter</b></td>
+<td>Format, minify, and validate JSON, and explore it as a collapsible tree with live stats.</td>
 </tr>
 </table>
 
@@ -161,17 +179,19 @@ Never fight `Error: listen EADDRINUSE: address already in use :::3000` again. Cl
 
 ## 🧰 Developer Utilities
 
-Seven everyday tools that usually mean opening a new browser tab — now built in and fully offline:
+Nine everyday tools that usually mean opening a new browser tab — now built in and fully offline:
 
-| Tool                    | What it does                                       |
-| :---------------------- | :------------------------------------------------- |
-| 🔑 **JWT Inspector**    | Decode and verify JSON Web Tokens with live output |
-| 🔢 **UUID Generator**   | Generate and copy a fresh UUID v4                  |
-| 🔡 **Base64 Converter** | Encode / decode text strings instantly             |
-| #️⃣ **SHA-256 Hasher**   | Generate a cryptographic checksum for any text     |
-| 🌐 **URL Encoder**      | Encode / decode URI components                     |
-| 🕒 **Date & Timezone**  | Convert dates and times across timezones           |
-| 🔎 **Regex Tester**     | Test patterns with live match highlighting         |
+| Tool                     | What it does                                                |
+| :------------------------ | :----------------------------------------------------------- |
+| 🔑 **JWT Inspector**     | Decode and verify JSON Web Tokens with live output           |
+| 🔢 **UUID Generator**    | Generate and copy a fresh UUID v4                             |
+| 🔡 **Base64 Converter**  | Encode / decode text strings instantly                        |
+| #️⃣ **SHA-256 Hasher**    | Generate a cryptographic checksum for any text                |
+| 🌐 **URL Encoder**       | Encode / decode URI components                                |
+| 🕒 **Date & Timezone**   | Convert dates and times across timezones                      |
+| 🔎 **Regex Tester**      | Test patterns with live match highlighting                    |
+| ⏰ **Cron Builder**      | Build a cron expression, see a plain-English explanation, and preview upcoming run times |
+| 🔠 **Case Converter**    | Convert text into 11 case styles at once — camelCase, snake_case, kebab-case & more      |
 
 ---
 
@@ -179,9 +199,40 @@ Seven everyday tools that usually mean opening a new browser tab — now built i
 
 Need realistic fake data for a demo, a seed script, or a UI mockup? Generate it locally — the only exception is the Image field, which loads a placeholder photo from picsum.photos.
 
+- **Search**: a top search bar filters the individual generators list by name or description as it grows.
 - **Batch Generator**: Pick any combination of fields — plus your own custom-named fields with a chosen data type — and generate many records at once, ready to copy or export.
-- **20 Individual Generators**: Email Address, Phone Number (country-aware formatting), Full Name, Password, Street Address, Username, Company Name, Date (multiple formats), Job Title, IP Address, MAC Address, User Agent, Hex Color, Lorem Ipsum, Image, UUID, Credit Card Number, URL, Timestamp, Latitude/Longitude.
+- **20 Individual Generators**: Email Address, Phone Number (country-aware formatting, with an optional country-code toggle), Full Name, Password, Street Address, Username, Company Name, Date (multiple formats), Job Title, IP Address, MAC Address, User Agent, Hex Color, Lorem Ipsum, Image, UUID, Credit Card Number, URL, Timestamp, Latitude/Longitude.
 - **Safe by Design**: IPs use the RFC 5737 documentation range, MAC addresses are locally administered, credit card numbers are Luhn-valid test numbers (not real card data), and URLs/emails use the RFC 2606 reserved `example.com`/`.org`/`.net` domains — nothing resembles real-world identifiers.
+
+---
+
+## ⌨️ Vim Guide
+
+A searchable, categorized cheat sheet for 128 Vim commands — so you can find the one you need without leaving VS Code.
+
+- **13 Categories**: Modes & Basics, Movement, Editing & Deleting, Copy/Paste & Registers, Undo/Redo & Repeat, Search & Replace, Visual Mode, Marks & Jumps, Windows & Splits, Buffers & Tabs, Macros, Indenting & Formatting, File & Save.
+- **Search & Filter**: a top search bar plus per-category filter pills narrow the list instantly.
+- **Click to Copy**: click any command row to copy its keystroke.
+
+---
+
+## 🌿 Git Cheat Sheet
+
+The same searchable reference format, for 74 everyday git commands across 10 categories — staging, branching, merging & rebasing, remotes, undoing changes, stashing, tags, and more.
+
+- **Search & Filter**: a top search bar plus per-category filter pills.
+- **Click to Copy**: click any command row to copy it, including full flag combinations like `git push --force-with-lease`.
+
+---
+
+## 🧾 JSON Formatter
+
+Format, validate, and explore JSON without leaving your editor or pasting it into a random website.
+
+- **Format / Minify**: reformat pasted JSON with 2-space indentation, or collapse it to a single line.
+- **Validation with Position**: invalid JSON shows a clear error message with the line and column where parsing failed.
+- **Collapsible Tree View**: browse the parsed JSON as an expandable tree, with Expand All / Collapse All controls.
+- **Live Stats**: key count, max depth, and size, updated as you type.
 
 ---
 
@@ -196,7 +247,7 @@ Need realistic fake data for a demo, a seed script, or a UI mockup? Generate it 
 
 ## 🔒 100% Offline, Private & Local
 
-- **Zero Telemetry**: All five core modules — Snippets, Converters, Ports, Utilities, and Random Data — have zero tracking and send zero data to external servers.
+- **Zero Telemetry**: All eight core modules — Snippets, Converters, Ports, Utilities, Random Data, Vim Guide, Git Cheat Sheet, and JSON Formatter — have zero tracking and send zero data to external servers.
 - **The two exceptions**: the optional **Feedback** button on the Home screen (_"Please provide me Feedback"_) loads a Google Form, and the **Image** field in Random Data loads a placeholder photo from picsum.photos. Both only make a network request when you actively use that specific feature — nothing runs automatically or in the background, and no data is sent to those services.
 - **Local Storage**: All snippets are stored locally on your machine in human-readable JSON:
 
@@ -254,8 +305,9 @@ Looking for specific tools? **myaz** provides a 100% local, offline solution:
 - **Data & Configuration**: `excel to json converter`, `csv to json`, `xlsx to markdown table`, `json to yaml`, `yaml to json converter`, `xml to json`, `env to json`.
 - **Port & Process Management**: `kill port`, `port killer`, `kill-port`, `eaddrinuse`, `address already in use`, `free port 3000`, `kill zombie process`, `find process by port`, `monorepo port manager`, `microservice port scanner`, `lsof port killer`, `terminate node process`.
 - **Snippet Management**: `vs code snippet manager`, `code snippet organizer`, `interactive snippets`, `tab-stops snippet placeholders`, `insert snippet at cursor`, `snippet search`.
-- **Dev Utilities**: `jwt decoder`, `jwt inspector`, `uuid generator`, `base64 encode decode`, `sha256 hash generator`, `url encoder decoder`, `regex tester`, `timezone converter`.
+- **Dev Utilities**: `jwt decoder`, `jwt inspector`, `uuid generator`, `base64 encode decode`, `sha256 hash generator`, `url encoder decoder`, `regex tester`, `timezone converter`, `cron expression generator`, `crontab generator`, `case converter`, `camelcase to snake_case`.
 - **Fake / Test Data**: `fake data generator`, `random data generator`, `mock data generator`, `faker alternative`, `random email generator`, `random address generator`, `random password generator`, `random uuid generator`, `fake credit card number generator`, `random image generator`, `random url generator`, `random timestamp generator`, `random latitude longitude generator`.
+- **Reference & Cheat Sheets**: `vim cheat sheet`, `vim commands list`, `vim shortcuts`, `git cheat sheet`, `git commands list`, `git undo last commit`, `json formatter`, `json validator`, `json viewer`, `json tree viewer`, `json beautifier`.
 
 ---
 

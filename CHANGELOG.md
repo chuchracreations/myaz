@@ -4,13 +4,25 @@ All notable changes to the **myaz** extension are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.6.0] - 2026-09-13
+## [0.6.0] - 2026-09-14
 
 ### Added
 
+- **Vim Guide**: a new top-level module — a searchable, categorized cheat sheet for 128 Vim commands across 13 groups (modes, movement, editing, registers, search, visual mode, marks, windows/buffers, macros, formatting, file ops). Click any command to copy it.
+- **Git Cheat Sheet**: a new top-level module — a searchable reference for 74 everyday git commands across 10 categories (staging, branching, rebasing, remotes, stashing, tags, and more). Click any command to copy it.
+- **JSON Formatter**: a new top-level module — format, minify, and validate JSON with line/column error reporting, and explore it as a collapsible tree with live stats (key count, depth, size) and expand/collapse-all controls.
+- **Utilities**: a Cron Builder tool — build a cron expression via synced fields, see a plain-English explanation, preview upcoming run times, and pick from common presets.
+- **Utilities**: a Case Converter tool — converts input into 11 case styles at once (camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, Title Case, and more), each individually copyable.
+- **Random Data**: a top search bar to filter the growing list of individual generators by name or description.
+- **Random Data / Batch Generator**: an "Include country code" checkbox for the Phone generator, so numbers can be produced with or without the dial prefix.
 - **Random Data**: 6 new individual generators — Image (via picsum.photos), UUID, Credit Card Number (Luhn-valid test numbers), URL, Timestamp, and Latitude/Longitude — bringing the module to 20 generators.
 - **Random Data**: a Date format picker (multiple formats, mirroring the existing Phone country picker).
 - **Batch Generator**: custom fields — add your own key name and pick a data type from a dropdown, included alongside the standard fields when generating.
+
+### Fixed
+
+- **Snippets**: the built-in "Welcome to myaz" snippet no longer reappears after being deleted — it's now seeded once on first run and behaves like any other snippet from then on.
+- **Landing page**: the header tab-strip no longer shows a visible scrollbar with arrow buttons on Windows.
 
 ### Changed
 
