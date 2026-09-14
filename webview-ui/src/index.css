@@ -226,6 +226,10 @@ code {
   --card-accent: #2dd4bf;
   --card-accent-soft: rgba(45, 212, 191, 0.12);
 }
+.launch-card--vimguide {
+  --card-accent: #4ade80;
+  --card-accent-soft: rgba(74, 222, 128, 0.12);
+}
 
 /* Accordion (Random Data's individual generators expand inline instead of navigating away) */
 .accordion-item {
@@ -3450,6 +3454,79 @@ code {
 .cron-next-run-time {
   font-family: var(--font-mono);
   color: #fdba74;
+}
+
+/* ==========================================================================
+   Vim Guide
+   ========================================================================== */
+
+.vim-guide-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vim-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vim-command-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vim-command-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 7px 9px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.vim-command-row:hover {
+  border-color: #4ade80;
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.vim-command-keys {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.28);
+  border-radius: 4px;
+  padding: 3px 7px;
+  white-space: nowrap;
+}
+
+.vim-command-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.vim-command-copy-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.vim-command-copy-icon.is-copied {
+  color: #4ade80;
 }
 
 /* ==========================================================================

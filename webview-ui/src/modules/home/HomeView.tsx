@@ -6,6 +6,7 @@ import {
   Radio,
   Wrench,
   Dices,
+  Keyboard,
   ChevronRight,
   MessageSquareHeart,
 } from 'lucide-react';
@@ -73,6 +74,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       badge: '14 types',
       icon: <Dices size={18} />,
       accentClass: 'launch-card--randomdata',
+    },
+    {
+      id: 'vimguide',
+      title: 'Vim Guide',
+      description: 'A searchable cheat sheet for every essential command',
+      badge: '128 commands',
+      icon: <Keyboard size={18} />,
+      accentClass: 'launch-card--vimguide',
     },
   ];
 
