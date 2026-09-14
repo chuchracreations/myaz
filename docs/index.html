@@ -152,9 +152,18 @@
     border: 1px solid var(--line);
     border-radius: 0 0 8px 8px;
     overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* old Edge/IE */
     position: sticky;
     top: 0;
     z-index: 10;
+  }
+
+  /* Keep the horizontal-scroll safety net for narrow viewports, but hide the
+     scrollbar itself — on Windows its visible track/arrow buttons make the
+     tab-strip nav look broken even when there's nothing to scroll. */
+  nav.tabstrip::-webkit-scrollbar {
+    display: none;
   }
 
   .tabstrip .brand {
