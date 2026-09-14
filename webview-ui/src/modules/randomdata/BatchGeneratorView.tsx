@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Copy, Check, Shuffle, Plus, X } from 'lucide-react';
 import { FIELDS, FieldId } from './generators';
-import { PHONE_FORMATS } from './phoneFormats';
+import { PHONE_FORMATS, generatePhoneNumber } from './phoneFormats';
 import { DATE_FORMATS } from './dateFormats';
 
 interface CustomField {
@@ -16,6 +16,7 @@ const MAX_RECORDS = 50;
 export const BatchGeneratorView: React.FC = () => {
   const [selected, setSelected] = useState<Set<FieldId>>(new Set(DEFAULT_SELECTED));
   const [phoneCountry, setPhoneCountry] = useState(PHONE_FORMATS[0].code);
+  const [phoneIncludeCountryCode, setPhoneIncludeCountryCode] = useState(true);
   const [dateFormat, setDateFormat] = useState(DATE_FORMATS[0].code);
   const [customFields, setCustomFields] = useState<CustomField[]>([]);
   const [count, setCount] = useState(5);
@@ -72,7 +73,7 @@ export const BatchGeneratorView: React.FC = () => {
     const phoneFormat = PHONE_FORMATS.find((p) => p.code === phoneCountry) || PHONE_FORMATS[0];
     const dobFormat = DATE_FORMATS.find((d) => d.code === dateFormat) || DATE_FORMATS[0];
     const generateByType = (typeId: FieldId): string => {
-      if (typeId === 'phone') return phoneFormat.generate();
+      if (typeId === 'phone') return generatePhoneNumber(phoneFormat, phoneIncludeCountryCode);
       if (typeId === 'dob') return dobFormat.generate();
       return (FIELDS.find((f) => f.id === typeId) || FIELDS[0]).generate();
     };
@@ -132,6 +133,17 @@ export const BatchGeneratorView: React.FC = () => {
               </option>
             ))}
           </select>
+          <label className="checkbox-field-row">
+            <input
+              type="checkbox"
+              checked={phoneIncludeCountryCode}
+              onChange={(e) => {
+                setPhoneIncludeCountryCode(e.target.checked);
+                setRecords(null);
+              }}
+            />
+            Include country code
+          </label>
         </div>
       )}
 

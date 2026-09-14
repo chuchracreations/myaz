@@ -62,7 +62,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ snippetCount, onNavigate }) 
       id: 'utility',
       title: 'Utilities',
       description: 'JWT inspector, UUID, Base64 & hash tools',
-      badge: '7 tools',
+      badge: '8 tools',
       icon: <Wrench size={18} />,
       accentClass: 'launch-card--utility',
     },

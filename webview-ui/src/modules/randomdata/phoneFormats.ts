@@ -5,6 +5,15 @@ export interface PhoneFormatDef {
   generate: () => string;
 }
 
+// Every PhoneFormatDef.generate() output starts with "<dial> " — strip that prefix
+// to produce a number without the country code.
+export function generatePhoneNumber(format: PhoneFormatDef, includeCountryCode: boolean): string {
+  const full = format.generate();
+  if (includeCountryCode) return full;
+  const prefix = `${format.dial} `;
+  return full.startsWith(prefix) ? full.slice(prefix.length) : full;
+}
+
 function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

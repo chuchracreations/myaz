@@ -8,6 +8,7 @@ import {
   Globe,
   Clock,
   Search,
+  Timer,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -18,8 +19,9 @@ import { HashTool } from './tools/HashTool';
 import { UrlEncoderTool } from './tools/UrlEncoderTool';
 import { DateTimezoneTool } from './tools/DateTimezoneTool';
 import { RegexTool } from './tools/RegexTool';
+import { CronTool } from './tools/CronTool';
 
-type ToolId = 'jwt' | 'uuid' | 'base64' | 'hash' | 'url' | 'datetime' | 'regex';
+type ToolId = 'jwt' | 'uuid' | 'base64' | 'hash' | 'url' | 'datetime' | 'regex' | 'cron';
 
 interface ToolMeta {
   id: ToolId;
@@ -82,6 +84,14 @@ const TOOLS: ToolMeta[] = [
     accentClass: 'launch-card--regex',
     tag: 'new',
   },
+  {
+    id: 'cron',
+    title: 'Cron Builder',
+    desc: 'Build & explain cron expressions in plain English',
+    icon: <Timer size={16} />,
+    accentClass: 'launch-card--cron',
+    tag: 'new',
+  },
 ];
 
 export const UtilityView: React.FC = () => {
@@ -111,6 +121,7 @@ export const UtilityView: React.FC = () => {
         {activeTool === 'url' && <UrlEncoderTool />}
         {activeTool === 'datetime' && <DateTimezoneTool />}
         {activeTool === 'regex' && <RegexTool />}
+        {activeTool === 'cron' && <CronTool />}
       </div>
     );
   }

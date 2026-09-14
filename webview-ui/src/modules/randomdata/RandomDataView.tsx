@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { Dices, Layers, ShieldCheck, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import {
+  Dices,
+  Layers,
+  ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Search,
+  X,
+} from 'lucide-react';
 import { FIELDS, FieldId } from './generators';
 import { SingleGeneratorTool } from './SingleGeneratorTool';
 import { PhoneGeneratorTool } from './PhoneGeneratorTool';
@@ -14,6 +23,15 @@ const BATCH_ACCENT_STYLE = {
 export const RandomDataView: React.FC = () => {
   const [batchOpen, setBatchOpen] = useState(false);
   const [expandedField, setExpandedField] = useState<FieldId | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredFields = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return FIELDS;
+    return FIELDS.filter(
+      (f) => f.title.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q)
+    );
+  }, [searchQuery]);
 
   if (batchOpen) {
     return (
@@ -49,6 +67,28 @@ export const RandomDataView: React.FC = () => {
         </div>
       </div>
 
+      <div className="search-container">
+        <Search size={13} className="search-icon" />
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search generators..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            className="btn-icon"
+            style={{ padding: '2px' }}
+            onClick={() => setSearchQuery('')}
+            title="Clear search"
+          >
+            <X size={12} />
+          </button>
+        )}
+      </div>
+
       <button
         type="button"
         className="launch-card"
@@ -66,8 +106,15 @@ export const RandomDataView: React.FC = () => {
       </button>
 
       <span className="discover-label">Individual Generators</span>
+      {filteredFields.length === 0 && (
+        <div className="empty-state">
+          <Search size={22} className="empty-icon" />
+          <span className="empty-title">No generators found</span>
+          <span className="empty-desc">Try a different search term.</span>
+        </div>
+      )}
       <div className="launch-list">
-        {FIELDS.map((f) => {
+        {filteredFields.map((f) => {
           const isOpen = expandedField === f.id;
           const accentStyle = {
             '--card-accent': f.accent,
